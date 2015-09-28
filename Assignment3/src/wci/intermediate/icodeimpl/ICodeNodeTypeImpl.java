@@ -36,6 +36,9 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     // Set node
     SET, //this node type will be the root node of a set expression parse tree
 
+    // range node
+    RANGE, //this node type will be the root node of a range expression parse tree
+
     // WRITE parameter
     WRITE_PARM,
 }

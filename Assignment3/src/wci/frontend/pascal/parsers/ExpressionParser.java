@@ -247,6 +247,25 @@ public class ExpressionParser extends StatementParser
 
         switch ((PascalTokenType) tokenType) {
 
+//            case IDENTIFIER: {
+//                // Look up the identifier in the symbol table stack.
+//                // Flag the identifier as undefined if it's not found.
+//                String name = token.getText().toLowerCase();
+//                SymTabEntry id = symTabStack.lookup(name);
+//                if (id == null) {
+//                    errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
+//                    id = symTabStack.enterLocal(name);
+//                }
+//
+//                rootNode = ICodeFactory.createICodeNode(VARIABLE);
+//                rootNode.setAttribute(ID, id);
+//                id.appendLineNumber(token.getLineNumber());
+//
+//                token = nextToken();  // consume the identifier
+//
+//                break;
+//            }
+
             case IDENTIFIER: {
                 // Look up the identifier in the symbol table stack.
                 // Flag the identifier as undefined if it's not found.
@@ -261,7 +280,19 @@ public class ExpressionParser extends StatementParser
                 rootNode.setAttribute(ID, id);
                 id.appendLineNumber(token.getLineNumber());
 
-                token = nextToken();  // consume the identifier
+                //handle ranges in sets such as 1..5
+
+                ICodeNode possibleChild = parse(token);
+                rootNode.addChild(possibleChild);
+
+                if(token.getType() == DOT_DOT) { // we know we have a range
+                    rootNode = ICodeFactory.createICodeNode(RANGE);
+                    rootNode.addChild(possibleChild);
+                    nextToken();
+                }
+                ICodeNode possibleChild2 = parse(token);
+                rootNode.addChild(possibleChild2);
+
                 break;
             }
 
@@ -327,7 +358,7 @@ public class ExpressionParser extends StatementParser
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
-                System.out.println("fafafa1");
+//                System.out.println("fafafa1");
                 //TODO: create parse tree for set expressions here
 
                 token = nextToken(); // consume the [
@@ -338,7 +369,7 @@ public class ExpressionParser extends StatementParser
                 while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
                                                             //is signified by a right bracket.
                     token = currentToken();
-                    System.out.println(token.getType());
+//                    System.out.println(token.getType());
                     if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
                        rootNode.addChild(parse(token));
                     }
