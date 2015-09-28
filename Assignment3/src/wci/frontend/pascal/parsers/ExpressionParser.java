@@ -339,19 +339,23 @@ public class ExpressionParser extends StatementParser
                                                             //is signified by a right bracket.
                     token = currentToken();
                     System.out.println(token.getType());
-                    if(token.getType() != COMMA ) {
+                    if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
                        rootNode.addChild(parse(token));
                     }
                     if(token.getType() == COMMA) token = nextToken();
                 }
                 
-                System.out.println("fafafa2");
-                System.out.println(nextToken().getText());
+//                System.out.println("fafafa2");
+//                System.out.println(nextToken().getText());
                 
-                if(token.getType() != SEMICOLON) {
+                if(token.getType() != RIGHT_BRACKET) {
                 	 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                 } 
                 token = nextToken();
+//                if(token.getType() != SEMICOLON) {
+//                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+//                }
+//                token = nextToken();
                 
                 break;
             }
