@@ -342,7 +342,7 @@ public class ExpressionParser extends StatementParser
                     if(token.getType() != COMMA ) {
                        rootNode.addChild(parse(token));
                     }
-                    token = nextToken();
+                    if(token.getType() == COMMA) token = nextToken();
                 }
                 
                 System.out.println("fafafa2");
