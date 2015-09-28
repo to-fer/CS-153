@@ -326,6 +326,9 @@ public class ExpressionParser extends StatementParser
 
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
+            case LEFT_BRACKET: {
+                //TODO: create parse tree for set expressions here
+            }
 
             default: {
                 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
