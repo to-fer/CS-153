@@ -247,25 +247,6 @@ public class ExpressionParser extends StatementParser
 
         switch ((PascalTokenType) tokenType) {
 
-//            case IDENTIFIER: {
-//                // Look up the identifier in the symbol table stack.
-//                // Flag the identifier as undefined if it's not found.
-//                String name = token.getText().toLowerCase();
-//                SymTabEntry id = symTabStack.lookup(name);
-//                if (id == null) {
-//                    errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
-//                    id = symTabStack.enterLocal(name);
-//                }
-//
-//                rootNode = ICodeFactory.createICodeNode(VARIABLE);
-//                rootNode.setAttribute(ID, id);
-//                id.appendLineNumber(token.getLineNumber());
-//
-//                token = nextToken();  // consume the identifier
-//
-//                break;
-//            }
-
             case IDENTIFIER: {
                 // Look up the identifier in the symbol table stack.
                 // Flag the identifier as undefined if it's not found.
@@ -279,20 +260,6 @@ public class ExpressionParser extends StatementParser
                 rootNode = ICodeFactory.createICodeNode(VARIABLE);
                 rootNode.setAttribute(ID, id);
                 id.appendLineNumber(token.getLineNumber());
-
-                //handle ranges in sets such as 1..5
-
-                ICodeNode possibleChild = parse(token);
-                rootNode.addChild(possibleChild);
-
-                if(token.getType() == DOT_DOT) { // we know we have a range
-                    rootNode = ICodeFactory.createICodeNode(RANGE);
-                    rootNode.addChild(possibleChild);
-                    nextToken();
-                }
-                ICodeNode possibleChild2 = parse(token);
-                rootNode.addChild(possibleChild2);
-
                 break;
             }
 
@@ -360,8 +327,9 @@ public class ExpressionParser extends StatementParser
             case LEFT_BRACKET: {
 //                System.out.println("fafafa1");
                 //TODO: create parse tree for set expressions here
-
+//                System.out.println(token.getType());
                 token = nextToken(); // consume the [
+//                System.out.println(token.getType());
 
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
 
@@ -370,10 +338,27 @@ public class ExpressionParser extends StatementParser
                                                             //is signified by a right bracket.
                     token = currentToken();
 //                    System.out.println(token.getType());
+                    ICodeNode subtree = null;
                     if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
-                       rootNode.addChild(parse(token));
+                       subtree = parse(token);
                     }
-                    if(token.getType() == COMMA) token = nextToken();
+                    token = nextToken();
+//                    System.out.println("gggggg = " + token.getType());
+                    if(token.getType() == COMMA)
+                    {
+                        rootNode.addChild(subtree);
+                        token = nextToken();
+                    }
+                    else if(token.getType() == DOT_DOT) {
+                        ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
+                        rangeRoot.addChild(subtree);
+                        token = nextToken();
+                        rangeRoot.addChild(parse(token));
+                        rootNode.addChild(rangeRoot);
+                    }
+//                    System.out.println("3 = " + token.getType());
+                    token = currentToken();
+
                 }
                 
 //                System.out.println("fafafa2");
@@ -387,7 +372,7 @@ public class ExpressionParser extends StatementParser
 //                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
 //                }
 //                token = nextToken();
-                
+                System.out.println("4 = " + token.getType());
                 break;
             }
 
