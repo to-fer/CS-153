@@ -341,6 +341,7 @@ public class ExpressionParser extends StatementParser
                     }
                     token = nextToken();
                 }
+                break;
             }
 
             default: {
