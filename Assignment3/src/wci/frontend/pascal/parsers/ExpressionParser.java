@@ -241,6 +241,7 @@ public class ExpressionParser extends StatementParser
     private ICodeNode parseFactor(Token token)
         throws Exception
     {
+    	
         TokenType tokenType = token.getType();
         ICodeNode rootNode = null;
 
@@ -326,6 +327,7 @@ public class ExpressionParser extends StatementParser
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
+                System.out.println("fafafa1");
                 //TODO: create parse tree for set expressions here
 
                 token = nextToken(); // consume the [
@@ -336,11 +338,21 @@ public class ExpressionParser extends StatementParser
                 while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
                                                             //is signified by a right bracket.
                     token = currentToken();
+                    System.out.println(token.getType());
                     if(token.getType() != COMMA ) {
-                       rootNode.addChild(parseFactor(token));
+                       rootNode.addChild(parse(token));
                     }
                     token = nextToken();
                 }
+                
+                System.out.println("fafafa2");
+                System.out.println(nextToken().getText());
+                
+                if(token.getType() != SEMICOLON) {
+                	 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                } 
+                token = nextToken();
+                
                 break;
             }
 
