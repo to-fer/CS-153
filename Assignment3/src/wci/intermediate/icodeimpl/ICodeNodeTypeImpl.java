@@ -33,6 +33,9 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     INTEGER_CONSTANT, REAL_CONSTANT,
     STRING_CONSTANT, BOOLEAN_CONSTANT,
 
+    // Set node
+    SET, //this node type will be the root node of a set expression parse tree
+
     // WRITE parameter
     WRITE_PARM,
 }

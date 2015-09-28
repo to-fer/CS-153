@@ -272,7 +272,6 @@ public class ExpressionParser extends StatementParser
                 token = nextToken();  // consume the number
                 break;
             }
-
             case REAL: {
                 // Create an REAL_CONSTANT node as the root node.
                 rootNode = ICodeFactory.createICodeNode(REAL_CONSTANT);
@@ -328,6 +327,20 @@ public class ExpressionParser extends StatementParser
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
                 //TODO: create parse tree for set expressions here
+
+                token = nextToken(); // consume the [
+
+                rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
+
+
+                while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
+                                                            //is signified by a right bracket.
+                    token = currentToken();
+                    if(token.getType() != COMMA ) {
+                       rootNode.addChild(parseFactor(token));
+                    }
+                    token = nextToken();
+                }
             }
 
             default: {
