@@ -349,8 +349,7 @@ public class ExpressionParser extends StatementParser
 
                     if(token.getType() == COMMA)
                     {
-                        token = nextToken();
-                        rootNode.addChild(parse(token));
+                        token = nextToken();//consume the comma
                         rootNode.addChild(subtree);
                     }
                     else if(token.getType() == DOT_DOT) {
