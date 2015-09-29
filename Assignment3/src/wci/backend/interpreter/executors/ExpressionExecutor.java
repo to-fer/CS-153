@@ -2,6 +2,7 @@ package wci.backend.interpreter.executors;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
@@ -102,6 +103,10 @@ public class ExpressionExecutor extends StatementExecutor
     // Set of arithmetic operator node types.
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
         EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD);
+
+    // TODO add other set operations here.
+    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
+        EnumSet.of(SET_UNION, SET_DIFFERENCE, SET_INTERSECTION);
 
     /**
      * Execute a binary operator.
@@ -233,6 +238,41 @@ public class ExpressionExecutor extends StatementExecutor
                 case LE: return value1 <= value2;
                 case GT: return value1 >  value2;
                 case GE: return value1 >= value2;
+            }
+        }
+        else if (SET_OPS.contains(nodeType)) {
+            HashSet<Integer> first_operand = (HashSet<Integer>) operandNode1;
+            HashSet<Integer> second_operand = (HashSet<Integer>) operandNode2;
+            switch (nodeType) {
+                case SET_UNION:
+                    HashSet<Integer> union_set = new HashSet<>();
+
+                    for (Integer i : first_operand)
+                        union_set.add(i);
+                    for (Integer i: second_operand)
+                        union_set.add(i);
+
+                    return union_set;
+
+                case SET_INTERSECTION:
+                    HashSet<Integer> intersection_set = new HashSet<>();
+
+                    for (Integer i : first_operand)
+                        if (second_operand.contains(i))
+                            intersection_set.add(i);
+
+                    return intersection_set;
+
+                case SET_DIFFERENCE:
+                    HashSet<Integer> difference_set = new HashSet<>(first_operand);
+                    /*
+                    In case you're unfamiliar with how set difference is defined: it is defined as
+                    a set containing all elements in the left operand that are not in the right operand.
+                     */
+                    for (Integer i : second_operand)
+                        difference_set.remove(i);
+
+                    return difference_set;
             }
         }
         else {
