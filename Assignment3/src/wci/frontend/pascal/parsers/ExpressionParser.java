@@ -325,44 +325,45 @@ public class ExpressionParser extends StatementParser
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
-//                System.out.println("fafafa1");
+                System.out.println("fafafa1");
                 //TODO: create parse tree for set expressions here
-//                System.out.println(token.getType());
+                System.out.println(token.getType());
                 token = nextToken(); // consume the [
-//                System.out.println(token.getType());
+                System.out.println(token.getType());
 
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
 
 
                 while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
-                                                            //is signified by a right bracket.
-                    token = currentToken();
-//                    System.out.println(token.getType());
+                   token = currentToken();
+                   System.out.println(token.getType());
+
                     ICodeNode subtree = null;
                     if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
-                       subtree = parse(token);
+                        subtree = parse(token);
                     }
-                    token = nextToken();
-//                    System.out.println("gggggg = " + token.getType());
+
+                    token = currentToken();
+
+                    System.out.println(token.getType());
+
                     if(token.getType() == COMMA)
                     {
-                        rootNode.addChild(subtree);
                         token = nextToken();
+                        rootNode.addChild(parse(token));
+                        rootNode.addChild(subtree);
                     }
                     else if(token.getType() == DOT_DOT) {
                         ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
                         rangeRoot.addChild(subtree);
                         token = nextToken();
+                        token = currentToken();
                         rangeRoot.addChild(parse(token));
                         rootNode.addChild(rangeRoot);
                     }
-//                    System.out.println("3 = " + token.getType());
-                    token = currentToken();
 
                 }
-                
-//                System.out.println("fafafa2");
-//                System.out.println(nextToken().getText());
+
                 
                 if(token.getType() != RIGHT_BRACKET) {
                 	 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
