@@ -328,18 +328,18 @@ public class ExpressionParser extends StatementParser
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
-                System.out.println("fafafa1");
+//                System.out.println("fafafa1");
                 //TODO: create parse tree for set expressions here
-                System.out.println(token.getType());
+//                System.out.println(token.getType());
                 token = nextToken(); // consume the [
-                System.out.println(token.getType());
+//                System.out.println(token.getType());
 
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
 
 
                 while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
                    token = currentToken();
-                   System.out.println(token.getType());
+//                   System.out.println(token.getType());
 
                     ICodeNode subtree = null;
                     //There seems too be an infinite loop here when you input [n,2,4,5] 
@@ -350,7 +350,7 @@ public class ExpressionParser extends StatementParser
 
                     token = currentToken();
 
-                    System.out.println(token.getType());
+//                    System.out.println(token.getType());
 
                     if(token.getType() == COMMA)
                     {
@@ -377,7 +377,7 @@ public class ExpressionParser extends StatementParser
 //                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
 //                }
 //                token = nextToken();
-                System.out.println("4 = " + token.getType());
+//                System.out.println("4 = " + token.getType());
                 break;
             }
 
