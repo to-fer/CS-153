@@ -106,7 +106,7 @@ public class ExpressionExecutor extends StatementExecutor
 
     // TODO add other set operations here.
     private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-        EnumSet.of(SET_UNION, SET_DIFFERENCE, SET_INTERSECTION);
+        EnumSet.of(SET_UNION, SET_DIFFERENCE, SET_INTERSECTION, SET_SYS_DIFFERENCE);
 
     /**
      * Execute a binary operator.
@@ -273,6 +273,20 @@ public class ExpressionExecutor extends StatementExecutor
                         difference_set.remove(i);
 
                     return difference_set;
+                    
+                case SET_SYS_DIFFERENCE:
+                	HashSet<Integer> sys_diff_set = new HashSet<>(first_operand);
+                	
+                	for(Integer i : second_operand) {
+                		if (sys_diff_set.contains(i)) {
+                			sys_diff_set.remove(i);
+                		} else {
+                			sys_diff_set.add(i);
+                		}
+                	}
+                	
+                	return sys_diff_set;
+                	
             }
         }
         else {
