@@ -260,6 +260,9 @@ public class ExpressionParser extends StatementParser
                 rootNode = ICodeFactory.createICodeNode(VARIABLE);
                 rootNode.setAttribute(ID, id);
                 id.appendLineNumber(token.getLineNumber());
+                
+                token = nextToken();  // consume the identifier
+
                 break;
             }
 
@@ -339,6 +342,8 @@ public class ExpressionParser extends StatementParser
                    System.out.println(token.getType());
 
                     ICodeNode subtree = null;
+                    //There seems too be an infinite loop here when you input [n,2,4,5] 
+                    //The Identifier just seem to repeat and never get parsed and keep returning n 
                     if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
                         subtree = parse(token);
                     }
