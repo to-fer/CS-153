@@ -37,7 +37,7 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     SET, //this node type will be the root node of a set expression parse tree
 
     // Set operation nodes
-    SET_UNION, SET_INTERSECTION, SET_DIFFERENCE, SET_SYS_DIFFERENCE, SET_CONTAINS, SET_ISCONTAINED,
+    SET_UNION, SET_INTERSECTION, SET_DIFFERENCE, SET_SYS_DIFFERENCE, SET_CONTAINS, SET_ISCONTAINED, SET_EQUALS, SET_IN,
 
     // range node
     RANGE, //this node type will be the root node of a range expression parse tree
