@@ -265,7 +265,7 @@ public class ExpressionExecutor extends StatementExecutor
                     int rightSide = (Integer) operand2;
 
                     Set<Integer> rangeContents = new HashSet<>();
-                    for (int i = leftSide; leftSide <= rightSide; i++)
+                    for (int i = leftSide; i <= rightSide; i++)
                         rangeContents.add(i);
 
                     return rangeContents;
