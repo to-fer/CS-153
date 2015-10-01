@@ -1,8 +1,6 @@
 package wci.backend.interpreter.executors;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.*;
 
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
@@ -93,6 +91,30 @@ public class ExpressionExecutor extends StatementExecutor
                 // Execute the expression and return the "not" of its value.
                 boolean value = (Boolean) execute(expressionNode);
                 return !value;
+            }
+
+            case SET: {
+                List<ICodeNode> children = node.getChildren();
+                Set<Integer> setContents = new HashSet<>();
+                for (ICodeNode n : children) {
+                    Object value = execute(n);
+                    if (value instanceof HashSet) {
+                        Set<Integer> rangeSet = (Set<Integer>) value;
+                        setContents.addAll(rangeSet);
+                    }
+                    else {
+                        setContents.add((Integer)value);
+                    }
+                }
+
+                for (Integer i : setContents) {
+                    if (i > 50) {
+                        errorHandler.flag(node, INVALID_SET_VALUE, this);
+                        return 0;
+                    }
+                }
+
+                return setContents;
             }
 
             // Must be a binary operator.
@@ -238,6 +260,16 @@ public class ExpressionExecutor extends StatementExecutor
                 case LE: return value1 <= value2;
                 case GT: return value1 >  value2;
                 case GE: return value1 >= value2;
+                case RANGE: {
+                    int leftSide = (Integer) operand1;
+                    int rightSide = (Integer) operand2;
+
+                    Set<Integer> rangeContents = new HashSet<>();
+                    for (int i = leftSide; leftSide <= rightSide; i++)
+                        rangeContents.add(i);
+
+                    return rangeContents;
+                }
             }
         }
         else if (SET_OPS.contains(nodeType)) {
