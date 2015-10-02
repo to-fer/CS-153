@@ -4,10 +4,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import wci.backend.interpreter.executors.StatementExecutor;
 import wci.frontend.*;
 import wci.frontend.pascal.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
+import wci.backend.interpreter.executors.ExpressionExecutor;
 
 import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.frontend.pascal.PascalTokenType.NOT;
@@ -386,6 +388,13 @@ public class ExpressionParser extends StatementParser
                                   from++;
                               }
                           }
+                          else {
+                              ICodeNode child = ICodeFactory.createICodeNode(RANGE);
+                              child.addChild(operand1);
+                              child.addChild(operand2);
+                              rootNode.addChild(child);
+                          }
+
                     }
 
                 }
