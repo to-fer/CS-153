@@ -2,6 +2,7 @@ package wci.frontend.pascal.parsers;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import wci.frontend.*;
 import wci.frontend.pascal.*;
@@ -13,6 +14,7 @@ import static wci.frontend.pascal.PascalTokenType.NOT;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+import static wci.backend.interpreter.executors.*;
 
 /**
  * <h1>ExpressionParser</h1>
@@ -359,12 +361,30 @@ public class ExpressionParser extends StatementParser
                         rootNode.addChild(subtree);
                     }
                     else if(token.getType() == DOT_DOT) {
-                        ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
-                        rangeRoot.addChild(subtree);
-                        token = nextToken();
-                        token = currentToken();
-                        rangeRoot.addChild(parse(token));
-                        rootNode.addChild(rangeRoot);
+//                        ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
+//                        rangeRoot.addChild(subtree);
+//                        token = nextToken();
+//                        token = currentToken();
+//                        rangeRoot.addChild(parse(token));
+//                        rootNode.addChild(rangeRoot);
+
+                          ICodeNode operand1 = subtree.getChildren().get(0); // get the first operand for range
+                          token = nextToken();
+                          token = currentToken();
+                          ICodeNode operand2 = parse(token);
+                          if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
+                              int from = (Integer) operand1.getAttribute(VALUE);
+                              int to = (Integer) operand2.getAttribute(VALUE);
+                              HashSet<Integer> rangeSet = new HashSet<Integer>();
+                              int i = from;
+                              while(from <= to) {
+                                  rangeSet.add(i);
+                                  i++;
+                              }
+                              ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
+                              rangeRoot.setAttribute(VALUE, rangeSet);
+                              rootNode.addChild(rangeRoot);
+                          }
                     }
 
                 }
