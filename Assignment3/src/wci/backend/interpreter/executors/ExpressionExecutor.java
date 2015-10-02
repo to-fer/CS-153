@@ -116,6 +116,17 @@ public class ExpressionExecutor extends StatementExecutor
 
                 return setContents;
             }
+            
+            case RANGE: {
+            	//if the node is of type range then it must have 2 children
+            	List<ICodeNode> children = node.getChildren();
+            	int start = (int) execute(children.get(0));
+            	int end = (int ) execute(children.get(1));
+            	System.out.println(start);
+            	System.out.println(end);
+            	// this is a temporay wrong return 
+            	return children.get(1);
+            }
 
             // Must be a binary operator.
             default: return executeBinaryOperator(node, nodeType);
