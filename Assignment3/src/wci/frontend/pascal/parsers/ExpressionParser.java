@@ -368,11 +368,12 @@ public class ExpressionParser extends StatementParser
 //                        rangeRoot.addChild(parse(token));
 //                        rootNode.addChild(rangeRoot);
 
-                          ICodeNode operand1 = subtree.getChildren().get(0); // get the first operand for range
+                          ICodeNode operand1 = subtree; // get the first operand for range
                           token = nextToken();
                           token = currentToken();
                           ICodeNode operand2 = parse(token);
                           if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
+
                               int from = (Integer) operand1.getAttribute(VALUE);
                               int to = (Integer) operand2.getAttribute(VALUE);
                               while(from <= to) {
