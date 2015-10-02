@@ -14,7 +14,7 @@ import static wci.frontend.pascal.PascalTokenType.NOT;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
-import static wci.backend.interpreter.executors.*;
+//import static wci.backend.interpreter.executors.*;
 
 /**
  * <h1>ExpressionParser</h1>
@@ -375,15 +375,12 @@ public class ExpressionParser extends StatementParser
                           if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
                               int from = (Integer) operand1.getAttribute(VALUE);
                               int to = (Integer) operand2.getAttribute(VALUE);
-                              HashSet<Integer> rangeSet = new HashSet<Integer>();
-                              int i = from;
                               while(from <= to) {
-                                  rangeSet.add(i);
-                                  i++;
+                                  ICodeNode child = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                                  child.setAttribute(VALUE, from);
+                                  rootNode.addChild(child);
+                                  from++;
                               }
-                              ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
-                              rangeRoot.setAttribute(VALUE, rangeSet);
-                              rootNode.addChild(rangeRoot);
                           }
                     }
 
