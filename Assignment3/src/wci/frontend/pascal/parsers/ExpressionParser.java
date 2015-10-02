@@ -342,7 +342,7 @@ public class ExpressionParser extends StatementParser
 
                 while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
                    token = currentToken();
-//                   System.out.println(token.getType());
+//                   System.out.println(token.getValue());
 
                     ICodeNode subtree = null;
                     //There seems too be an infinite loop here when you input [n,2,4,5] 
@@ -358,6 +358,9 @@ public class ExpressionParser extends StatementParser
                     if(token.getType() == COMMA)
                     {
                         token = nextToken();//consume the comma
+                        rootNode.addChild(subtree);
+                    }
+                    else if(token.getType() == RIGHT_BRACKET) {
                         rootNode.addChild(subtree);
                     }
                     else if(token.getType() == DOT_DOT) {
