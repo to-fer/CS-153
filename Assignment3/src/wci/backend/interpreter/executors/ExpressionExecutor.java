@@ -5,7 +5,7 @@ import java.util.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
 import wci.backend.interpreter.*;
-
+import wci.util.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
@@ -93,7 +93,9 @@ public class ExpressionExecutor extends StatementExecutor
                 return !value;
             }
 
+            
             case SET: {
+            	/*
                 List<ICodeNode> children = node.getChildren();
                 Set<Integer> setContents = new HashSet<>();
                 for (ICodeNode n : children) {
@@ -113,19 +115,31 @@ public class ExpressionExecutor extends StatementExecutor
                         return 0;
                     }
                 }
-
-                return setContents;
+				*/
+                return node;
             }
             
+            
+            /*
+             * This the were we handle the .. that is parsed into a tree
+             * by adding the set nodes into the range parent's children 
+             * and return a value representing the set and transform it 
+             * to a SET node that will contain all the children 
+             */
             case RANGE: {
-            	//if the node is of type range then it must have 2 children
-            	List<ICodeNode> children = node.getChildren();
+    	       	List<ICodeNode> children = node.getChildren();
             	int start = (int) execute(children.get(0));
             	int end = (int ) execute(children.get(1));
+            	
+            	ICodeNode set = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
+            	for(Integer t = start; t <= end; t++) {
+                	ICodeNode setMember = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.INTEGER_CONSTANT);
+                	setMember.setAttribute(VALUE, t);
+                	set.addChild(setMember);
+            	}
             	System.out.println(start);
             	System.out.println(end);
-            	// this is a temporay wrong return 
-            	return children.get(1);
+            	return set;
             }
 
             // Must be a binary operator.
@@ -161,6 +175,7 @@ public class ExpressionExecutor extends StatementExecutor
 
         boolean integerMode = (operand1 instanceof Integer) &&
                               (operand2 instanceof Integer);
+        
 
         // ====================
         // Arithmetic operators
