@@ -116,7 +116,22 @@ public class ExpressionExecutor extends StatementExecutor
                     }
                 }
 				*/
-                return node;
+                ICodeNode result = ICodeFactory.createICodeNode(SET);
+                for(ICodeNode curr: node.getChildren()) {
+                    Object add = execute(curr);
+                    if(add instanceof Integer) {
+                        ICodeNode asInt = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                        asInt.setAttribute(VALUE, (int) add);
+                        result.addChild(asInt);
+                    }
+                    else if(add instanceof ICodeNode) {
+                        ICodeNode set = (ICodeNode) add;
+                        for(ICodeNode member: set.getChildren()) {
+                            result.addChild(member);
+                        }
+                    }
+                }
+                return result;
             }
             
             
@@ -130,15 +145,12 @@ public class ExpressionExecutor extends StatementExecutor
     	       	List<ICodeNode> children = node.getChildren();
             	int start = (int) execute(children.get(0));
             	int end = (int ) execute(children.get(1));
-            	
             	ICodeNode set = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
             	for(Integer t = start; t <= end; t++) {
                 	ICodeNode setMember = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.INTEGER_CONSTANT);
                 	setMember.setAttribute(VALUE, t);
                 	set.addChild(setMember);
             	}
-            	System.out.println(start);
-            	System.out.println(end);
             	return set;
             }
 
@@ -149,12 +161,26 @@ public class ExpressionExecutor extends StatementExecutor
 
     // Set of arithmetic operator node types.
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
-        EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD);
+        EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, SET);
 
     // TODO add other set operations here.
     private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
         EnumSet.of(SET_UNION, SET_DIFFERENCE, SET_INTERSECTION, SET_SYS_DIFFERENCE, SET_CONTAINS, SET_ISCONTAINED, SET_EQUALS, SET_IN);
 
+    //this is for executing operations where both arguments are sets.
+//    private Object executeSetOp(ICodeNode op, ICodeNode set1, ICodeNode set2) {
+//        ArrayList<ICodeNode> set1Members = set1.getChildren();
+//        ArrayList<ICodeNode> set2Members = set2.getChildren();
+//        switch(op.getType()) {
+//            //get the union of the 2 sets
+//            case ADD:
+//                break;
+//            case SUBTRACT:
+//                break;
+//            case MULTIPLY:
+//                break;
+//        }
+//    }
     /**
      * Execute a binary operator.
      * @param node the root node of the expression.
@@ -175,7 +201,10 @@ public class ExpressionExecutor extends StatementExecutor
 
         boolean integerMode = (operand1 instanceof Integer) &&
                               (operand2 instanceof Integer);
-        
+
+        boolean setMode = (operandNode1.getType() == SET) && (operandNode2 .getType() == SET);
+
+//        if(setMode) return executeSetOp(node, operandNode1, operandNode2);
 
         // ====================
         // Arithmetic operators
@@ -298,82 +327,82 @@ public class ExpressionExecutor extends StatementExecutor
                 }
             }
         }
-        else if (SET_OPS.contains(nodeType)) {
-            HashSet<Integer> first_operand = (HashSet<Integer>) operandNode1;
-            HashSet<Integer> second_operand = (HashSet<Integer>) operandNode2;
-            switch (nodeType) {
-                case SET_UNION:
-                    HashSet<Integer> union_set = new HashSet<>();
-
-                    for (Integer i : first_operand)
-                        union_set.add(i);
-                    for (Integer i: second_operand)
-                        union_set.add(i);
-
-                    return union_set;
-
-                case SET_INTERSECTION:
-                    HashSet<Integer> intersection_set = new HashSet<>();
-
-                    for (Integer i : first_operand)
-                        if (second_operand.contains(i))
-                            intersection_set.add(i);
-
-                    return intersection_set;
-
-                case SET_DIFFERENCE:
-                    HashSet<Integer> difference_set = new HashSet<>(first_operand);
-                    /*
-                    In case you're unfamiliar with how set difference is defined: it is defined as
-                    a set containing all elements in the left operand that are not in the right operand.
-                     */
-                    for (Integer i : second_operand)
-                        difference_set.remove(i);
-
-                    return difference_set;
-                    
-                case SET_SYS_DIFFERENCE:
-                	HashSet<Integer> sys_diff_set = new HashSet<>(first_operand);
-                	
-                	for(Integer i : second_operand) {
-                		if (sys_diff_set.contains(i)) {
-                			sys_diff_set.remove(i);
-                		} else {
-                			sys_diff_set.add(i);
-                		}
-                	}
-                	
-                	return sys_diff_set;
-                	
-                case SET_CONTAINS:
-                	for(Integer i: second_operand) {
-                		if(!first_operand.contains(i)) {
-                			return new Boolean(false);
-                		}
-                	}
-                	
-                	return new Boolean(true);
-                	
-                case SET_ISCONTAINED:
-                	for(Integer i: first_operand) {
-                		if(!second_operand.contains(i)) {
-                			return new Boolean(false);
-                		}
-                	}
-                	
-                	return new Boolean(true);
-                case SET_IN:
-                    Integer first_node_as_int = (Integer) operand1;
-                    if(second_operand.contains(first_node_as_int)) return new Boolean(true);
-                    return new Boolean(false);
-                case SET_EQUALS:
-                    if(first_operand.size() != second_operand.size()) return new Boolean(false);
-                    for(Integer i: first_operand) {
-                        if(!second_operand.contains(i)) return new Boolean(false);
-                    }
-                    return new Boolean(true);
-            }
-        }
+//        else if (SET_OPS.contains(nodeType)) {
+//            HashSet<Integer> first_operand = (HashSet<Integer>) operandNode1;
+//            HashSet<Integer> second_operand = (HashSet<Integer>) operandNode2;
+//            switch (nodeType) {
+//                case SET_UNION:
+//                    HashSet<Integer> union_set = new HashSet<>();
+//
+//                    for (Integer i : first_operand)
+//                        union_set.add(i);
+//                    for (Integer i: second_operand)
+//                        union_set.add(i);
+//
+//                    return union_set;
+//
+//                case SET_INTERSECTION:
+//                    HashSet<Integer> intersection_set = new HashSet<>();
+//
+//                    for (Integer i : first_operand)
+//                        if (second_operand.contains(i))
+//                            intersection_set.add(i);
+//
+//                    return intersection_set;
+//
+//                case SET_DIFFERENCE:
+//                    HashSet<Integer> difference_set = new HashSet<>(first_operand);
+//                    /*
+//                    In case you're unfamiliar with how set difference is defined: it is defined as
+//                    a set containing all elements in the left operand that are not in the right operand.
+//                     */
+//                    for (Integer i : second_operand)
+//                        difference_set.remove(i);
+//
+//                    return difference_set;
+//
+//                case SET_SYS_DIFFERENCE:
+//                	HashSet<Integer> sys_diff_set = new HashSet<>(first_operand);
+//
+//                	for(Integer i : second_operand) {
+//                		if (sys_diff_set.contains(i)) {
+//                			sys_diff_set.remove(i);
+//                		} else {
+//                			sys_diff_set.add(i);
+//                		}
+//                	}
+//
+//                	return sys_diff_set;
+//
+//                case SET_CONTAINS:
+//                	for(Integer i: second_operand) {
+//                		if(!first_operand.contains(i)) {
+//                			return new Boolean(false);
+//                		}
+//                	}
+//
+//                	return new Boolean(true);
+//
+//                case SET_ISCONTAINED:
+//                	for(Integer i: first_operand) {
+//                		if(!second_operand.contains(i)) {
+//                			return new Boolean(false);
+//                		}
+//                	}
+//
+//                	return new Boolean(true);
+//                case SET_IN:
+//                    Integer first_node_as_int = (Integer) operand1;
+//                    if(second_operand.contains(first_node_as_int)) return new Boolean(true);
+//                    return new Boolean(false);
+//                case SET_EQUALS:
+//                    if(first_operand.size() != second_operand.size()) return new Boolean(false);
+//                    for(Integer i: first_operand) {
+//                        if(!second_operand.contains(i)) return new Boolean(false);
+//                    }
+//                    return new Boolean(true);
+//            }
+//        }
         else {
             float value1 = operand1 instanceof Integer
                                ? (Integer) operand1 : (Float) operand1;

@@ -2,6 +2,7 @@ BEGIN
  low := 15;
  mid := 45;
  high := 50;
+ exp := 40*low;
  n := 0;
  range := [low..high];
  set0 := [n*n..50];
