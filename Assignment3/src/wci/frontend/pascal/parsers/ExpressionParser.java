@@ -85,8 +85,17 @@ public class ExpressionParser extends StatementParser
         token = currentToken();
         TokenType tokenType = token.getType();
 
-        // Look for a relational operator.
-        if (REL_OPS.contains(tokenType)) {
+        if (tokenType == DOT_DOT) {
+            ICodeNode rangeStart = rootNode;
+            rootNode = ICodeFactory.createICodeNode(RANGE);
+
+            token = nextToken();
+            ICodeNode rangeEnd = parseSimpleExpression(token);
+
+            rootNode.addChild(rangeStart);
+            rootNode.addChild(rangeEnd);
+        }
+        else if (REL_OPS.contains(tokenType)) {
 
             // Create a new operator node and adopt the current tree
             // as its first child.
@@ -176,7 +185,7 @@ public class ExpressionParser extends StatementParser
             if (nextOperand.getType() == ICodeNodeTypeImpl.SET) {
                 errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
             }
-            opNode.addChild(parseTerm(token));
+            opNode.addChild(nextOperand);
 
             // The operator node becomes the new root node.
             rootNode = opNode;
@@ -339,107 +348,107 @@ public class ExpressionParser extends StatementParser
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
-//                System.out.println("fafafa1");
-                //TODO: create parse tree for set expressions here
-//                System.out.println(token.getType());
-                token = nextToken(); // consume the [
-//                System.out.println(token.getType());
+                nextToken(); // consume the [
 
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
 
+                boolean isExpectingSetElement = true;
+                boolean isDoneParsingSet = false;
                 HashSet<Integer> setMembers = new HashSet<>();
-                while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
+                while(!isDoneParsingSet) {
                    token = currentToken();
-//                   System.out.println(token.getValue());
 
-                    ICodeNode subtree = null;
-                    if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
-                        subtree = parse(token);
-                    }
+                    if (isExpectingSetElement) {
+                        ICodeNode currentNode = parse(token);
+                        if (currentNode != null) {
+                            /*
+                            The assignment requires that we do courtesy error checking if the range start and end are
+                            integer constants. We might as well get rid of the range node and add its contents to
+                            the set node if we find that to be the case.
+                            */
+                            if (currentNode.getType() == RANGE) {
+                                /*
+                                Make sure we're dealing with a valid range (start and end of range were both
+                                tokens that were recognized correctly by the parser in the parse() method)
+                                 */
+                                if (currentNode.getChildren().size() == 2) {
+                                    ICodeNode rangeStartNode = currentNode.getChildren().get(0);
+                                    ICodeNode rangeEndNode = currentNode.getChildren().get(1);
+                                    boolean areBothIntConstants = rangeStartNode.getType() == INTEGER_CONSTANT &&
+                                            rangeEndNode.getType() == INTEGER_CONSTANT;
+                                    if (areBothIntConstants) {
+                                        boolean hasFlaggedError = false;
+                                        int from = (Integer) rangeStartNode.getAttribute(VALUE);
+                                        int to = (Integer) rangeEndNode.getAttribute(VALUE);
+                                        while(from <= to) {
+                                            ICodeNode child = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                                            child.setAttribute(VALUE, from);
+                                        /*
+                                        Ranges may produce many duplicates, spamming the error output. Let's make sure
+                                        we only report a single error.
+                                        */
+                                            if (!hasFlaggedError) {
+                                                hasFlaggedError = !addSetNodeChild(rootNode, child, token, setMembers);
+                                            }
+                                            else {
+                                            /*
+                                            We deliberately DO NOT use addSetNodeChild() here because we have already checked
+                                            for duplicate members up above (see the above comment).
+                                            */
+                                                setMembers.add(from);
+                                                rootNode.addChild(child);
+                                            }
 
-                    // Used to flag the correct token as an error if an error has occurred.
-                    Token previousToken = token;
-                    token = currentToken();
+                                            from++;
+                                        }
+                                    }
 
-//                    System.out.println(token.getType());
-                    if(token.getType() == COMMA)
-                    {
-                        previousToken = token;
-                        token = nextToken(); //consume the comma
-                        boolean isValidSetMemberAsExpected = token.getType() != PascalTokenType.INTEGER &&
-                                                             token.getType() != PascalTokenType.IDENTIFIER;
-                        if (isValidSetMemberAsExpected) {
-                            errorHandler.flag(previousToken, PascalErrorCode.INVALID_CHARACTER, this);
+                                    isExpectingSetElement = false;
+                                }
+                                else if (peekPreviousToken().getType() == COMMA) {
+                                    isExpectingSetElement = true;
+                                }
+                                else {
+                                    isExpectingSetElement = false;
+                                }
+                            }
+                            else {
+                                isExpectingSetElement = false;
+                            }
+
+                            addSetNodeChild(rootNode, currentNode, token, setMembers);
                         }
-
-                        addSetNodeChild(rootNode, subtree, previousToken, setMembers);
-                    }
-                    else if(token.getType() == RIGHT_BRACKET) {
-                        addSetNodeChild(rootNode, subtree, previousToken, setMembers);
-                    }
-                    else if(token.getType() == DOT_DOT) {
-//                        ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
-//                        rangeRoot.addChild(subtree);
-//                        token = nextToken();
-//                        token = currentToken();
-//                        rangeRoot.addChild(parse(token));
-//                        rootNode.addChild(rangeRoot);
-
-                          ICodeNode operand1 = subtree; // get the first operand for range
-                          token = nextToken();
-                          if (token.getType() != PascalTokenType.INTEGER) {
-                              errorHandler.flag(token, PascalErrorCode.UNEXPECTED_TOKEN, this);
-                          }
-                          else {
-                              ICodeNode operand2 = parse(token);
-                              if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
-                                  boolean hasFlaggedError = false;
-                                  int from = (Integer) operand1.getAttribute(VALUE);
-                                  int to = (Integer) operand2.getAttribute(VALUE);
-                                  while(from <= to) {
-                                      ICodeNode child = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
-                                      child.setAttribute(VALUE, from);
-                                  /*
-                                  Ranges may produce many duplicates, spamming the error output. We do this to make
-                                  sure we only flag ONE of the duplicates as an error so as to prevent the spamming.
-                                   */
-                                      if (!hasFlaggedError) {
-                                          hasFlaggedError = !addSetNodeChild(rootNode, child, token, setMembers);
-                                      }
-                                      else {
-                                      /*
-                                      We deliberately DO NOT use addSetNodeChild() here because we have already checked
-                                      for duplicate members up above (see the above comment).
-                                      */
-                                          setMembers.add(from);
-                                          rootNode.addChild(child);
-                                      }
-
-                                      from++;
-                                  }
-                              }
-                              else {
-                                  ICodeNode child = ICodeFactory.createICodeNode(RANGE);
-                                  child.addChild(operand1);
-                                  child.addChild(operand2);
-                                  addSetNodeChild(rootNode, child, token, setMembers);
-                              }
-                          }
-
-                    }
-                    else if (token.getType() == INTEGER) {
-                        errorHandler.flag(token, PascalErrorCode.MISSING_COMMA, this);
+                        else {
+                            if (token.getType() == COMMA) {
+                                // If we encounter duplicate commas, keep trying to find a set element.
+                                isExpectingSetElement = true;
+                            }
+                            else if (token.getType() == RIGHT_BRACKET) {
+                                isDoneParsingSet = true;
+                            }
+                        }
                     }
                     else {
-                        break;
-                    }
-                }
+                        if (token.getType() == COMMA) {
+                            nextToken(); // consume the comma
+                        }
+                        else if (token.getType() == INTEGER) {
+                            errorHandler.flag(token, PascalErrorCode.MISSING_COMMA, this);
+                        }
+                        else {
+                            if (token.getType() != RIGHT_BRACKET) {
+                                errorHandler.flag(token, PascalErrorCode.MISSING_RIGHT_BRACKET, this);
+                            }
+                            else {
+                                nextToken(); // consume ]
+                            }
 
-                if(token.getType() != RIGHT_BRACKET) {
-                	 errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
-                }
-                else {
-                    nextToken(); // Consume right bracket
+                            isDoneParsingSet = true;
+                        }
+
+                        isExpectingSetElement = true;
+                    }
+
                 }
 //                if(token.getType() != SEMICOLON) {
 //                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
@@ -464,18 +473,19 @@ public class ExpressionParser extends StatementParser
      * intended that were duplicate constants in the set (doing so in the parser is recommended by the assignment).
      *
      * @param setNode the set node
-     * @param child the child node to add
+     * @param child the child node to add, assumed to ne non-null
      * @param childToken the token from which the child node was parsed
      * @param setMembers the members of the set seen so far
      *
      * @return true if no error occurred, false otherwise.
      */
     private boolean addSetNodeChild(ICodeNode setNode,
-                                 ICodeNode child,
-                                 Token childToken,
-                                 HashSet<Integer> setMembers) {
+                                    ICodeNode child,
+                                    Token childToken,
+                                    HashSet<Integer> setMembers) {
         boolean success = true;
-        if (child != null && child.getType() == INTEGER_CONSTANT) {
+
+        if (child.getType() == INTEGER_CONSTANT) {
             int value = (int) child.getAttribute(ICodeKeyImpl.VALUE);
             if (setMembers.contains(value)) {
                 errorHandler.flag(childToken, PascalErrorCode.DUPLICATE_ELEMENT, this);
@@ -487,6 +497,7 @@ public class ExpressionParser extends StatementParser
         }
 
         setNode.addChild(child);
+
         return success;
     }
 }
