@@ -18,7 +18,8 @@ public enum RuntimeErrorCode
     INVALID_INPUT("Invalid input"),
     STACK_OVERFLOW("Runtime stack overflow"),
     INVALID_SET_VALUE("Set value is not between 0 and 50 (inclusive)."),
-    UNIMPLEMENTED_FEATURE("Unimplemented runtime feature");
+    UNIMPLEMENTED_FEATURE("Unimplemented runtime feature"),
+    INVALID_OPERATION("This is an invalid operation");
 
     private String message;  // error message
 

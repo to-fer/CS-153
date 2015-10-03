@@ -243,7 +243,7 @@ public class Pascal
         	String t = "";
         	ArrayList<ICodeNode> arr = set.getChildren();
     		t += "[";
-
+            if(arr.size() == 0) return "[]";
         	for(int i = 0; i < arr.size()-1; i++) {
         		t += arr.get(i).getAttribute(ICodeKeyImpl.VALUE);
         		t += ",";

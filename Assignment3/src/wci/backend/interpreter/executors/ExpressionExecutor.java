@@ -171,20 +171,62 @@ public class ExpressionExecutor extends StatementExecutor
     private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
         EnumSet.of(SET_UNION, SET_DIFFERENCE, SET_INTERSECTION, SET_SYS_DIFFERENCE, SET_CONTAINS, SET_ISCONTAINED, SET_EQUALS, SET_IN);
 
+    private HashSet<Integer> convertSetChildrenToHashSet(ArrayList<ICodeNode> setChildren) {
+        HashSet<Integer> result = new HashSet<Integer>();
+        for(ICodeNode i: setChildren) {
+            result.add((int) i.getAttribute(VALUE));
+        }
+        return result;
+    }
+
+    private ICodeNode convertHashSetToSetNode(HashSet<Integer> set) {
+        ICodeNode result = ICodeFactory.createICodeNode(SET);
+        for(int i: set) {
+            ICodeNode curr = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+            curr.setAttribute(VALUE, i);
+            result.addChild(curr);
+        }
+        return result;
+    }
     //this is for executing operations where both arguments are sets.
-//    private Object executeSetOp(ICodeNode op, ICodeNode set1, ICodeNode set2) {
-//        ArrayList<ICodeNode> set1Members = set1.getChildren();
-//        ArrayList<ICodeNode> set2Members = set2.getChildren();
-//        switch(op.getType()) {
-//            //get the union of the 2 sets
-//            case ADD:
-//                break;
-//            case SUBTRACT:
-//                break;
-//            case MULTIPLY:
-//                break;
-//        }
-//    }
+    private Object executeSetOp(ICodeNode op, ICodeNode set1, ICodeNode set2) {
+        ArrayList<ICodeNode> set1Members = set1.getChildren();
+        ArrayList<ICodeNode> set2Members = set2.getChildren();
+        ICodeNodeType opType = op.getType();
+        HashSet<Integer> s1 =  convertSetChildrenToHashSet(set1Members);
+        HashSet<Integer> s2 = convertSetChildrenToHashSet(set2Members);
+        HashSet<Integer> result = new HashSet<Integer>();
+        if(opType == ADD) {
+
+            for(Integer i: s1) {
+                result.add(i);
+            }
+            for(Integer i: s2) {
+                result.add(i);
+            }
+            return convertHashSetToSetNode(result);
+
+        }
+        else if(opType == SUBTRACT) {
+            result = s1;
+            for(int i: s2) {
+                if(result.contains(i)) result.remove(i);
+            }
+            return convertHashSetToSetNode(result);
+        }
+        else if(opType == MULTIPLY) {
+            for(int i: s1) {
+                if(s2.contains(i)) {
+                    result.add(i);
+                }
+            }
+            return convertHashSetToSetNode(result);
+        }
+        else {
+            errorHandler.flag(op, INVALID_OPERATION, this);
+            return 0;
+        }
+    }
     /**
      * Execute a binary operator.
      * @param node the root node of the expression.
@@ -206,9 +248,9 @@ public class ExpressionExecutor extends StatementExecutor
         boolean integerMode = (operand1 instanceof Integer) &&
                               (operand2 instanceof Integer);
 
-        boolean setMode = (operandNode1.getType() == SET) && (operandNode2 .getType() == SET);
+        boolean setMode = (execute(operandNode1) instanceof ICodeNode) && (execute(operandNode2) instanceof ICodeNode);
 
-//        if(setMode) return executeSetOp(node, operandNode1, operandNode2);
+        if(setMode) return executeSetOp(node, (ICodeNode) execute(operandNode1), (ICodeNode) execute(operandNode2));
 
         // ====================
         // Arithmetic operators
@@ -331,7 +373,7 @@ public class ExpressionExecutor extends StatementExecutor
                 }
             }
         }
-//        else if (SET_OPS.contains(nodeType)) {
+        else if (SET_OPS.contains(nodeType)) {
 //            HashSet<Integer> first_operand = (HashSet<Integer>) operandNode1;
 //            HashSet<Integer> second_operand = (HashSet<Integer>) operandNode2;
 //            switch (nodeType) {
@@ -406,7 +448,7 @@ public class ExpressionExecutor extends StatementExecutor
 //                    }
 //                    return new Boolean(true);
 //            }
-//        }
+        }
         else {
             float value1 = operand1 instanceof Integer
                                ? (Integer) operand1 : (Float) operand1;
