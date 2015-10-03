@@ -359,6 +359,9 @@ public class ExpressionParser extends StatementParser
                     if(token.getType() == COMMA)
                     {
                         token = nextToken();//consume the comma
+                        if (token.getType() == COMMA) {
+                            errorHandler.flag(token, PascalErrorCode.INVALID_CHARACTER, this);
+                        }
                         rootNode.addChild(subtree);
                     }
                     else if(token.getType() == RIGHT_BRACKET) {
