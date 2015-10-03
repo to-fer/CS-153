@@ -4,15 +4,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import wci.backend.interpreter.executors.StatementExecutor;
 import wci.frontend.*;
 import wci.frontend.pascal.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
-import wci.backend.interpreter.executors.ExpressionExecutor;
 
 import static wci.frontend.pascal.PascalTokenType.*;
-import static wci.frontend.pascal.PascalTokenType.NOT;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
@@ -341,32 +338,32 @@ public class ExpressionParser extends StatementParser
 
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
 
-
+                HashSet<Integer> setMembers = new HashSet<>();
                 while(token.getType() != RIGHT_BRACKET) { //keep parsing until the end of the set expression which
                    token = currentToken();
 //                   System.out.println(token.getValue());
 
                     ICodeNode subtree = null;
-                    //There seems too be an infinite loop here when you input [n,2,4,5] 
-                    //The Identifier just seem to repeat and never get parsed and keep returning n 
                     if(token.getType() != COMMA && token.getType() != RIGHT_BRACKET) {
                         subtree = parse(token);
                     }
 
+                    Token previousToken = token;
                     token = currentToken();
 
 //                    System.out.println(token.getType());
                     if(token.getType() == COMMA)
                     {
-                        token = nextToken();//consume the comma
+                        token = nextToken(); //consume the comma
                         if (token.getType() == COMMA) {
                             errorHandler.flag(token, PascalErrorCode.INVALID_CHARACTER, this);
                             break;
                         }
-                        rootNode.addChild(subtree);
+
+                        addSetNodeChild(rootNode, subtree, previousToken, setMembers);
                     }
                     else if(token.getType() == RIGHT_BRACKET) {
-                        rootNode.addChild(subtree);
+                        addSetNodeChild(rootNode, subtree, previousToken, setMembers);
                     }
                     else if(token.getType() == DOT_DOT) {
 //                        ICodeNode rangeRoot = ICodeFactory.createICodeNode(RANGE);
@@ -384,13 +381,29 @@ public class ExpressionParser extends StatementParser
                               break;
                           }
                           else if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
-
+                              boolean hasFlaggedError = false;
                               int from = (Integer) operand1.getAttribute(VALUE);
                               int to = (Integer) operand2.getAttribute(VALUE);
                               while(from <= to) {
                                   ICodeNode child = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
                                   child.setAttribute(VALUE, from);
-                                  rootNode.addChild(child);
+                                  /*
+                                  Ranges may produce many duplicates, spamming the error output. We do this to make
+                                  sure we only flag ONE of the duplicates as an error so as to prevent the spamming.
+                                   */
+                                  if (!hasFlaggedError) {
+                                      addSetNodeChild(rootNode, child, token, setMembers);
+                                      hasFlaggedError = true;
+                                  }
+                                  else {
+                                      /*
+                                      We deliberately DO NOT use addSetNodeChild() here because we have already checked
+                                      for duplicate members up above (see the above comment).
+                                      */
+                                      setMembers.add(from);
+                                      rootNode.addChild(child);
+                                  }
+
                                   from++;
                               }
                           }
@@ -398,7 +411,7 @@ public class ExpressionParser extends StatementParser
                               ICodeNode child = ICodeFactory.createICodeNode(RANGE);
                               child.addChild(operand1);
                               child.addChild(operand2);
-                              rootNode.addChild(child);
+                              addSetNodeChild(rootNode, child, token, setMembers);
                           }
 
                     }
@@ -411,7 +424,6 @@ public class ExpressionParser extends StatementParser
                     }
                 }
 
-                
                 if(token.getType() != RIGHT_BRACKET) {
                 	 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                 } 
@@ -431,5 +443,32 @@ public class ExpressionParser extends StatementParser
         }
 
         return rootNode;
+    }
+
+    /**
+     * Adds a child to the set node. If the value is an integer constant, the parser has the opportunity to check
+     * to see if that value already exists in the set. If it does, we flag it as an error since it probably wasn't
+     * intended that were duplicate constants in the set (doing so in the parser is recommended by the assignment).
+     *
+     * @param setNode the set node
+     * @param child the child node to add
+     * @param childToken the token from which the child node was parsed
+     * @param setMembers the members of the set seen so far
+     */
+    private void addSetNodeChild(ICodeNode setNode,
+                                 ICodeNode child,
+                                 Token childToken,
+                                 HashSet<Integer> setMembers) {
+        if (child != null && child.getType() == INTEGER_CONSTANT) {
+            int value = (int) child.getAttribute(ICodeKeyImpl.VALUE);
+            if (setMembers.contains(value)) {
+                errorHandler.flag(childToken, PascalErrorCode.DUPLICATE_ELEMENT, this);
+            }
+            else {
+                setMembers.add(value);
+            }
+        }
+
+        setNode.addChild(child);
     }
 }
