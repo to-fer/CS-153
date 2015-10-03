@@ -228,6 +228,12 @@ public class ExpressionExecutor extends StatementExecutor
             }
             return new Boolean(false);
         }
+        else if(opType == LE) {
+            for(int i: s1) {
+                if(!s2.contains(i)) return new Boolean(false);
+            }
+            return new Boolean(true);
+        }
         else {
             errorHandler.flag(op, INVALID_OPERATION, this);
             return 0;
