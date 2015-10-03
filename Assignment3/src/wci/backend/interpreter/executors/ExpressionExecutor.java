@@ -117,19 +117,23 @@ public class ExpressionExecutor extends StatementExecutor
                 }
 				*/
                 ICodeNode result = ICodeFactory.createICodeNode(SET);
+                HashSet<Integer> uniques = new HashSet<Integer>();
                 for(ICodeNode curr: node.getChildren()) {
                     Object add = execute(curr);
                     if(add instanceof Integer) {
-                        ICodeNode asInt = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
-                        asInt.setAttribute(VALUE, (int) add);
-                        result.addChild(asInt);
+                        uniques.add((int) add);
                     }
                     else if(add instanceof ICodeNode) {
                         ICodeNode set = (ICodeNode) add;
                         for(ICodeNode member: set.getChildren()) {
-                            result.addChild(member);
+                            uniques.add((int) member.getAttribute(VALUE));
                         }
                     }
+                }
+                for(int i: uniques){
+                    ICodeNode member = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                    member.setAttribute(VALUE, i);
+                    result.addChild(member);
                 }
                 return result;
             }
