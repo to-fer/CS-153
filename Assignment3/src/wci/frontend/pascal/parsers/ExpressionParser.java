@@ -14,7 +14,6 @@ import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.SET;
-//import static wci.backend.interpreter.executors.*;
 
 /**
  * <h1>ExpressionParser</h1>
@@ -34,6 +33,9 @@ public class ExpressionParser extends StatementParser
     {
         super(parent);
     }
+
+    private static final int MIN_SET_ELEMENT_VALUE = 0;
+    private static final int MAX_SET_ELEMENT_VALUE = 50;
 
     private static final EnumSet<ICodeNodeTypeImpl> NODES_THAT_CAN_BE_INTEGER =
             EnumSet.of(
@@ -424,10 +426,13 @@ public class ExpressionParser extends StatementParser
                                 if (currentNode.getChildren().size() == 2) {
                                     ICodeNode rangeStartNode = currentNode.getChildren().get(0);
                                     ICodeNode rangeEndNode = currentNode.getChildren().get(1);
-                                    boolean areBothIntConstants = rangeStartNode.getType() == INTEGER_CONSTANT &&
-                                            rangeEndNode.getType() == INTEGER_CONSTANT;
+
+                                    boolean startIsInt = rangeStartNode.getType() == INTEGER_CONSTANT;
+                                    boolean endIsInt = rangeEndNode.getType() == INTEGER_CONSTANT;
+
+                                    boolean areBothIntConstants = startIsInt && endIsInt;
                                     if (areBothIntConstants) {
-                                        boolean hasFlaggedError = false;
+                                        boolean hasFlaggedDuplicateError = false;
                                         int from = (Integer) rangeStartNode.getAttribute(VALUE);
                                         int to = (Integer) rangeEndNode.getAttribute(VALUE);
                                         while(from <= to) {
@@ -437,8 +442,9 @@ public class ExpressionParser extends StatementParser
                                         Ranges may produce many duplicates, spamming the error output. Let's make sure
                                         we only report a single error.
                                         */
-                                            if (!hasFlaggedError) {
-                                                hasFlaggedError = !addSetNodeChild(rootNode, child, token, setMembers);
+                                            if (!hasFlaggedDuplicateError) {
+                                                hasFlaggedDuplicateError =
+                                                        !addSetNodeChild(rootNode, child, token, setMembers);
                                             }
                                             else {
                                             /*
@@ -446,11 +452,24 @@ public class ExpressionParser extends StatementParser
                                             for duplicate members up above (see the above comment).
                                             */
                                                 setMembers.add(from);
+                                                if (!isValidSetElementValue(from)) {
+                                                    errorHandler.flag(token, 
+                                                            PascalErrorCode.SET_ELEMENT_OUT_OF_BOUNDS, this);
+                                                }
                                                 rootNode.addChild(child);
                                             }
 
                                             from++;
                                         }
+                                    }
+                                    else if (startIsInt &&
+                                             !isValidSetElementValue((int)rangeStartNode.getAttribute(VALUE))) {
+                                        errorHandler.flag(token, PascalErrorCode.SET_ELEMENT_OUT_OF_BOUNDS, this);
+                                    }
+                                    else if (endIsInt &&
+                                            !isValidSetElementValue((int)rangeEndNode.getAttribute(VALUE))) {
+                                        errorHandler.flag(peekPreviousToken(),
+                                                PascalErrorCode.SET_ELEMENT_OUT_OF_BOUNDS, this);
                                     }
 
                                     isExpectingSetElement = false;
@@ -539,10 +558,18 @@ public class ExpressionParser extends StatementParser
             else {
                 setMembers.add(value);
             }
+
+            if (!isValidSetElementValue(value)) {
+                errorHandler.flag(childToken, PascalErrorCode.SET_ELEMENT_OUT_OF_BOUNDS, this);
+            }
         }
 
         setNode.addChild(child);
 
         return success;
+    }
+
+    private boolean isValidSetElementValue(int value) {
+        return MIN_SET_ELEMENT_VALUE <= value && value <= MAX_SET_ELEMENT_VALUE;
     }
 }

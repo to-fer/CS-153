@@ -71,7 +71,7 @@ public enum PascalErrorCode
     DUPLICATE_ELEMENT("Duplicate set element"),
     IN_LEFT_OPERAND_MUST_BE_INTEGER("IN left operand must be an integer"),
     IN_RIGHT_OPERAND_MUST_BE_SET("IN right operand must be a set"),
-
+    SET_ELEMENT_OUT_OF_BOUNDS("Set element is less than 0 or greater than 50 (out of allowable bounds)"),
     // Fatal errors.
     IO_ERROR(-101, "Object I/O error"),
     TOO_MANY_ERRORS(-102, "Too many syntax errors");
