@@ -348,16 +348,19 @@ public class ExpressionParser extends StatementParser
                         subtree = parse(token);
                     }
 
+                    // Used to flag the correct token as an error if an error has occurred.
                     Token previousToken = token;
                     token = currentToken();
 
 //                    System.out.println(token.getType());
                     if(token.getType() == COMMA)
                     {
+                        previousToken = token;
                         token = nextToken(); //consume the comma
-                        if (token.getType() == COMMA) {
-                            errorHandler.flag(token, PascalErrorCode.INVALID_CHARACTER, this);
-                            break;
+                        boolean isValidSetMemberAsExpected = token.getType() != PascalTokenType.INTEGER &&
+                                                             token.getType() != PascalTokenType.IDENTIFIER;
+                        if (isValidSetMemberAsExpected) {
+                            errorHandler.flag(previousToken, PascalErrorCode.INVALID_CHARACTER, this);
                         }
 
                         addSetNodeChild(rootNode, subtree, previousToken, setMembers);
@@ -378,7 +381,6 @@ public class ExpressionParser extends StatementParser
                           ICodeNode operand2 = parse(token);
                           if (token.getType() != PascalTokenType.INTEGER) {
                               errorHandler.flag(token, PascalErrorCode.UNEXPECTED_TOKEN, this);
-                              break;
                           }
                           else if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
                               boolean hasFlaggedError = false;
@@ -417,7 +419,6 @@ public class ExpressionParser extends StatementParser
                     }
                     else if (token.getType() == INTEGER) {
                         errorHandler.flag(token, PascalErrorCode.MISSING_COMMA, this);
-                        break;
                     }
                     else {
                         break;
@@ -425,9 +426,12 @@ public class ExpressionParser extends StatementParser
                 }
 
                 if(token.getType() != RIGHT_BRACKET) {
-                	 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                } 
-                token = nextToken();
+                	 errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
+
+                }
+                else {
+                    nextToken(); // Consume right bracket
+                }
 //                if(token.getType() != SEMICOLON) {
 //                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
 //                }
