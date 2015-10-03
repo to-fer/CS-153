@@ -378,42 +378,44 @@ public class ExpressionParser extends StatementParser
 
                           ICodeNode operand1 = subtree; // get the first operand for range
                           token = nextToken();
-                          ICodeNode operand2 = parse(token);
                           if (token.getType() != PascalTokenType.INTEGER) {
                               errorHandler.flag(token, PascalErrorCode.UNEXPECTED_TOKEN, this);
                           }
-                          else if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
-                              boolean hasFlaggedError = false;
-                              int from = (Integer) operand1.getAttribute(VALUE);
-                              int to = (Integer) operand2.getAttribute(VALUE);
-                              while(from <= to) {
-                                  ICodeNode child = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
-                                  child.setAttribute(VALUE, from);
+                          else {
+                              ICodeNode operand2 = parse(token);
+                              if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
+                                  boolean hasFlaggedError = false;
+                                  int from = (Integer) operand1.getAttribute(VALUE);
+                                  int to = (Integer) operand2.getAttribute(VALUE);
+                                  while(from <= to) {
+                                      ICodeNode child = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                                      child.setAttribute(VALUE, from);
                                   /*
                                   Ranges may produce many duplicates, spamming the error output. We do this to make
                                   sure we only flag ONE of the duplicates as an error so as to prevent the spamming.
                                    */
-                                  if (!hasFlaggedError) {
-                                      addSetNodeChild(rootNode, child, token, setMembers);
-                                      hasFlaggedError = true;
-                                  }
-                                  else {
+                                      if (!hasFlaggedError) {
+                                          addSetNodeChild(rootNode, child, token, setMembers);
+                                          hasFlaggedError = true;
+                                      }
+                                      else {
                                       /*
                                       We deliberately DO NOT use addSetNodeChild() here because we have already checked
                                       for duplicate members up above (see the above comment).
                                       */
-                                      setMembers.add(from);
-                                      rootNode.addChild(child);
-                                  }
+                                          setMembers.add(from);
+                                          rootNode.addChild(child);
+                                      }
 
-                                  from++;
+                                      from++;
+                                  }
                               }
-                          }
-                          else {
-                              ICodeNode child = ICodeFactory.createICodeNode(RANGE);
-                              child.addChild(operand1);
-                              child.addChild(operand2);
-                              addSetNodeChild(rootNode, child, token, setMembers);
+                              else {
+                                  ICodeNode child = ICodeFactory.createICodeNode(RANGE);
+                                  child.addChild(operand1);
+                                  child.addChild(operand2);
+                                  addSetNodeChild(rootNode, child, token, setMembers);
+                              }
                           }
 
                     }
