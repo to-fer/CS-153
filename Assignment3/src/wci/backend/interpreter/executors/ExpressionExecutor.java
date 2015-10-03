@@ -222,6 +222,12 @@ public class ExpressionExecutor extends StatementExecutor
             }
             return convertHashSetToSetNode(result);
         }
+        else if(opType == EQ) {
+            if(s1.equals(s2)) {
+                return new Boolean(true);
+            }
+            return new Boolean(false);
+        }
         else {
             errorHandler.flag(op, INVALID_OPERATION, this);
             return 0;

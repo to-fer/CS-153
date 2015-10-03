@@ -17,6 +17,9 @@ BEGIN
  s4 := s3 - odds;
  s5 := evens + odds + primes + teens;
  s6 := (primes - teens)*odds;
+ eqTest := [1,2,3] = [3,2,1];
+ eqTest2 := [1,2,3] = [1..4];
+ eqTest3 := [1..4] = [1,2,3,4];
  b1 := odds - primes = [15, 9, 21, 1];
  b2 := teens <= evens + odds;
  b3 := primes >= teens;
