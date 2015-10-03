@@ -35,6 +35,17 @@ public class ExpressionParser extends StatementParser
         super(parent);
     }
 
+    private static final EnumSet<ICodeNodeTypeImpl> NODES_THAT_CAN_BE_INTEGER =
+            EnumSet.of(
+                    INTEGER_CONSTANT, VARIABLE, ADD,
+                    SUBTRACT, MULTIPLY, INTEGER_DIVIDE, ICodeNodeTypeImpl.MOD);
+
+    private static final EnumSet<ICodeNodeTypeImpl> NODES_THAT_CAN_BE_SET =
+            EnumSet.of(
+                    SET, VARIABLE, ADD, SUBTRACT,
+                    MULTIPLY, LE, GE, SET_IN, EQ
+            );
+
     // Synchronization set for starting an expression.
     static final EnumSet<PascalTokenType> EXPR_START_SET =
         EnumSet.of(PLUS, MINUS, IDENTIFIER, INTEGER, REAL, STRING,
@@ -110,9 +121,7 @@ public class ExpressionParser extends StatementParser
                 errorHandler.flag(previousToken, PascalErrorCode.INVALID_TYPE, this);
             }
             else if (tokenType == IN) {
-                if (rootNode != null &&
-                        rootNode.getType() != INTEGER_CONSTANT &&
-                        rootNode.getType() != VARIABLE) {
+                if (rootNode != null && !NODES_THAT_CAN_BE_INTEGER.contains(rootNode.getType())) {
                     errorHandler.flag(previousToken, PascalErrorCode.IN_LEFT_OPERAND_MUST_BE_INTEGER, this);
                 }
             }
@@ -133,9 +142,7 @@ public class ExpressionParser extends StatementParser
                 errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
             }
             else if (tokenType == IN) {
-                if (operand != null &&
-                        operand.getType() != SET &&
-                        operand.getType() != VARIABLE) {
+                if (operand != null && !NODES_THAT_CAN_BE_SET.contains(operand.getType())) {
                     errorHandler.flag(token, PascalErrorCode.IN_RIGHT_OPERAND_MUST_BE_SET, this);
                 }
             }
@@ -387,9 +394,13 @@ public class ExpressionParser extends StatementParser
             // this is where the code goes for building the parse tree for sets
             // add a case for LEFT_BRACKET because '[' signifies that it is a set
             case LEFT_BRACKET: {
-                nextToken(); // consume the [
-
+                token = nextToken(); // consume the [
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
+
+                if (token.getType() == RIGHT_BRACKET) {
+                    nextToken(); // Consume ]
+                    break; // Just exit if the set is empty.
+                }
 
                 boolean isExpectingSetElement = true;
                 boolean isDoneParsingSet = false;
@@ -489,11 +500,6 @@ public class ExpressionParser extends StatementParser
                     }
 
                 }
-//                if(token.getType() != SEMICOLON) {
-//                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-//                }
-//                token = nextToken();
-//                System.out.println("4 = " + token.getType());
                 break;
             }
             default: {
