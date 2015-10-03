@@ -356,7 +356,6 @@ public class ExpressionParser extends StatementParser
                     token = currentToken();
 
 //                    System.out.println(token.getType());
-
                     if(token.getType() == COMMA)
                     {
                         token = nextToken();//consume the comma
@@ -396,7 +395,9 @@ public class ExpressionParser extends StatementParser
                           }
 
                     }
-
+                    else if (token.getType() == INTEGER) {
+                        errorHandler.flag(token, PascalErrorCode.MISSING_COMMA, this);
+                    }
                 }
 
                 
