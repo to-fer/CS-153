@@ -23,7 +23,7 @@ public class ExpressionExecutor extends StatementExecutor
 {
     /**
      * Constructor.
-     * @param the parent executor.
+     * @param parent the parent executor.
      */
     public ExpressionExecutor(Executor parent)
     {
@@ -188,66 +188,83 @@ public class ExpressionExecutor extends StatementExecutor
         }
         return result;
     }
-    //this is for executing operations where both arguments are sets.
-    private Object executeSetOp(ICodeNode op, ICodeNode set1, ICodeNode set2) {
-        ArrayList<ICodeNode> set1Members = set1.getChildren();
-        ArrayList<ICodeNode> set2Members = set2.getChildren();
+
+    private Object executeSetOp(ICodeNode op, Object first_operand, Object second_operand) {
         ICodeNodeType opType = op.getType();
-        HashSet<Integer> s1 =  convertSetChildrenToHashSet(set1Members);
-        HashSet<Integer> s2 = convertSetChildrenToHashSet(set2Members);
-        HashSet<Integer> result = new HashSet<Integer>();
-        if(opType == ADD) {
+        boolean areBothSets = first_operand instanceof ICodeNode && second_operand instanceof ICodeNode;
+        if (areBothSets) {
+            ArrayList<ICodeNode> set1Members = ((ICodeNode)first_operand).getChildren();
+            ArrayList<ICodeNode> set2Members = ((ICodeNode)second_operand).getChildren();
+            HashSet<Integer> s1 =  convertSetChildrenToHashSet(set1Members);
+            HashSet<Integer> s2 = convertSetChildrenToHashSet(set2Members);
+            HashSet<Integer> result = new HashSet<Integer>();
+            if(opType == ADD) {
 
-            for(Integer i: s1) {
-                result.add(i);
-            }
-            for(Integer i: s2) {
-                result.add(i);
-            }
-            return convertHashSetToSetNode(result);
-
-        }
-        else if(opType == SUBTRACT) {
-            result = s1;
-            for(int i: s2) {
-                if(result.contains(i)) result.remove(i);
-            }
-            return convertHashSetToSetNode(result);
-        }
-        else if(opType == MULTIPLY) {
-            for(int i: s1) {
-                if(s2.contains(i)) {
+                for(Integer i: s1) {
                     result.add(i);
                 }
+                for(Integer i: s2) {
+                    result.add(i);
+                }
+                return convertHashSetToSetNode(result);
+
             }
-            return convertHashSetToSetNode(result);
-        }
-        else if(opType == EQ) {
-            if(s1.equals(s2)) {
+            else if(opType == SUBTRACT) {
+                result = s1;
+                for(int i: s2) {
+                    if(result.contains(i)) result.remove(i);
+                }
+                return convertHashSetToSetNode(result);
+            }
+            else if(opType == MULTIPLY) {
+                for(int i: s1) {
+                    if(s2.contains(i)) {
+                        result.add(i);
+                    }
+                }
+                return convertHashSetToSetNode(result);
+            }
+            else if(opType == EQ) {
+                if(s1.equals(s2)) {
+                    return new Boolean(true);
+                }
+                return new Boolean(false);
+            }
+            else if(opType == LE) {
+                for(int i: s1) {
+                    if(!s2.contains(i)) return new Boolean(false);
+                }
                 return new Boolean(true);
             }
-            return new Boolean(false);
-        }
-        else if(opType == LE) {
-            for(int i: s1) {
-                if(!s2.contains(i)) return new Boolean(false);
+            else if(opType == GE) {
+                for(int i: s2) {
+                    if(!s1.contains(i)) return new Boolean(false);
+                }
+                return new Boolean(true);
             }
-            return new Boolean(true);
-        }
-        else if(opType == GE) {
-            for(int i: s2) {
-                if(!s1.contains(i)) return new Boolean(false);
+            else if(opType == NE) {
+                if(!s1.equals(s2)) return new Boolean(true);
+                return new Boolean(false);
             }
-            return new Boolean(true);
+            else {
+                errorHandler.flag(op, INVALID_OPERATION, this);
+                return 0;
+            }
         }
-        else if(opType == NE) {
-            if(!s1.equals(s2)) return new Boolean(true);
-            return new Boolean(false);
-        }
-        else if(opType == SET_IN) {
-            //this is just a temporary implementation that doesn't work
-            System.out.println("IN");
-            return 12;
+        else if (opType == SET_IN){
+            // op type must be SET_IN because one operand must be a set and the other must be an int.
+            HashSet<Integer> setOperand;
+            int intOperand;
+            if (first_operand instanceof ICodeNode) {
+                setOperand = convertSetChildrenToHashSet(((ICodeNode) first_operand).getChildren());
+                intOperand = (int)second_operand;
+            }
+            else {
+                setOperand = convertSetChildrenToHashSet(((ICodeNode) second_operand).getChildren());
+                intOperand = (int)first_operand;
+            }
+
+            return setOperand.contains(intOperand);
         }
         else {
             errorHandler.flag(op, INVALID_OPERATION, this);
@@ -275,10 +292,10 @@ public class ExpressionExecutor extends StatementExecutor
         boolean integerMode = (operand1 instanceof Integer) &&
                               (operand2 instanceof Integer);
 
-        boolean setMode = (execute(operandNode1) instanceof ICodeNode) && (execute(operandNode2) instanceof ICodeNode);
+        boolean setMode = (operand1 instanceof ICodeNode) || (operand2 instanceof ICodeNode);
 
-        if(setMode || nodeType == SET_IN)
-            return executeSetOp(node, (ICodeNode) execute(operandNode1), (ICodeNode) execute(operandNode2));
+        if(setMode)
+            return executeSetOp(node, operand1, operand2);
 
         // ====================
         // Arithmetic operators
