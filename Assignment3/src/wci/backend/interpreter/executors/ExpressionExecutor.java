@@ -21,6 +21,8 @@ import static wci.backend.interpreter.RuntimeErrorCode.*;
  */
 public class ExpressionExecutor extends StatementExecutor
 {
+    private static final int MAXIMUM_SET_VALUE = 50;
+
     /**
      * Constructor.
      * @param parent the parent executor.
@@ -131,9 +133,15 @@ public class ExpressionExecutor extends StatementExecutor
                     }
                 }
                 for(int i: uniques){
-                    ICodeNode member = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
-                    member.setAttribute(VALUE, i);
-                    result.addChild(member);
+                    if (i > MAXIMUM_SET_VALUE) {
+                        errorHandler.flag(node, INVALID_SET_VALUE, this);
+                        System.exit(-1);
+                    }
+                    else {
+                        ICodeNode member = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                        member.setAttribute(VALUE, i);
+                        result.addChild(member);
+                    }
                 }
                 return result;
             }
