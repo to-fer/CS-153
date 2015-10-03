@@ -151,11 +151,16 @@ public class ExpressionParser extends StatementParser
             rootNode = negateNode;
         }
 
+        Token previousToken = token;
         token = currentToken();
         tokenType = token.getType();
 
         // Loop over additive operators.
         while (ADD_OPS.contains(tokenType)) {
+
+            if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
+                errorHandler.flag(previousToken, PascalErrorCode.INVALID_TYPE, this);
+            }
 
             // Create a new operator node and adopt the current tree
             // as its first child.
@@ -167,6 +172,10 @@ public class ExpressionParser extends StatementParser
 
             // Parse another term.  The operator node adopts
             // the term's tree as its second child.
+            ICodeNode nextOperand = parseTerm(token);
+            if (nextOperand.getType() == ICodeNodeTypeImpl.SET) {
+                errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
+            }
             opNode.addChild(parseTerm(token));
 
             // The operator node becomes the new root node.
@@ -395,8 +404,7 @@ public class ExpressionParser extends StatementParser
                                   sure we only flag ONE of the duplicates as an error so as to prevent the spamming.
                                    */
                                       if (!hasFlaggedError) {
-                                          addSetNodeChild(rootNode, child, token, setMembers);
-                                          hasFlaggedError = true;
+                                          hasFlaggedError = !addSetNodeChild(rootNode, child, token, setMembers);
                                       }
                                       else {
                                       /*
@@ -429,7 +437,6 @@ public class ExpressionParser extends StatementParser
 
                 if(token.getType() != RIGHT_BRACKET) {
                 	 errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
-
                 }
                 else {
                     nextToken(); // Consume right bracket
@@ -460,15 +467,19 @@ public class ExpressionParser extends StatementParser
      * @param child the child node to add
      * @param childToken the token from which the child node was parsed
      * @param setMembers the members of the set seen so far
+     *
+     * @return true if no error occurred, false otherwise.
      */
-    private void addSetNodeChild(ICodeNode setNode,
+    private boolean addSetNodeChild(ICodeNode setNode,
                                  ICodeNode child,
                                  Token childToken,
                                  HashSet<Integer> setMembers) {
+        boolean success = true;
         if (child != null && child.getType() == INTEGER_CONSTANT) {
             int value = (int) child.getAttribute(ICodeKeyImpl.VALUE);
             if (setMembers.contains(value)) {
                 errorHandler.flag(childToken, PascalErrorCode.DUPLICATE_ELEMENT, this);
+                success = false;
             }
             else {
                 setMembers.add(value);
@@ -476,5 +487,6 @@ public class ExpressionParser extends StatementParser
         }
 
         setNode.addChild(child);
+        return success;
     }
 }
