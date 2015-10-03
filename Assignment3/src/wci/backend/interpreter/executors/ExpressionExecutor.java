@@ -234,6 +234,21 @@ public class ExpressionExecutor extends StatementExecutor
             }
             return new Boolean(true);
         }
+        else if(opType == GE) {
+            for(int i: s2) {
+                if(!s1.contains(i)) return new Boolean(false);
+            }
+            return new Boolean(true);
+        }
+        else if(opType == NE) {
+            if(!s1.equals(s2)) return new Boolean(true);
+            return new Boolean(false);
+        }
+        else if(opType == SET_IN) {
+            //this is just a temporary implementation that doesn't work
+            System.out.println("IN");
+            return 12;
+        }
         else {
             errorHandler.flag(op, INVALID_OPERATION, this);
             return 0;
@@ -262,7 +277,8 @@ public class ExpressionExecutor extends StatementExecutor
 
         boolean setMode = (execute(operandNode1) instanceof ICodeNode) && (execute(operandNode2) instanceof ICodeNode);
 
-        if(setMode) return executeSetOp(node, (ICodeNode) execute(operandNode1), (ICodeNode) execute(operandNode2));
+        if(setMode || nodeType == SET_IN)
+            return executeSetOp(node, (ICodeNode) execute(operandNode1), (ICodeNode) execute(operandNode2));
 
         // ====================
         // Arithmetic operators
