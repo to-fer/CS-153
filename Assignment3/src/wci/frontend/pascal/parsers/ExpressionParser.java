@@ -361,6 +361,7 @@ public class ExpressionParser extends StatementParser
                         token = nextToken();//consume the comma
                         if (token.getType() == COMMA) {
                             errorHandler.flag(token, PascalErrorCode.INVALID_CHARACTER, this);
+                            break;
                         }
                         rootNode.addChild(subtree);
                     }
@@ -377,9 +378,12 @@ public class ExpressionParser extends StatementParser
 
                           ICodeNode operand1 = subtree; // get the first operand for range
                           token = nextToken();
-                          token = currentToken();
                           ICodeNode operand2 = parse(token);
-                          if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
+                          if (token.getType() != PascalTokenType.INTEGER) {
+                              errorHandler.flag(token, PascalErrorCode.UNEXPECTED_TOKEN, this);
+                              break;
+                          }
+                          else if(operand1.getType() == INTEGER_CONSTANT && operand2.getType() == INTEGER_CONSTANT) {
 
                               int from = (Integer) operand1.getAttribute(VALUE);
                               int to = (Integer) operand2.getAttribute(VALUE);
@@ -400,6 +404,10 @@ public class ExpressionParser extends StatementParser
                     }
                     else if (token.getType() == INTEGER) {
                         errorHandler.flag(token, PascalErrorCode.MISSING_COMMA, this);
+                        break;
+                    }
+                    else {
+                        break;
                     }
                 }
 
@@ -417,6 +425,7 @@ public class ExpressionParser extends StatementParser
             }
             default: {
                 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                nextToken();
                 break;
             }
         }
