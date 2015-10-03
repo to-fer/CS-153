@@ -69,6 +69,8 @@ public enum PascalErrorCode
     UNRECOGNIZABLE("Unrecognizable input"),
     WRONG_NUMBER_OF_PARMS("Wrong number of actual parameters"),
     DUPLICATE_ELEMENT("Duplicate set element"),
+    IN_LEFT_OPERAND_MUST_BE_INTEGER("IN left operand must be an integer"),
+    IN_RIGHT_OPERAND_MUST_BE_SET("IN right operand must be a set"),
 
     // Fatal errors.
     IO_ERROR(-101, "Object I/O error"),

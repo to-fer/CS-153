@@ -13,6 +13,7 @@ import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.SET;
 //import static wci.backend.interpreter.executors.*;
 
 /**
@@ -38,6 +39,13 @@ public class ExpressionParser extends StatementParser
     static final EnumSet<PascalTokenType> EXPR_START_SET =
         EnumSet.of(PLUS, MINUS, IDENTIFIER, INTEGER, REAL, STRING,
                    PascalTokenType.NOT, LEFT_PAREN);
+
+    private static final EnumSet<PascalTokenType> SET_OPS =
+            EnumSet.of(PLUS, MINUS, LESS_EQUALS, GREATER_EQUALS, STAR, EQUALS, IN, NOT_EQUALS);
+
+    private boolean isOperatingOnSetWithBadOperator(ICodeNode node, TokenType type) {
+        return node != null && node.getType() == SET && !SET_OPS.contains(type);
+    }
 
     /**
      * Parse an expression.
@@ -82,6 +90,7 @@ public class ExpressionParser extends StatementParser
         // the root node.
         ICodeNode rootNode = parseSimpleExpression(token);
 
+        Token previousToken = token;
         token = currentToken();
         TokenType tokenType = token.getType();
 
@@ -97,6 +106,17 @@ public class ExpressionParser extends StatementParser
         }
         else if (REL_OPS.contains(tokenType)) {
 
+            if (isOperatingOnSetWithBadOperator(rootNode, tokenType)) {
+                errorHandler.flag(previousToken, PascalErrorCode.INVALID_TYPE, this);
+            }
+            else if (tokenType == IN) {
+                if (rootNode != null &&
+                        rootNode.getType() != INTEGER_CONSTANT &&
+                        rootNode.getType() != VARIABLE) {
+                    errorHandler.flag(previousToken, PascalErrorCode.IN_LEFT_OPERAND_MUST_BE_INTEGER, this);
+                }
+            }
+
             // Create a new operator node and adopt the current tree
             // as its first child.
             ICodeNodeType nodeType = REL_OPS_MAP.get(tokenType);
@@ -107,8 +127,18 @@ public class ExpressionParser extends StatementParser
 
             // Parse the second simple expression.  The operator node adopts
             // the simple expression's tree as its second child.
-            opNode.addChild(parseSimpleExpression(token));
-
+            ICodeNode operand = parseSimpleExpression(token);
+            opNode.addChild(operand);
+            if (isOperatingOnSetWithBadOperator(rootNode, tokenType)) {
+                errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
+            }
+            else if (tokenType == IN) {
+                if (operand != null &&
+                        operand.getType() != SET &&
+                        operand.getType() != VARIABLE) {
+                    errorHandler.flag(token, PascalErrorCode.IN_RIGHT_OPERAND_MUST_BE_SET, this);
+                }
+            }
             // The operator node becomes the new root node.
             rootNode = opNode;
         }
@@ -150,6 +180,11 @@ public class ExpressionParser extends StatementParser
         // Parse a term and make the root of its tree the root node.
         ICodeNode rootNode = parseTerm(token);
 
+        if (ADD_OPS.contains(currentToken().getType()) &&
+                isOperatingOnSetWithBadOperator(rootNode, currentToken().getType())) {
+            errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
+        }
+
         // Was there a leading - sign?
         if (signType == MINUS) {
 
@@ -160,16 +195,11 @@ public class ExpressionParser extends StatementParser
             rootNode = negateNode;
         }
 
-        Token previousToken = token;
         token = currentToken();
         tokenType = token.getType();
 
         // Loop over additive operators.
         while (ADD_OPS.contains(tokenType)) {
-
-            if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
-                errorHandler.flag(previousToken, PascalErrorCode.INVALID_TYPE, this);
-            }
 
             // Create a new operator node and adopt the current tree
             // as its first child.
@@ -182,9 +212,10 @@ public class ExpressionParser extends StatementParser
             // Parse another term.  The operator node adopts
             // the term's tree as its second child.
             ICodeNode nextOperand = parseTerm(token);
-            if (nextOperand.getType() == ICodeNodeTypeImpl.SET) {
+            if (isOperatingOnSetWithBadOperator(nextOperand, tokenType)) {
                 errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
             }
+
             opNode.addChild(nextOperand);
 
             // The operator node becomes the new root node.
@@ -224,12 +255,16 @@ public class ExpressionParser extends StatementParser
         // Parse a factor and make its node the root node.
         ICodeNode rootNode = parseFactor(token);
 
+        if (MULT_OPS.contains(currentToken().getType()) &&
+                isOperatingOnSetWithBadOperator(rootNode, currentToken().getType())) {
+            errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
+        }
+
         token = currentToken();
         TokenType tokenType = token.getType();
 
         // Loop over multiplicative operators.
         while (MULT_OPS.contains(tokenType)) {
-
             // Create a new operator node and adopt the current tree
             // as its first child.
             ICodeNodeType nodeType = MULT_OPS_OPS_MAP.get(tokenType);
@@ -237,10 +272,14 @@ public class ExpressionParser extends StatementParser
             opNode.addChild(rootNode);
 
             token = nextToken();  // consume the operator
-
             // Parse another factor.  The operator node adopts
             // the term's tree as its second child.
-            opNode.addChild(parseFactor(token));
+            ICodeNode operand = parseFactor(token);
+            opNode.addChild(operand);
+
+            if (isOperatingOnSetWithBadOperator(operand, tokenType)) {
+                errorHandler.flag(token, PascalErrorCode.INVALID_TYPE, this);
+            }
 
             // The operator node becomes the new root node.
             rootNode = opNode;
