@@ -13,6 +13,7 @@ public abstract class Scanner
 {
     protected Source source;     // source
     private Token currentToken;  // current token
+    private Token previousToken;
 
     /**
      * Constructor
@@ -31,6 +32,8 @@ public abstract class Scanner
         return currentToken;
     }
 
+    public Token peekPreviousToken() { return previousToken; }
+
     /**
      * Return next token from the source.
      * @return the next token.
@@ -39,6 +42,7 @@ public abstract class Scanner
     public Token nextToken()
         throws Exception
     {
+        previousToken = currentToken;
         currentToken = extractToken();
         return currentToken;
     }

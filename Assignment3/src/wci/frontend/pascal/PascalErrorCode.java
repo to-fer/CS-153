@@ -30,6 +30,7 @@ public enum PascalErrorCode
     INVALID_SUBRANGE_TYPE("Invalid subrange type"),
     INVALID_TARGET("Invalid assignment target"),
     INVALID_TYPE("Invalid type"),
+    INVALID_SET_ELEMENT("Not a valid set element"),
     INVALID_VAR_PARM("Invalid VAR parameter"),
     MIN_GT_MAX("Min limit greater than max limit"),
     MISSING_BEGIN("Missing BEGIN"),
@@ -67,7 +68,10 @@ public enum PascalErrorCode
     UNIMPLEMENTED("Unimplemented feature"),
     UNRECOGNIZABLE("Unrecognizable input"),
     WRONG_NUMBER_OF_PARMS("Wrong number of actual parameters"),
-
+    DUPLICATE_ELEMENT("Duplicate set element"),
+    IN_LEFT_OPERAND_MUST_BE_INTEGER("IN left operand must be an integer"),
+    IN_RIGHT_OPERAND_MUST_BE_SET("IN right operand must be a set"),
+    SET_ELEMENT_OUT_OF_BOUNDS("Set element is less than 0 or greater than 50 (out of allowable bounds)"),
     // Fatal errors.
     IO_ERROR(-101, "Object I/O error"),
     TOO_MANY_ERRORS(-102, "Too many syntax errors");

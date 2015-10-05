@@ -21,9 +21,11 @@ import static wci.backend.interpreter.RuntimeErrorCode.*;
  */
 public class ExpressionExecutor extends StatementExecutor
 {
+    private static final int MAXIMUM_SET_VALUE = 50;
+
     /**
      * Constructor.
-     * @param the parent executor.
+     * @param parent the parent executor.
      */
     public ExpressionExecutor(Executor parent)
     {
@@ -131,9 +133,15 @@ public class ExpressionExecutor extends StatementExecutor
                     }
                 }
                 for(int i: uniques){
-                    ICodeNode member = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
-                    member.setAttribute(VALUE, i);
-                    result.addChild(member);
+                    if (i > MAXIMUM_SET_VALUE) {
+                        errorHandler.flag(node, INVALID_SET_VALUE, this);
+                        System.exit(-1);
+                    }
+                    else {
+                        ICodeNode member = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
+                        member.setAttribute(VALUE, i);
+                        result.addChild(member);
+                    }
                 }
                 return result;
             }
@@ -167,10 +175,6 @@ public class ExpressionExecutor extends StatementExecutor
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
         EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, SET);
 
-    // TODO add other set operations here.
-    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-        EnumSet.of(SET_UNION, SET_DIFFERENCE, SET_INTERSECTION, SET_SYS_DIFFERENCE, SET_CONTAINS, SET_ISCONTAINED, SET_EQUALS, SET_IN);
-
     private HashSet<Integer> convertSetChildrenToHashSet(ArrayList<ICodeNode> setChildren) {
         HashSet<Integer> result = new HashSet<Integer>();
         for(ICodeNode i: setChildren) {
@@ -188,66 +192,83 @@ public class ExpressionExecutor extends StatementExecutor
         }
         return result;
     }
-    //this is for executing operations where both arguments are sets.
-    private Object executeSetOp(ICodeNode op, ICodeNode set1, ICodeNode set2) {
-        ArrayList<ICodeNode> set1Members = set1.getChildren();
-        ArrayList<ICodeNode> set2Members = set2.getChildren();
+
+    private Object executeSetOp(ICodeNode op, Object first_operand, Object second_operand) {
         ICodeNodeType opType = op.getType();
-        HashSet<Integer> s1 =  convertSetChildrenToHashSet(set1Members);
-        HashSet<Integer> s2 = convertSetChildrenToHashSet(set2Members);
-        HashSet<Integer> result = new HashSet<Integer>();
-        if(opType == ADD) {
+        boolean areBothSets = first_operand instanceof ICodeNode && second_operand instanceof ICodeNode;
+        if (areBothSets) {
+            ArrayList<ICodeNode> set1Members = ((ICodeNode)first_operand).getChildren();
+            ArrayList<ICodeNode> set2Members = ((ICodeNode)second_operand).getChildren();
+            HashSet<Integer> s1 =  convertSetChildrenToHashSet(set1Members);
+            HashSet<Integer> s2 = convertSetChildrenToHashSet(set2Members);
+            HashSet<Integer> result = new HashSet<Integer>();
+            if(opType == ADD) {
 
-            for(Integer i: s1) {
-                result.add(i);
-            }
-            for(Integer i: s2) {
-                result.add(i);
-            }
-            return convertHashSetToSetNode(result);
-
-        }
-        else if(opType == SUBTRACT) {
-            result = s1;
-            for(int i: s2) {
-                if(result.contains(i)) result.remove(i);
-            }
-            return convertHashSetToSetNode(result);
-        }
-        else if(opType == MULTIPLY) {
-            for(int i: s1) {
-                if(s2.contains(i)) {
+                for(Integer i: s1) {
                     result.add(i);
                 }
+                for(Integer i: s2) {
+                    result.add(i);
+                }
+                return convertHashSetToSetNode(result);
+
             }
-            return convertHashSetToSetNode(result);
-        }
-        else if(opType == EQ) {
-            if(s1.equals(s2)) {
+            else if(opType == SUBTRACT) {
+                result = s1;
+                for(int i: s2) {
+                    if(result.contains(i)) result.remove(i);
+                }
+                return convertHashSetToSetNode(result);
+            }
+            else if(opType == MULTIPLY) {
+                for(int i: s1) {
+                    if(s2.contains(i)) {
+                        result.add(i);
+                    }
+                }
+                return convertHashSetToSetNode(result);
+            }
+            else if(opType == EQ) {
+                if(s1.equals(s2)) {
+                    return new Boolean(true);
+                }
+                return new Boolean(false);
+            }
+            else if(opType == LE) {
+                for(int i: s1) {
+                    if(!s2.contains(i)) return new Boolean(false);
+                }
                 return new Boolean(true);
             }
-            return new Boolean(false);
-        }
-        else if(opType == LE) {
-            for(int i: s1) {
-                if(!s2.contains(i)) return new Boolean(false);
+            else if(opType == GE) {
+                for(int i: s2) {
+                    if(!s1.contains(i)) return new Boolean(false);
+                }
+                return new Boolean(true);
             }
-            return new Boolean(true);
-        }
-        else if(opType == GE) {
-            for(int i: s2) {
-                if(!s1.contains(i)) return new Boolean(false);
+            else if(opType == NE) {
+                if(!s1.equals(s2)) return new Boolean(true);
+                return new Boolean(false);
             }
-            return new Boolean(true);
+            else {
+                errorHandler.flag(op, INVALID_OPERATION, this);
+                return 0;
+            }
         }
-        else if(opType == NE) {
-            if(!s1.equals(s2)) return new Boolean(true);
-            return new Boolean(false);
-        }
-        else if(opType == SET_IN) {
-            //this is just a temporary implementation that doesn't work
-            System.out.println("IN");
-            return 12;
+        else if (opType == SET_IN){
+            // op type must be SET_IN because one operand must be a set and the other must be an int.
+            HashSet<Integer> setOperand;
+            int intOperand;
+            if (first_operand instanceof ICodeNode) {
+                setOperand = convertSetChildrenToHashSet(((ICodeNode) first_operand).getChildren());
+                intOperand = (int)second_operand;
+            }
+            else {
+                setOperand = convertSetChildrenToHashSet(((ICodeNode) second_operand).getChildren());
+                intOperand = (int)first_operand;
+            }
+
+            return setOperand.contains(intOperand);
         }
         else {
             errorHandler.flag(op, INVALID_OPERATION, this);
@@ -275,10 +296,10 @@ public class ExpressionExecutor extends StatementExecutor
         boolean integerMode = (operand1 instanceof Integer) &&
                               (operand2 instanceof Integer);
 
-        boolean setMode = (execute(operandNode1) instanceof ICodeNode) && (execute(operandNode2) instanceof ICodeNode);
+        boolean setMode = (operand1 instanceof ICodeNode) || (operand2 instanceof ICodeNode);
 
-        if(setMode || nodeType == SET_IN)
-            return executeSetOp(node, (ICodeNode) execute(operandNode1), (ICodeNode) execute(operandNode2));
+        if(setMode)
+            return executeSetOp(node, operand1, operand2);
 
         // ====================
         // Arithmetic operators
@@ -400,82 +421,6 @@ public class ExpressionExecutor extends StatementExecutor
                     return rangeContents;
                 }
             }
-        }
-        else if (SET_OPS.contains(nodeType)) {
-//            HashSet<Integer> first_operand = (HashSet<Integer>) operandNode1;
-//            HashSet<Integer> second_operand = (HashSet<Integer>) operandNode2;
-//            switch (nodeType) {
-//                case SET_UNION:
-//                    HashSet<Integer> union_set = new HashSet<>();
-//
-//                    for (Integer i : first_operand)
-//                        union_set.add(i);
-//                    for (Integer i: second_operand)
-//                        union_set.add(i);
-//
-//                    return union_set;
-//
-//                case SET_INTERSECTION:
-//                    HashSet<Integer> intersection_set = new HashSet<>();
-//
-//                    for (Integer i : first_operand)
-//                        if (second_operand.contains(i))
-//                            intersection_set.add(i);
-//
-//                    return intersection_set;
-//
-//                case SET_DIFFERENCE:
-//                    HashSet<Integer> difference_set = new HashSet<>(first_operand);
-//                    /*
-//                    In case you're unfamiliar with how set difference is defined: it is defined as
-//                    a set containing all elements in the left operand that are not in the right operand.
-//                     */
-//                    for (Integer i : second_operand)
-//                        difference_set.remove(i);
-//
-//                    return difference_set;
-//
-//                case SET_SYS_DIFFERENCE:
-//                	HashSet<Integer> sys_diff_set = new HashSet<>(first_operand);
-//
-//                	for(Integer i : second_operand) {
-//                		if (sys_diff_set.contains(i)) {
-//                			sys_diff_set.remove(i);
-//                		} else {
-//                			sys_diff_set.add(i);
-//                		}
-//                	}
-//
-//                	return sys_diff_set;
-//
-//                case SET_CONTAINS:
-//                	for(Integer i: second_operand) {
-//                		if(!first_operand.contains(i)) {
-//                			return new Boolean(false);
-//                		}
-//                	}
-//
-//                	return new Boolean(true);
-//
-//                case SET_ISCONTAINED:
-//                	for(Integer i: first_operand) {
-//                		if(!second_operand.contains(i)) {
-//                			return new Boolean(false);
-//                		}
-//                	}
-//
-//                	return new Boolean(true);
-//                case SET_IN:
-//                    Integer first_node_as_int = (Integer) operand1;
-//                    if(second_operand.contains(first_node_as_int)) return new Boolean(true);
-//                    return new Boolean(false);
-//                case SET_EQUALS:
-//                    if(first_operand.size() != second_operand.size()) return new Boolean(false);
-//                    for(Integer i: first_operand) {
-//                        if(!second_operand.contains(i)) return new Boolean(false);
-//                    }
-//                    return new Boolean(true);
-//            }
         }
         else {
             float value1 = operand1 instanceof Integer
