@@ -24,7 +24,7 @@ public class ExpressionExecutor extends StatementExecutor
 {
     /**
      * Constructor.
-     * @param the parent executor.
+     * @param parent the parent executor.
      */
     public ExpressionExecutor(Executor parent)
     {
