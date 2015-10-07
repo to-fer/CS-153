@@ -51,6 +51,18 @@ public class ParseTreePrinter
 
     /**
      * Print the intermediate code as a parse tree.
+     * @param iCode the intermediate code.
+     */
+    public void print(ICode iCode)
+    {
+        ps.println("\n===== INTERMEDIATE CODE =====\n");
+
+        printNode((ICodeNodeImpl) iCode.getRoot());
+        printLine();
+    }
+
+    /**
+     * Print the intermediate code as a parse tree.
      * @param symTabStack the symbol table stack.
      */
     public void print(SymTabStack symTabStack)

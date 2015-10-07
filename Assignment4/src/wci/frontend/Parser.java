@@ -84,6 +84,8 @@ public abstract class Parser implements MessageProducer
         return scanner.currentToken();
     }
 
+    public Token peekPreviousToken() { return scanner.peekPreviousToken(); }
+
     /**
      * Call the scanner's nextToken() method.
      * @return the next token.

@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import wci.frontend.*;
 import wci.intermediate.*;
 import wci.backend.*;
+import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.message.*;
 import wci.util.*;
 
@@ -235,6 +237,21 @@ public class Pascal
     {
         private boolean firstOutputMessage = true;
 
+        public String printSet(ICodeNode set) {
+            String t = "";
+            ArrayList<ICodeNode> arr = set.getChildren();
+            t += "[";
+            if(arr.size() == 0) return "[]";
+            for(int i = 0; i < arr.size()-1; i++) {
+                t += arr.get(i).getAttribute(ICodeKeyImpl.VALUE);
+                t += ",";
+            }
+            t += arr.get(arr.size()-1).getAttribute(ICodeKeyImpl.VALUE);
+            t += "]";
+
+            return t;
+        }
+
         /**
          * Called by the back end whenever it produces a message.
          * @param message the message.
@@ -256,8 +273,14 @@ public class Pascal
                     String variableName = (String) body[1];
                     Object value = body[2];
 
-                    System.out.printf(ASSIGN_FORMAT,
-                                      lineNumber, variableName, value);
+                    if(value instanceof ICodeNode) {
+                        System.out.printf(ASSIGN_FORMAT,
+                                lineNumber, variableName, printSet((ICodeNode) value));
+                    } else {
+                        System.out.printf(ASSIGN_FORMAT,
+                                lineNumber, variableName, value);
+                    }
+                    
                     break;
                 }
 
