@@ -66,10 +66,12 @@ class TypeSpecificationParser extends PascalParserTD
                 RecordTypeParser recordTypeParser = new RecordTypeParser(this);
                 return recordTypeParser.parse(token);
             }
+            /*
             case SET: {
                 SetTypeParser setTypeParser = new SetTypeParser(this);
                 return setTypeParser.parse(token);
             }
+            */
             default: {
                 SimpleTypeParser simpleTypeParser = new SimpleTypeParser(this);
                 return simpleTypeParser.parse(token);
