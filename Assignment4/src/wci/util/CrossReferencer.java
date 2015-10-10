@@ -276,13 +276,11 @@ public class CrossReferencer
             
             case SET: {
             	TypeSpec elementType = (TypeSpec) type.getAttribute(SET_ELEMENT_TYPE);
-            	int count = (Integer) type.getAttribute(SET_ELEMENT_COUNT);
             	
             	System.out.print(INDENT + "--- ELEMENT TYPE---");
             	printType(elementType);
-            	System.out.println(INDENT.toString() + count + " elements");
             	
-            	//Should print if type is unamed
+            	//Should print if type is unnamed
             	if(elementType.getIdentifier() == null) {
             		printTypeDetail(elementType, recordTypes);
             	}
