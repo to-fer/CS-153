@@ -692,9 +692,12 @@ public class ExpressionParser extends StatementParser
          * so setting the set type base on the first child assumes that 
          * the error checking for all children being that base type is also true
          */
+        if(!rootNode.getChildren().isEmpty()) {
         setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE,
         		rootNode.getChildren().get(0).getTypeSpec().baseType());
-        
+        } else {
+            setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE, Predefined.undefinedType);
+        }
         rootNode.setTypeSpec(setType);
         
         return rootNode;
