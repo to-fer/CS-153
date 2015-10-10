@@ -50,7 +50,8 @@ public class SetTypeParser extends TypeSpecificationParser{
             token = nextToken();
         }
 
-        TypeSpec elementType = parseElementType(token, setType);
+        TypeSpec elementType = parseElementType(token);
+        setType.setAttribute(SET_ELEMENT_TYPE, elementType);
         return setType;
     }
 
