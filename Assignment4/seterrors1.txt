@@ -1,0 +1,25 @@
+CONST
+ low = 15;
+ mid = 45;
+ high = 50;
+TYPE
+ LowNums = 0..high;
+ NumSet = SET OF LowNums;
+ RSet = SET OF real;
+ Giant = (fee, fie, foe, fum);
+ GSet = SET OF SET OF Giant;
+ Rec = RECORD
+ x, y : real;
+ END;
+VAR
+ i : LowNums;
+ g : Giant;
+ gs : GSet;
+ evens, odds, primes, teens : NumSet;
+ s1, s2, s3 : NumSet;
+ rs: SET OF Rec;
+BEGIN
+ i := 1;
+ odds := [i];
+ 
+END.

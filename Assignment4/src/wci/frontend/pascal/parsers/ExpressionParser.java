@@ -683,7 +683,11 @@ public class ExpressionParser extends StatementParser
                 nextToken();
             }
         }
-
+        
+        //Create a set typeSpec 
+        TypeForm setForm = TypeFormImpl.SET;
+        TypeSpec newSpec = TypeFactory.createType(setForm); 
+        // set the attributes of the set to match the children. 
         return rootNode;
     }
 

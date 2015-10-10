@@ -75,9 +75,16 @@ public class AssignmentStatementParser extends StatementParser
         ICodeNode exprNode = expressionParser.parse(token);
         assignNode.addChild(exprNode);
 
+       
         // Type check: Assignment compatible?
         TypeSpec exprType = exprNode != null ? exprNode.getTypeSpec()
                                              : Predefined.undefinedType;
+        
+        if(exprType != null) {
+        System.out.println(targetType.getForm() + " vs " +
+        		exprType.getForm());
+        }
+        
         if (!TypeChecker.areAssignmentCompatible(targetType, exprType)) {
             errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
         }
