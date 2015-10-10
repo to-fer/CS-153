@@ -705,6 +705,7 @@ public class ExpressionParser extends StatementParser
                 if(!i.getTypeSpec().baseType()
                         .equals(rootNode.getChildren().get(0).getTypeSpec().baseType()) ) {
                     // what error should I throw here
+                    errorHandler.flag(token, MULTIPLE_TYPES_IN_SET, this);
                 }
             }
         }
