@@ -686,8 +686,16 @@ public class ExpressionParser extends StatementParser
         
         //Create a set typeSpec 
         TypeForm setForm = TypeFormImpl.SET;
-        TypeSpec newSpec = TypeFactory.createType(setForm); 
-        // set the attributes of the set to match the children. 
+        TypeSpec setType = TypeFactory.createType(setForm); 
+        // set the attributes of the set to match the children.
+        /** he current problem is that a child type could be a scalar
+         * so setting the set type base on the first child assumes that 
+         * the error checking for all children being that base type is also true
+         */
+        setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE,
+        		rootNode.getChildren().get(0).getTypeSpec().baseType());
+        
+        
         return rootNode;
     }
 
