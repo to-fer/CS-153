@@ -175,6 +175,7 @@ public class CrossReferencer
 
                 break;
             }
+            
         }
     }
 
@@ -271,6 +272,21 @@ public class CrossReferencer
                 }
 
                 break;
+            }
+            
+            case SET: {
+            	TypeSpec elementType = (TypeSpec) type.getAttribute(SET_ELEMENT_TYPE);
+            	int count = (Integer) type.getAttribute(SET_ELEMENT_COUNT);
+            	
+            	System.out.print(INDENT + "--- ELEMENT TYPE---");
+            	printType(elementType);
+            	System.out.println(INDENT.toString() + count + " elements");
+            	
+            	//Should print if type is unamed
+            	if(elementType.getIdentifier() == null) {
+            		printTypeDetail(elementType, recordTypes);
+            	}
+            	break;
             }
 
             case RECORD: {
