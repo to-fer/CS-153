@@ -699,7 +699,15 @@ public class ExpressionParser extends StatementParser
             setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE, Predefined.undefinedType);
         }
         rootNode.setTypeSpec(setType);
-        
+
+        if(!rootNode.getChildren().isEmpty()) {
+            for (ICodeNode i : rootNode.getChildren()) {
+                if(!i.getTypeSpec().baseType()
+                        .equals(rootNode.getChildren().get(0).getTypeSpec().baseType()) ) {
+                    // what error should I throw here
+                }
+            }
+        }
         return rootNode;
     }
 
