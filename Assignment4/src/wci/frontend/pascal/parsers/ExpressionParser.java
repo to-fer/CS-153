@@ -695,6 +695,7 @@ public class ExpressionParser extends StatementParser
         setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE,
         		rootNode.getChildren().get(0).getTypeSpec().baseType());
         
+        rootNode.setTypeSpec(setType);
         
         return rootNode;
     }
