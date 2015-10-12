@@ -675,6 +675,33 @@ public class ExpressionParser extends StatementParser
                     }
 
                 }
+
+                //Create a set typeSpec
+                TypeForm setForm = TypeFormImpl.SET;
+                TypeSpec setType = TypeFactory.createType(setForm);
+                // set the attributes of the set to match the children.
+                /** he current problem is that a child type could be a scalar
+                 * so setting the set type base on the first child assumes that
+                 * the error checking for all children being that base type is also true
+                 */
+                if(!rootNode.getChildren().isEmpty()) {
+                    setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE,
+                            rootNode.getChildren().get(0).getTypeSpec().baseType());
+                } else {
+                    setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE, Predefined.undefinedType);
+                }
+                rootNode.setTypeSpec(setType);
+
+                if(!rootNode.getChildren().isEmpty()) {
+                    for (ICodeNode i : rootNode.getChildren()) {
+                        if(!i.getTypeSpec().baseType()
+                                .equals(rootNode.getChildren().get(0).getTypeSpec().baseType()) ) {
+                            // what error should I throw here
+                            errorHandler.flag(token, MULTIPLE_TYPES_IN_SET, this);
+                        }
+                    }
+                }
+                
                 break;
             }
 
@@ -683,32 +710,7 @@ public class ExpressionParser extends StatementParser
                 nextToken();
             }
         }
-        
-        //Create a set typeSpec 
-        TypeForm setForm = TypeFormImpl.SET;
-        TypeSpec setType = TypeFactory.createType(setForm); 
-        // set the attributes of the set to match the children.
-        /** he current problem is that a child type could be a scalar
-         * so setting the set type base on the first child assumes that 
-         * the error checking for all children being that base type is also true
-         */
-        if(!rootNode.getChildren().isEmpty()) {
-        setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE,
-        		rootNode.getChildren().get(0).getTypeSpec().baseType());
-        } else {
-            setType.setAttribute(TypeKeyImpl.SET_ELEMENT_TYPE, Predefined.undefinedType);
-        }
-        rootNode.setTypeSpec(setType);
 
-        if(!rootNode.getChildren().isEmpty()) {
-            for (ICodeNode i : rootNode.getChildren()) {
-                if(!i.getTypeSpec().baseType()
-                        .equals(rootNode.getChildren().get(0).getTypeSpec().baseType()) ) {
-                    // what error should I throw here
-                    errorHandler.flag(token, MULTIPLE_TYPES_IN_SET, this);
-                }
-            }
-        }
         return rootNode;
     }
 
