@@ -80,11 +80,6 @@ public class AssignmentStatementParser extends StatementParser
         TypeSpec exprType = exprNode != null ? exprNode.getTypeSpec()
                                              : Predefined.undefinedType;
         
-        if(exprType != null) {
-        System.out.println(targetType.getForm() + " vs " +
-        		exprType.getForm());
-        }
-        
         if (!TypeChecker.areAssignmentCompatible(targetType, exprType)) {
             errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
         }
