@@ -102,6 +102,10 @@ public class TypeChecker
         return (type != null) && (type.baseType() == Predefined.charType);
     }
 
+    public static boolean isSet(TypeSpec type) {
+        return (type != null) && (type.getForm() == SET);
+    }
+
     /**
      * Check if two type specifications are assignment compatible.
      * @param targetType the target type specification.
@@ -128,6 +132,10 @@ public class TypeChecker
         // real := integer
         else if (isReal(targetType) && isInteger(valueType)) {
             compatible = true;
+        }
+
+        else if (isSet(targetType) && isSet(valueType)) {
+            compatible = targetType.baseType() == valueType.baseType();
         }
 
         // string := string
