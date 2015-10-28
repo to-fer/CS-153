@@ -175,4 +175,17 @@ public class TypeChecker
 
         return compatible;
     }
+    
+    public static boolean areEquivlentSets(TypeSpec type1, TypeSpec type2) {
+    	
+    	if ((type1 == null) || (type2 == null)) {
+            return false;
+        }
+    	
+    	// hard coded for only Sets of nesting 2 can be change later for general solution 
+    	type1 = type1.baseType();
+        type2 = type2.baseType();
+        
+    	return false; 
+    }
 }
