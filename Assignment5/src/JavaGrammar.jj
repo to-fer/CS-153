@@ -4,10 +4,17 @@ options {
 
 PARSER_BEGIN(Java)
 import java.io.IOException;
+import java.io.*;
 public class Java {}
 PARSER_END(Java)
 
-TOKEN_MGR_DECLS :{	public static void main(String[] args)	{	}
+TOKEN_MGR_DECLS :{	public static void main(String[] args) throws IOException	{
+	  BufferedReader javaReader = new BufferedReader( new FileReader(args[0]));
+	  SimpleCharStream javaStream = new SimpleCharStream(javaReader);
+	  JavaTokenManager mgr = new JavaTokenManager(javaStream);
+	  
+	  for(Token t = mgr.getNextToken(); t.kind != EOF; t = mgr.getNextToken())	  {
+	    debugStream.println("Found token: "+t.image);	  }	}
 }
 
 
