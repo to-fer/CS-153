@@ -1,0 +1,16 @@
+options {
+    BUILD_PARSER=false;
+}
+
+PARSER_BEGIN(Java)
+import java.io.IOException;
+public class Java {}
+PARSER_END(Java)
+
+TOKEN_MGR_DECLS :{	public static void main(String[] args)	{	}
+}
+
+
+TOKEN : {
+    <ABSTRACT : "abstract">
+}
