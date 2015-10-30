@@ -1,9 +1,10 @@
+/* This is a comment.
 
-Two/*comments in*/
-
-//dfsdfds 
-
-/***a row***/ here.
+*/
+// So is this.
 
 
-
+// dsffdas 
+/* Here's a comment
+   that spans several
+   source lines. */

@@ -1,0 +1,4 @@
+// String tokens
+"Hello, world."
+"It's Friday!"
+""
