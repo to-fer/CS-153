@@ -1,6 +1,6 @@
 options {
     BUILD_PARSER=false;
-    IGNORE_CASE=true;
+    IGNORE_CASE=false;
     DEBUG_TOKEN_MANAGER=false;
 }
 
@@ -244,6 +244,13 @@ TOKEN : {
 	| <COLON_EQ : ":=" >
 	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
 
+	//All word tokens AKA IDENTIFIERS
+	| <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
+      { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+  	| <#DIGIT  : ["0"-"9"]>
+  	//A-Z only if ignore case option is false
+  	| <#LETTER : ["a"-"z","A"-"Z"]>
 
+	//All char tokens 
 
 }
