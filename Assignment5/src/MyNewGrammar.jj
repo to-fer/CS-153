@@ -1,5 +1,7 @@
 options {
     BUILD_PARSER=false;
+    IGNORE_CASE=true;
+    DEBUG_TOKEN_MANAGER=false;
 }
 
 PARSER_BEGIN(HelloWorld)
@@ -28,7 +30,18 @@ TOKEN_MGR_DECLS : {
     }
 }
 
+
+SKIP : {
+    <IGNORE : [" "]>
+}
+
 TOKEN : {
     <HELLO : "hello">
+      { debugStream.println("HELLO token: " + matchedToken.image); }
   | <WORLD : "world">
+      { debugStream.println("WORLD token: " + matchedToken.image); }
+  | <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
+      { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+  | <#DIGIT  : ["0"-"9"]>
+  | <#LETTER : ["a"-"z"]>
 }
