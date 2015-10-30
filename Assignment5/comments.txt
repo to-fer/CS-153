@@ -1,10 +1,9 @@
-/* This is a comment. */
-// So is this.
 
-/* Here's a comment
-   that spans several
-   source lines. */
+Two/*comments in*/
 
-Two/*comments in*//***a row***/ here.
-/* This is /* not a nested comment. */
-// Nor is /* this */ one.
+//dfsdfds 
+
+/***a row***/ here.
+
+
+

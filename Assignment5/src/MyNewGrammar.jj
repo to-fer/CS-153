@@ -2,6 +2,7 @@ options {
     BUILD_PARSER=false;
     IGNORE_CASE=false;
     DEBUG_TOKEN_MANAGER=false;
+    LOOKAHEAD=1;
 }
 
 PARSER_BEGIN(HelloWorld)
@@ -251,10 +252,14 @@ TOKEN : {
 	  	//A-Z only if ignore case option is false
 	| <LETTER : ["a"-"z","A"-"Z"]>
 
+	//ALL CHARACTER TOKENS 
 	| <CHARACTER : <SINGLE_QUOTE> <UNICODE_CHAR> <SINGLE_QUOTE> >
      { debugStream.println("CHARACTER token: " + matchedToken.image); }
 	| <#UNICODE_CHAR: (<LETTER> | <DIGIT> | <SYMBOL>)>
-	| <#SYMBOL: ["\\"] >
+	| <#UNICODE_CHARS: (<LETTER> | <DIGIT> | <SYMBOL>)*>
+	| <#SYMBOL: ["\\", "*", "/", ".", "'"] >
+	| <#SPACE: [" ", "\n"] >
+	
 	
 /*
 	| <#SYMBOL: ["\`","~","!","@","#","$","%","^",
@@ -262,6 +267,21 @@ TOKEN : {
 				"\{", "\}", ":",";","\"","'","<",
 				">", "," , ".","?","/",] >*/
 
+	//ALL COMMENTS
+	| <COMMENT_INLINE : <START_COMMENT> <UNICODE_CHARS_INLINE> <EOL> >
+     { debugStream.println("COMMENT_BLK: " + matchedToken.image); }
+     
+	|<COMMENT_BLK : <START_COMMENT_BLK> <UNICODE_CHARS_BLK> <END_COMMENT_BLK> >
+     { debugStream.println("COMMENT_BLK: " + matchedToken.image); }
+	| <#START_COMMENT: "//">
+	| <START_COMMENT_BLK: "/*">
+	| <END_COMMENT_BLK: "*/">
+	| <#UNICODE_CHARS_INLINE: ((<LETTER> | <DIGIT> | <INLINE_CMMT_SKIP>)?)*>
+	| <#UNICODE_CHARS_BLK: ((<BLK_CMMT_SKIP> |<LETTER> | <DIGIT> | <SYMBOL>)*)?>
+	| <#BLK_CMMT_SKIP: [" ", "\n","\\", "*", ".", "'"]>
+	| <#INLINE_CMMT_SKIP : [" ", "*", ".", "'"] >
+	| <#EOL: "\n" >
+	
 				  
 }
 /*
