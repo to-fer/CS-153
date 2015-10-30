@@ -247,10 +247,26 @@ TOKEN : {
 	//All word tokens AKA IDENTIFIERS
 	| <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
       { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-  	| <#DIGIT  : ["0"-"9"]>
-  	//A-Z only if ignore case option is false
-  	| <#LETTER : ["a"-"z","A"-"Z"]>
+	| <DIGIT  : ["0"-"9"]>
+	  	//A-Z only if ignore case option is false
+	| <LETTER : ["a"-"z","A"-"Z"]>
 
-	//All char tokens 
+	| <CHARACTER : <SINGLE_QUOTE> <UNICODE_CHAR> <SINGLE_QUOTE> >
+     { debugStream.println("CHARACTER token: " + matchedToken.image); }
+	| <#UNICODE_CHAR: (<LETTER> | <DIGIT> | <SYMBOL>)>
+	| <#SYMBOL: ["\\"] >
+	
+/*
+	| <#SYMBOL: ["\`","~","!","@","#","$","%","^",
+				"&","*","(",")","-","_","+","=",
+				"\{", "\}", ":",";","\"","'","<",
+				">", "," , ".","?","/",] >*/
 
+				  
 }
+/*
+void CHAR_TOKEN() :{ }
+{
+   "\'" (<LETTER > | <DIGIT>) "\'"
+}
+*/
