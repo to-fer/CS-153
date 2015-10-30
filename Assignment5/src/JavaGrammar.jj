@@ -19,5 +19,71 @@ TOKEN_MGR_DECLS :{	public static void main(String[] args) throws IOException	
 
 
 TOKEN : {
+	//All the key words 
     <ABSTRACT : "abstract">
+    { debugStream.println("ABSTRACT token: " + matchedToken.image); }
+    | <GOTO : "goto">
+    { debugStream.println("GOTO token: " + matchedToken.image); }
+    //| <DEFAULT : "default" >
+    //{ debugStream.println("DEFAULT token: " + matchedToken.image); }
+    | <DO : "do">
+    { debugStream.println("GOTO token: " + matchedToken.image); }
+    | <SYNCHRONIZED : "synchronized">
+    { debugStream.println("GOTO token: " + matchedToken.image); }
+    | <ASSERT : "assert">
+    { debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <IF : "if">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <PRIVATE : "private">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <THIS : "this">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <BOOLEAN : "boolean">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <DOUBLE : "double">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <IMPLEMENTS : "implements">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <PROTECTED : "protected">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <THROW : "throw">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <BREAK : "break">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <ELSE : "else">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <IMPORT : "import">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <PUBLIC : "public">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <THROWS : "throws">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <BYTE : "byte">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <ENUM : "enum">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <CASE : "case">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <RETURN : "return">
+ 	{ debugStream.println("GOTO token: " + matchedToken.image); }
+ 	| <INSTANCEOF : "instanceof">
+ 	| <EXTENDS : "extends">
+ 	| <INT : "int">
+ 	| <FOR : "for"> 
+ 	| <SHORT : "short">
+ 	| <TRUE : "true">
+ 	| <FALSE : "false">
+ 	| <INTERFACE : "interface">
+ 	| <STATIC : "static">
+ 	| <TRY : "try">
+ 	| <CHAR : "char">
+ 	| <TRANSIENT : "transient">
+ 	| <LONG : "long">
+ 	| <STRICTFP : "strictfp">
+ 	| <NATIVE : "native">  | <CLASS : "class">
+ 	| <FINALLY : "finally">  | <SUPER : "super">  | <VOLATILE : "volatile">
+ 	| <CONST : "const">  | <FLOAT : "float">  | <NEW : "new">
+ 	| <SWITCH : "switch">  | <WHILE : "while">  | <CONTINUE : "continue">
+	| <NULL : "null">
+
 }

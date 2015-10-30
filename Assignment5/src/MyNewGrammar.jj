@@ -32,16 +32,117 @@ TOKEN_MGR_DECLS : {
 
 
 SKIP : {
-    <IGNORE : [" "]>
+    <IGNORE : [" ", "\n", "\t"]>
 }
 
 TOKEN : {
-    <HELLO : "hello">
-      { debugStream.println("HELLO token: " + matchedToken.image); }
-  | <WORLD : "world">
-      { debugStream.println("WORLD token: " + matchedToken.image); }
-  | <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
-      { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-  | <#DIGIT  : ["0"-"9"]>
-  | <#LETTER : ["a"-"z"]>
+	//All the key words 
+    <ABSTRACT : "abstract">
+    { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    | <GOTO : "goto">
+    { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    | <DEAFAULT : "default" >
+    { debugStream.println("DEFAULT token: " + matchedToken.image); }
+    | <DO : "do">
+    { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    | <SYNCHRONIZED : "synchronized">
+    { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    | <PACKAGE : "package">
+    { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    | <ASSERT : "assert">
+    { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <IF : "if">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <PRIVATE : "private">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <THIS : "this">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <BOOLEAN : "boolean">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <DOUBLE : "double">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <IMPLEMENTS : "implements">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <PROTECTED : "protected">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <THROW : "throw">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <BREAK : "break">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <ELSE : "else">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <IMPORT : "import">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <PUBLIC : "public">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <THROWS : "throws">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <BYTE : "byte">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <ENUM : "enum">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <CASE : "case">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <RETURN : "return">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <INSTANCEOF : "instanceof">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <EXTENDS : "extends">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <INT : "int">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <FOR : "for">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <SHORT : "short">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <TRUE : "true">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <CATCH : "catch">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <FALSE : "false">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <INTERFACE : "interface">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <STATIC : "static">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <TRY : "try">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <CHAR : "char">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <FINAL : "final">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <TRANSIENT : "transient">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <LONG : "long">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <STRICTFP : "strictfp">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <VOID : "void">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <NATIVE : "native">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <CLASS : "class">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <FINALLY : "finally">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <SUPER : "super">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <VOLATILE : "volatile">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <CONST : "const">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <FLOAT : "float">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <NEW : "new">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <SWITCH : "switch">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <WHILE : "while">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <CONTINUE : "continue">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+	| <NULL : "null">
+	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+
+	//ALL Symbol tokens
 }
