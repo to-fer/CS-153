@@ -145,4 +145,105 @@ TOKEN : {
 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
 
 	//ALL Symbol tokens
+	| <TILDA : "~">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <NOT : "!">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <AT : "@">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <MOD : "%">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <CARROT : "^">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <AMPRSAND : "&">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <MUL : "*">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <MINUS : "-">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <PLUS : "+">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <SINGLE_EQ : "=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <BAR : "|">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <DIV : "/">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <COLON : ":">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <SEMICOLON : ";">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <QM : "?">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LT : "<">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <GT : ">">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <COMMA : ",">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <DOT : ".">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <SINGLE_QUOTE : "'">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <QUOTE : "\"">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LEFT_PARAN : "(">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <RIGHT_PARAN : ")">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LEFT_BRAKET : "[">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <RIGHT_BRAKET : "]">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LEFT_BRACE : "{"> 
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <RIHGT_BRACE : "}">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <PLUS_PLUS : "++">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <MINUS_MINUS : "--">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LEFT_SHIFT : "<<">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <RIGHT_SHIFT : ">>">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LE : "<=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <GE : ">=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <PLUS_EQ : "+=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <MINUS_EQ : "-=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <TIMES_EQ : "*=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <DIV_EQ : "/=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <EQ : "==">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <OR_EQ : "|=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <MOD_EQ : "%=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <AND_EQ : "&=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <CARROT_EQ : "^=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <OR : "||">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <AND : "&&">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <NOT_EQ : "!=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LEFT_SHIFT_EQ : "<<=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <RIGHT_SHIFT_EQ : ">>=">
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <LT_GT : "<>" >
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+	| <COLON_EQ : ":=" >
+	{ debugStream.println("SYMBOL token: " + matchedToken.image); }
+
+
+
 }
