@@ -11,4 +11,3 @@
 Two/*comments in*//***a row***/ here.
 /* This is /* not a nested comment. */
 // Nor is /* this */ one.
-// So is this
