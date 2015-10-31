@@ -5,7 +5,7 @@ options {
     LOOKAHEAD=1;
 }
 
-PARSER_BEGIN(HelloWorld)
+PARSER_BEGIN(Java)
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -13,8 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.File;
 
-    public class HelloWorld {}
-PARSER_END(HelloWorld)
+public class Java {}
+PARSER_END(Java)
 
 TOKEN_MGR_DECLS : {
     public static void main(String[] args) throws IOException
@@ -23,7 +23,7 @@ TOKEN_MGR_DECLS : {
 	  String content = new String(encoded, StandardCharsets.UTF_8);
         java.io.StringReader sr = new java.io.StringReader(content);
         SimpleCharStream scs = new SimpleCharStream(sr);
-        HelloWorldTokenManager mgr = new HelloWorldTokenManager(scs);
+        JavaTokenManager mgr = new JavaTokenManager(scs);
 
         for (Token t = mgr.getNextToken(); t.kind != EOF; t = mgr.getNextToken()) {
             debugStream.println("Found token: " + t.image);
@@ -270,7 +270,8 @@ TOKEN : {
 	| <#SYMBOL: ["\`","~","!","@","#","$","%","^",
 				"&","*","(",")","-","_","+","=",
 				"\{", "\}", ":",";","\"","'","<",
-				">", "," , ".","?","/",] >*/
+				">", "," , ".","?","/",] >
+*/
 
 	//ALL COMMENTS All camments are skipped 
 	| <COMMENT_INLINE : <START_COMMENT> <UNICODE_CHARS_INLINE> (<EOL>){1}>
