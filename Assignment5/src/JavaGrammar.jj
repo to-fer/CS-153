@@ -32,8 +32,7 @@ TOKEN_MGR_DECLS : {
 
 
 SKIP : {
-<<<<<<< HEAD
-   <IGNORE : [" ", "\n", "\t", "\r"]>
+    <IGNORE : [" ", "\n", "\t", "\r"]>
    | <"//" (~["\n"])* ("\n"|"\r")? >
    | <"/*" > : ML_COMMENT
 }
@@ -41,23 +40,6 @@ SKIP : {
 <ML_COMMENT> SKIP :
 {  <"*/" >: DEFAULT
   |<~[]>
-=======
-    <IGNORE : [" ", "\n", "\t", "\r"]>
-
-    //ALL COMMENTS All camments are skipped
-   	| <COMMENT_INLINE : <START_COMMENT> <COMMENT_INLINE_CONTENTS> <EOL>>
-//    { debugStream.println("COMMENT_INLINE: " + matchedToken.image); }
-    | <#START_COMMENT: "//">
-    | <#COMMENT_INLINE_CONTENTS : (~["\n"])*>
-
-    |<COMMENT_BLK : <START_COMMENT_BLK> (<COMMENT_BLK_LINE>)* (<END_COMMENT_BLK> | <COMMENT_BLK_CONTENTS_PART> <END_COMMENT_BLK>)>
-//    { debugStream.println("COMMENT_BLK: " + matchedToken.image); }
-    | <#START_COMMENT_BLK: "/*">
-    | <#END_COMMENT_BLK: "*/">
-    | <#COMMENT_BLK_CONTENTS_PART: (~["\n", "*"] | ["*"] ~["/"])*>
-    | <#COMMENT_BLK_LINE: <COMMENT_BLK_CONTENTS_PART> <EOL>>
-    | <#EOL: "\n">
->>>>>>> c55074394881005d04019d60b4d4a9b78b2089c2
 }
 
 TOKEN : {
@@ -289,18 +271,7 @@ TOKEN : {
 	| <STRING : <QUOTE> <UNICODE_CHARS_STRINGS> <QUOTE> >
      { debugStream.println("STRING token: " + matchedToken.image); }
 	| <#UNICODE_CHARS_STRINGS: (<LETTER> | <DIGIT> | <SYMBOL> | <SPACE>)*>
-<<<<<<< HEAD
 	
-=======
-     
-/*
-	| <#SYMBOL: ["\`","~","!","@","#","$","%","^",
-				"&","*","(",")","-","_","+","=",
-				"\{", "\}", ":",";","\"","'","<",
-				">", "," , ".","?","/",] >
-*/
-
->>>>>>> c55074394881005d04019d60b4d4a9b78b2089c2
 	//All Numbers
 	| <INTEGER: (<SIGN>)? (<DIGIT>)+ | (<ONE_TO_NINE> (<DIGIT>)+) >
      { debugStream.println("INTEGER TOKEN: " + matchedToken.image); }
