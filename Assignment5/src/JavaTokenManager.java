@@ -17,9 +17,7 @@ public class JavaTokenManager implements JavaConstants
         SimpleCharStream scs = new SimpleCharStream(sr);
         JavaTokenManager mgr = new JavaTokenManager(scs);
 
-        for (Token t = mgr.getNextToken(); t.kind != EOF; t = mgr.getNextToken()) {
-            debugStream.println("Found token: " + t.image);
-        }
+                while (mgr.getNextToken().kind != EOF) {}
     }
 
   /** Debug output. */
