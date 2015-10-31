@@ -33,7 +33,7 @@ TOKEN_MGR_DECLS : {
 
 
 SKIP : {
-    <IGNORE : [" ", "\n", "\t"]>
+    <IGNORE : [" ", "\n", "\t", "\r"]>
 }
 
 TOKEN : {
@@ -273,20 +273,18 @@ TOKEN : {
 				">", "," , ".","?","/",] >
 */
 
-	//ALL COMMENTS All camments are skipped 
-	| <COMMENT_INLINE : <START_COMMENT> <UNICODE_CHARS_INLINE> (<EOL>){1}>
-    { debugStream.println("COMMENT_INLINE: " + matchedToken.image); }
-     
-	|<COMMENT_BLK : (<START_COMMENT_BLK>){1} <UNICODE_CHARS_BLK> (<END_COMMENT_BLK>){1}>
-    { debugStream.println("COMMENT_BLK: " + matchedToken.image); }
+	//ALL COMMENTS All camments are skipped
+	| <COMMENT_INLINE : <START_COMMENT> <COMMENT_INLINE_CONTENTS> <EOL>>
+	{ debugStream.println("COMMENT_INLINE: " + matchedToken.image); }
 	| <#START_COMMENT: "//">
-	| <START_COMMENT_BLK: "/*">
-	| <END_COMMENT_BLK: "*/">
-	| <#UNICODE_CHARS_INLINE: (<LETTER> | <DIGIT> | <INLINE_CMMT_SKIP>)*>
-	| <#UNICODE_CHARS_BLK: (<BLK_CMMT_SKIP> |<LETTER> | <DIGIT> | <SYMBOL>)*>
-	| <#BLK_CMMT_SKIP: [" ", ".", "'","\n", "@", "*"]>
-	| <#INLINE_CMMT_SKIP : [" ", "*", ".", "'", "@"] >
-	| <#EOL: "\n" >
+	| <#COMMENT_INLINE_CONTENTS : (~["\n"])*>
+
+	|<COMMENT_BLK : <START_COMMENT_BLK> <COMMENT_BLK_CONTENTS> <END_COMMENT_BLK>>
+    { debugStream.println("COMMENT_BLK: " + matchedToken.image); }
+	| <#START_COMMENT_BLK: "/*">
+	| <#END_COMMENT_BLK: "*/">
+	| <#COMMENT_BLK_CONTENTS: (<COMMENT_INLINE_CONTENTS> <EOL>)* <COMMENT_INLINE_CONTENTS> >
+	| <#EOL: "\n">
 	
 	//All Numbers
 	| <INTEGER: (<SIGN>)? (<DIGIT>)+ | (<ONE_TO_NINE> (<DIGIT>)+) >
