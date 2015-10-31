@@ -277,13 +277,14 @@ TOKEN : {
 	| <#START_COMMENT: "//">
 	| <#COMMENT_INLINE_CONTENTS : (~["\n"])*>
 
-	|<COMMENT_BLK : <START_COMMENT_BLK> <COMMENT_BLK_CONTENTS> <END_COMMENT_BLK>>
+	|<COMMENT_BLK : <START_COMMENT_BLK> (<COMMENT_BLK_LINE>)* (<END_COMMENT_BLK> | <COMMENT_BLK_CONTENTS_PART> <END_COMMENT_BLK>)>
     { debugStream.println("COMMENT_BLK: " + matchedToken.image); }
 	| <#START_COMMENT_BLK: "/*">
 	| <#END_COMMENT_BLK: "*/">
-	| <#COMMENT_BLK_CONTENTS: (<COMMENT_INLINE_CONTENTS> <EOL>)* <COMMENT_INLINE_CONTENTS> >
+	| <#COMMENT_BLK_CONTENTS_PART: (~["\n", "*"] | ["*"] ~["/"])*>
+	| <#COMMENT_BLK_LINE: <COMMENT_BLK_CONTENTS_PART> <EOL>>
 	| <#EOL: "\n">
-	
+
 	//All Numbers
 	| <INTEGER: (<SIGN>)? (<DIGIT>)+ | (<ONE_TO_NINE> (<DIGIT>)+) >
      { debugStream.println("INTEGER TOKEN: " + matchedToken.image); }
