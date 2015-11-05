@@ -9,7 +9,7 @@ import java.io.File;
 /** Token Manager. */
 public class JavaTokenManager implements JavaConstants
 {
-    public static void main(String[] args) throws IOException
+    public static void main(String [] args) throws IOException
     {
           byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
           String content = new String(encoded, StandardCharsets.UTF_8);

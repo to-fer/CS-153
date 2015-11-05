@@ -17,7 +17,7 @@ public class Java {}
 PARSER_END(Java)
 
 TOKEN_MGR_DECLS : {
-    public static void main(String[] args) throws IOException
+    public static void main(String [] args) throws IOException
     {
 	  byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
 	  String content = new String(encoded, StandardCharsets.UTF_8);
