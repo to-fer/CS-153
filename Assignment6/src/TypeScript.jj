@@ -196,7 +196,7 @@ TOKEN : {//Numbers
 // all the Expression 
 void Expression() : {} 
 {
-  LOOKAHEAD(3)
+  LOOKAHEAD(2)
   {System.out.println("SimpleExpression STARTS");}
   SimpleExpression()
   {System.out.println("SimpleExpression ENDS");}
@@ -211,7 +211,7 @@ void Expression() : {}
 
 void SimpleExpression() : {} 
 {
-  LOOKAHEAD(3)
+  LOOKAHEAD(2)
   
  	( (<PLUS> | <MINUS>)? term()
 	  	(	  	  (<PLUS> | <MINUS> | <OR>)
@@ -222,7 +222,7 @@ void SimpleExpression() : {}
 
 void term() : {} 
 {
-  LOOKAHEAD(3)
+  LOOKAHEAD(2)
   (
     factor()
     	(  

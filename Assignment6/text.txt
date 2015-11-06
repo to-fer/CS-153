@@ -1,1 +1,1 @@
-32+centigrade/ratio
+-32+(centigrade/ratio)

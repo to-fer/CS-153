@@ -27,7 +27,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
 
 // all the Expression 
   static final public void Expression() throws ParseException {
-    if (jj_2_1(3)) {
+    if (jj_2_1(2)) {
    System.out.println("SimpleExpression STARTS");
       SimpleExpression();
    System.out.println("SimpleExpression ENDS");
@@ -76,7 +76,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void SimpleExpression() throws ParseException {
-    if (jj_2_2(3)) {
+    if (jj_2_2(2)) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case MINUS:
       case PLUS:
@@ -145,7 +145,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void term() throws ParseException {
-    if (jj_2_3(3)) {
+    if (jj_2_3(2)) {
       factor();
       label_2:
       while (true) {
@@ -285,7 +285,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   static private boolean jj_3R_12() {
     if (jj_scan_token(LEFT_PARAN)) return true;
     if (jj_3R_13()) return true;
-    if (jj_scan_token(RIGHT_PARAN)) return true;
     return false;
   }
 
@@ -351,30 +350,11 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     if (jj_scan_token(52)) return true;
     }
     }
-    if (jj_3R_5()) return true;
     return false;
   }
 
   static private boolean jj_3R_14() {
     if (jj_3R_3()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(29)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(54)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(35)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(47)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(36)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(49)) return true;
-    }
-    }
-    }
-    }
-    }
     return false;
   }
 
@@ -396,7 +376,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     }
     }
     }
-    if (jj_3R_7()) return true;
     return false;
   }
 
