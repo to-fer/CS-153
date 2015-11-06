@@ -1286,7 +1286,7 @@ static void TokenLexicalActions(Token matchedToken)
       case 51 :
         image.append(jjstrLiteralImages[51]);
         lengthOfMatch = jjstrLiteralImages[51].length();
-          debugStream.println("EQUALITY SYMBOL token: " + matchedToken.image);
+          debugStream.println("DOUBLE_EQ SYMBOL token: " + matchedToken.image);
          break;
       case 52 :
         image.append(jjstrLiteralImages[52]);

@@ -116,7 +116,7 @@ TOKEN : {//Symbols
 	{ debugStream.println("MINUS SYMBOL token: " + matchedToken.image); }
 	| <PLUS : "+">
 	{ debugStream.println("PLUS SYMBOL token: " + matchedToken.image); }
-	| <SINGLE_EQ : "=">
+	| <EQ : "=">
 	{ debugStream.println("SINGLE_EQ SYMBOL token: " + matchedToken.image); }
 	| <BAR : "|">
 	{ debugStream.println("BAR SYMBOL token: " + matchedToken.image); }
@@ -160,8 +160,8 @@ TOKEN : {//Symbols
 	{ debugStream.println("GT EQUAL SYMBOL token: " + matchedToken.image); }
 	| <PLUS_EQ : "+=">
 	{ debugStream.println("PLUS EQAUALS SYMBOL token: " + matchedToken.image); }
-	| <EQ : "==">
-	{ debugStream.println("EQUALITY SYMBOL token: " + matchedToken.image); }
+	| <DOUBLE_EQ : "==">
+	{ debugStream.println("DOUBLE_EQ SYMBOL token: " + matchedToken.image); }
 	| <OR : "||">
 	{ debugStream.println("OR SYMBOL token: " + matchedToken.image); }
 	| <AND : "&&">
@@ -191,10 +191,66 @@ TOKEN : {//Numbers
 }
 
 
+
+
+// all the Expression 
 void Expression() : {} 
 {
-  {System.out.println("EXPRESSION STARTS");}
+  LOOKAHEAD(3)
+  {System.out.println("SimpleExpression STARTS");}
+  SimpleExpression()
+  {System.out.println("SimpleExpression ENDS");}
+
+  |
+  	(  	  SimpleExpression()
+  		// ==     !=         <      <=     >      >=          
+  		( <EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>)
+  		SimpleExpression()
+  	)
+}
+
+void SimpleExpression() : {} 
+{
+  LOOKAHEAD(3)
+  
+ 	( (<PLUS> | <MINUS>)? term()
+	  	(	  	  (<PLUS> | <MINUS> | <OR>)
+	  	  term()
+	  	)*
+  	) | term()
+}
+
+void term() : {} 
+{
+  LOOKAHEAD(3)
+  (
+    factor()
+    	(  
+			(<MUL>| <DIV> | <MOD> | <AND>)
+			factor()
+		)*
+  ) | factor()
+  
+}
+
+void factor() : {} 
+{
+  <NOT> factor() | variable() | number() | string() |
+  <LEFT_PARAN> Expression() <RIGHT_PARAN>
 }
 
 
+void variable() : {} 
+{
+  <IDENTIFIER>
+}
 
+void number() : {} 
+{
+  <NUM>
+}
+
+void string() : {} 
+{
+  <STRING_LITERAL>
+}
