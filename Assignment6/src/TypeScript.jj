@@ -210,13 +210,13 @@ void AssignmentStatement():{}{
 void Expression() : {} 
 {
   (
-    LOOKAHEAD(6)
+    LOOKAHEAD(3)
   {System.out.println("SimpleExpression STARTS");}
   SimpleExpression()
   {System.out.println("SimpleExpression ENDS");}
 
   |
-  LOOKAHEAD(6)
+  LOOKAHEAD(3)
   	(  	  SimpleExpression()
   		// ==     !=         <      <=     >      >=          
   		( <EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>)

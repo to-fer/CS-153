@@ -98,11 +98,11 @@ public class TypeScriptParser implements TypeScriptParserConstants {
         jj_la1[4] = jj_gen;
         break label_1;
       }
-      if (jj_2_1(6)) {
+      if (jj_2_1(3)) {
    System.out.println("SimpleExpression STARTS");
         SimpleExpression();
    System.out.println("SimpleExpression ENDS");
-      } else if (jj_2_2(6)) {
+      } else if (jj_2_2(3)) {
         SimpleExpression();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case EQ:
@@ -333,148 +333,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     finally { jj_save(3, xla); }
   }
 
-  static private boolean jj_3R_9() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(26)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(31)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(23)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(53)) return true;
-    }
-    }
-    }
-    if (jj_3R_8()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_13() {
-    if (jj_scan_token(LEFT_PARAN)) return true;
-    if (jj_3R_14()) return true;
-    if (jj_scan_token(RIGHT_PARAN)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_12() {
-    if (jj_scan_token(NOT)) return true;
-    if (jj_3R_8()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_8() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_12()) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(56)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(57)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(55)) {
-    jj_scanpos = xsp;
-    if (jj_3R_13()) return true;
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_19() {
-    if (jj_scan_token(EQ)) return true;
-    if (jj_3R_14()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_11() {
-    if (jj_3R_8()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_7() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(27)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(52)) return true;
-    }
-    }
-    if (jj_3R_6()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_10() {
-    if (jj_3R_6()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_4() {
-    if (jj_3R_8()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_9()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_6() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_4()) {
-    jj_scanpos = xsp;
-    if (jj_3R_11()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_5() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(27)) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3_3() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_5()) jj_scanpos = xsp;
-    if (jj_3R_6()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_7()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_4() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_3()) {
-    jj_scanpos = xsp;
-    if (jj_3R_10()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_16() {
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_18() {
-    if (jj_scan_token(COLON)) return true;
-    if (jj_3R_20()) return true;
-    return false;
-  }
-
   static private boolean jj_3_2() {
     if (jj_3R_4()) return true;
     Token xsp;
@@ -526,6 +384,48 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     return false;
   }
 
+  static private boolean jj_3R_13() {
+    if (jj_scan_token(LEFT_PARAN)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(RIGHT_PARAN)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_19() {
+    if (jj_scan_token(EQ)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_8() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_12()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(56)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(57)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(55)) {
+    jj_scanpos = xsp;
+    if (jj_3R_13()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_12() {
+    if (jj_scan_token(NOT)) return true;
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_11() {
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
   static private boolean jj_3R_17() {
     Token xsp;
     xsp = jj_scanpos;
@@ -539,26 +439,101 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     return false;
   }
 
-  static private boolean jj_3R_22() {
-    if (jj_scan_token(BOOLEAN)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_20() {
+  static private boolean jj_3R_7() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_21()) {
+    if (jj_scan_token(28)) {
     jj_scanpos = xsp;
-    if (jj_3R_22()) {
+    if (jj_scan_token(27)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(16)) return true;
+    if (jj_scan_token(52)) return true;
     }
+    }
+    if (jj_3R_6()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_10() {
+    if (jj_3R_6()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_6() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_4()) {
+    jj_scanpos = xsp;
+    if (jj_3R_11()) return true;
     }
     return false;
   }
 
-  static private boolean jj_3R_21() {
-    if (jj_scan_token(NUMBER)) return true;
+  static private boolean jj_3_4() {
+    if (jj_3R_8()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_9()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_5() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(28)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(27)) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_4() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_3()) {
+    jj_scanpos = xsp;
+    if (jj_3R_10()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3_3() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_5()) jj_scanpos = xsp;
+    if (jj_3R_6()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_7()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_16() {
+    if (jj_3R_17()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_18() {
+    if (jj_scan_token(COLON)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_9() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(26)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(31)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(23)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(53)) return true;
+    }
+    }
+    }
+    if (jj_3R_8()) return true;
     return false;
   }
 
