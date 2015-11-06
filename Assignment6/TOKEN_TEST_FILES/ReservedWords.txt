@@ -1,0 +1,3 @@
+if else function boolean number 
+string enum interface return 
+void
