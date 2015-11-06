@@ -190,12 +190,19 @@ TOKEN : {//Numbers
  	| <#SIGN: "-" | "+" >
 }
 
+void typeSignature():{}{
+  {System.out.println("Type: number");}
+   <NUMBER>
+  {System.out.println("Type: boolean");}
+  |<BOOLEAN>
+  {System.out.println("Type: string");}
+  |<STRING>}
 
 void AssignmentStatement():{}{
 //  LOOKAHEAD(3)
 //  {System.out.println("VariableDeclaration STARTS");}//  <VAR> <IDENTIFIER> <SEMICOLON>//  {System.out.println("VariableDeclaration ENDS");}//|
 	{System.out.println("ComplexAssignmentStatement STARTS");}
-	(<VAR>)? <IDENTIFIER> (<COLON> <IDENTIFIER>)? (<EQ> Expression())? <SEMICOLON>
+	(<VAR>)? <IDENTIFIER> (<COLON> typeSignature())? (<EQ> Expression())? <SEMICOLON>
 	{System.out.println("ComplexAssignmentStatement ENDS");}	  }
 
 
@@ -209,6 +216,7 @@ void Expression() : {}
   {System.out.println("SimpleExpression ENDS");}
 
   |
+  LOOKAHEAD(6)
   	(  	  SimpleExpression()
   		// ==     !=         <      <=     >      >=          
   		( <EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>)
