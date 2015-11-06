@@ -1,7 +1,7 @@
 options {
     BUILD_PARSER=true;
     IGNORE_CASE=true;
-    DEBUG_TOKEN_MANAGER=false;
+    DEBUG_TOKEN_MANAGER=true;
 }
 
 PARSER_BEGIN(AtScriptParser)
@@ -21,7 +21,7 @@ public class AtScriptParser
         java.io.StringReader sr = new java.io.StringReader(content);
         AtScriptParser parser = new AtScriptParser(sr);
         try {
-            parser.PhoneNumber();
+            parser.Expression();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -30,14 +30,31 @@ public class AtScriptParser
 }
 PARSER_END(AtScriptParser)
 
+
+SKIP : {
+    <IGNORE : [" ", "\n", "\t", "\r"]>
+   | <"//" (~["\n"])* ("\n"|"\r")? >
+   | <"/*" > : ML_COMMENT
+}
+
+<ML_COMMENT> SKIP :
+{
+  <"*/" >: DEFAULT
+  |<~[]>
+}
+
+
+
 TOKEN : {
-    <FOUR_DIGITS  : (<DIGITS>){4}>
-  | <THREE_DIGITS : (<DIGITS>){3}>
-  | <#DIGITS      : ["0"-"9"]>
+  <DIGIT : ["0"-"9"]>
 }
 
-void PhoneNumber() : {} {
-  <THREE_DIGITS> "-" <THREE_DIGITS> "-" <FOUR_DIGITS> <EOF>
-    { System.out.println("Successfully parsed a phone number!"); }
+void Expression() : { StringBuffer sb = new StringBuffer(); }
+{
+  LOOKAHEAD(2) (Term() "+" Expression()) | Term() 
 }
 
+void Term() : {} 
+{
+  <DIGIT>
+}
