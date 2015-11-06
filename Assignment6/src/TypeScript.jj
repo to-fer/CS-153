@@ -12,6 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
+/**
+	TypeScriptParser is the class that is doing the parsing of
+	the program file (not implemented)
+*/
 public class TypeScriptParser
 {
     public static void main(String [] args) throws IOException
@@ -19,7 +24,6 @@ public class TypeScriptParser
       	byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
 	  	String content = new String(encoded, StandardCharsets.UTF_8);
         java.io.StringReader sr = new java.io.StringReader(content);
-		/*
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
             parser.Expression();
@@ -27,12 +31,15 @@ public class TypeScriptParser
         catch (ParseException ex) {
             ex.printStackTrace();
         }
-        */
     }
 }
 PARSER_END(TypeScriptParser)
 
-
+/**
+	TypeScriptParserTokenManager class is used to just test if the
+	TOKENS that are difined actually work as planned It does not do
+	any parsing
+*/
 TOKEN_MGR_DECLS : {
     public static void main(String [] args) throws IOException
     {

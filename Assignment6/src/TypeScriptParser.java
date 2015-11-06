@@ -5,13 +5,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
+/**
+	TypeScriptParser is the class that is doing the parsing of
+	the program file (not implemented)
+*/
 public class TypeScriptParser implements TypeScriptParserConstants {
     public static void main(String [] args) throws IOException
     {
         byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
                 String content = new String(encoded, StandardCharsets.UTF_8);
         java.io.StringReader sr = new java.io.StringReader(content);
-                /*
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
             parser.Expression();
@@ -19,7 +23,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
         catch (ParseException ex) {
             ex.printStackTrace();
         }
-        */
     }
 
   static final public void Expression() throws ParseException {
