@@ -191,6 +191,15 @@ TOKEN : {//Numbers
 }
 
 
+void AssignmentStatement():{}{
+  LOOKAHEAD(3)
+  {System.out.println("AssignmentStatement STARTS");}
+  <VAR> <IDENTIFIER> <SEMICOLON>
+  {System.out.println("AssignmentStatement ENDS");}
+|
+	{System.out.println("complex statement");}
+	(<VAR>)? <IDENTIFIER> (<COLON> <IDENTIFIER>)? <EQ> Expression() <SEMICOLON>
+	{System.out.println("complex statement ends");}	  }
 
 
 // all the Expression 
@@ -207,6 +216,8 @@ void Expression() : {}
   		( <EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>)
   		SimpleExpression()
   	)
+ |
+	AssignmentStatement()
 }
 
 void SimpleExpression() : {} 
