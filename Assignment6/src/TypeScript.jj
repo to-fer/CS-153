@@ -193,19 +193,20 @@ TOKEN : {//Numbers
 
 void AssignmentStatement():{}{
   LOOKAHEAD(3)
-  {System.out.println("AssignmentStatement STARTS");}
+  {System.out.println("VariableDeclaration STARTS");}
   <VAR> <IDENTIFIER> <SEMICOLON>
-  {System.out.println("AssignmentStatement ENDS");}
+  {System.out.println("VariableDeclaration ENDS");}
 |
-	{System.out.println("complex statement");}
+	{System.out.println("ComplexAssignmentStatement STARTS");}
 	(<VAR>)? <IDENTIFIER> (<COLON> <IDENTIFIER>)? <EQ> Expression() <SEMICOLON>
-	{System.out.println("complex statement ends");}	  }
+	{System.out.println("ComplexAssignmentStatement ENDS");}	  }
 
 
 // all the Expression 
 void Expression() : {} 
 {
-  LOOKAHEAD(3)
+  (
+    LOOKAHEAD(6)
   {System.out.println("SimpleExpression STARTS");}
   SimpleExpression()
   {System.out.println("SimpleExpression ENDS");}
@@ -218,6 +219,7 @@ void Expression() : {}
   	)
  |
 	AssignmentStatement()
+)*
 }
 
 void SimpleExpression() : {} 
