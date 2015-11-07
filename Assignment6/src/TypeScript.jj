@@ -284,19 +284,12 @@ void typeSignature():{}
 // all the Expression 
 void Expression() : {} 
 {
-  LOOKAHEAD(2)
   {System.out.println("SimpleExpression STARTS");}
-  SimpleExpression()
+  SimpleExpression() (( <DOUBLE_EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>) SimpleExpression())?
   {System.out.println("SimpleExpression ENDS");}
-  |  	(
-  	  SimpleExpression()
-  		// ==             !=         <      <=     >      >=          
-  		( <DOUBLE_EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>)
-  		SimpleExpression()
-  	)
 }
 
-void SimpleExpression() : {} 
+void SimpleExpression() : {}
 {
   LOOKAHEAD(2)
  	( (<PLUS> | <MINUS>)? term()
@@ -307,8 +300,9 @@ void SimpleExpression() : {}
   	) | term()
 }
 
-void term() : {} 
+void term() : {}
 {
+
   LOOKAHEAD(2)
   (
     factor()
@@ -320,7 +314,7 @@ void term() : {}
   
 }
 
-void factor() : {} 
+void factor() : {}
 {
   <NOT> factor() | identifier() | number() | string() |
   <LEFT_PARAN> Expression() <RIGHT_PARAN>
@@ -332,7 +326,7 @@ void identifier() : {}
   <IDENTIFIER>
 }
 
-void number() : {} 
+void number() : {}
 {
   <NUM>
 }
