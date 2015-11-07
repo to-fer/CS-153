@@ -214,7 +214,7 @@ void If_stmt():{}
 {
   LOOKAHEAD(2)
   	{System.out.println("IF_STATEMENT START");}
-	If_part() Else_part() | If_part()
+	If_part() | If_part() Else_part()
 	{System.out.println("IF_STATEMENT END");}
 }
 
