@@ -262,9 +262,7 @@ void FunctionDeclaration():{}
 
 void Assignment():{}
 {
-  LOOKAHEAD(5)
-  VarIdentifierType() <SEMICOLON>|
-	VarIdentifierType() <EQ> Expression() <SEMICOLON>|
+  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
 		identifier() <EQ> Expression() <SEMICOLON>
 	{System.out.println("ComplexAssignmentStatement ENDS");}
 }
