@@ -26,7 +26,7 @@ public class TypeScriptParser
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.Assignment();
+            parser.Statement();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -150,7 +150,7 @@ TOKEN : {//Symbols
 	{ debugStream.println("RIGHT_BRAKET SYMBOL token: " + matchedToken.image); }
 	| <LEFT_BRACE : "{"> 
 	{ debugStream.println("LEFT_BRACE SYMBOL token: " + matchedToken.image); }
-	| <RIHGT_BRACE : "}">
+	| <RIGHT_BRACE : "}">
 	{ debugStream.println("RIHGT_BRACE SYMBOL token: " + matchedToken.image); }
 	| <LE : "<=">
 	{ debugStream.println("LT EQUAL SYMBOL token: " + matchedToken.image); }
@@ -190,20 +190,52 @@ TOKEN : {//Numbers
  	| <#SIGN: "-" | "+" >
 }
 
-void typeSignature():{}{
-  {System.out.println("Type: number");}
-   <NUMBER>
-  {System.out.println("Type: boolean");}
-  |<BOOLEAN>
-  {System.out.println("Type: string");}
-  |<STRING>}
+
+void Statement() : {}{
+  Compound_stmt() | Assignment() | Expression() <SEMICOLON>}
+
+void Compound_stmt() : {}
+{
+  <LEFT_BRACE> Statement_list() <RIGHT_BRACE>
+}
+
+void Statement_list() : {}
+{
+  (Statement())*
+}
+
+void If_stmt():{}
+{
+	<SEMICOLON>
+}
+
+void If_part():{}
+{
+	<SEMICOLON>
+}
+
+void Else_part():{}
+{
+	<SEMICOLON>
+}
 
 void Assignment():{}{
 	AssignmentVar() (<EQ> Expression())? <SEMICOLON>
 	{System.out.println("ComplexAssignmentStatement ENDS");}  }
 
+
 void AssignmentVar():{}
 {	<VAR> identifier() <COLON> typeSignature()
+}
+
+void typeSignature():{}
+{
+  {System.out.println("Type: number");}
+   <NUMBER>
+  {System.out.println("Type: boolean");}
+  |<BOOLEAN>
+  {System.out.println("Type: string");}
+  |<STRING>
 }
 
 // all the Expression 
