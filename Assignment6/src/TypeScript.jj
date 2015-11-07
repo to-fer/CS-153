@@ -26,7 +26,7 @@ public class TypeScriptParser
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.FunctionDeclaration();
+            parser.Statement();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
