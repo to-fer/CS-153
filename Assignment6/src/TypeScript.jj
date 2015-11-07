@@ -246,8 +246,6 @@ void ArgumentList(): {}
 void PureFunction(): {}
 {
     {System.out.println("PureFunction START");}
-    // If at some point typeSignature() includes void, then we'll need to do something else here because of
-    // how SideEffectFunction() is defined with <VOID> at the front.
     <LEFT_BRACE> Statement_list() <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>
     {System.out.println("PureFunction END");}
 }
@@ -262,6 +260,7 @@ void SideEffectFunction(): {}
 void FunctionDeclaration():{}
 {
     {System.out.println("FunctionDeclaration START");}
+    // If at some point typeSignature() includes void, then we'll need to do something else here.
     <FUNCTION> identifier() ArgumentList() (<COLON> (typeSignature() PureFunction() | <VOID> SideEffectFunction()) | SideEffectFunction())
     {System.out.println("FunctionDeclaration END");}
 }
