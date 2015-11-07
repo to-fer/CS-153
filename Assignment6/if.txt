@@ -1,4 +1,15 @@
-if (i < 0)
+if (i < 0 )
 {
 	var j: number = 0;
+	var j: number = 0;	
+} else {
+	var j: number = 0;
+	if(t =5) {
+		var j: number = 0;
+	} else if (6 == 7) {
+		var j: number = 0;
+	} else {
+		var j: number = 0;
+	}
 }
+

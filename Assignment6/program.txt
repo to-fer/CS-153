@@ -2,31 +2,29 @@ var test : boolean;
 var x: integer = 3;
 var t = 5 + 6*(9/3.64); 
 
-// a function 
-function cat(str : string) : string {
-	/*a block comments 
-		extending multi lines
-		*/
-	return str + " Hello"; 
+// No function integrated yet, but no choice conflicts so far
+
+if(display1 && !display2) {
+	var a = 1; 
+} else if(!display1 && !display2) {
+	var a = 3; 
+} else if(display1 && display2) {
+	var a = 5; 
+} else {
+	var a = 7; 
 }
 
-function cat(display1 : boolean, display2 : boolean ) : void {
-	if(display1 && !display2) {
-		var a = 1; 
-	} else if(!display1 && !display2) {
-		var a = 3; 
-	} else if(display1 && display2) {
-		var a = 5; 
+if (i < 0 )
+{
+	var j: number = 0;
+	var j: number = 0;	
+} else {
+	var j: number = 0;
+	if(t =5) {
+		var j: number = 0;
+	} else if (6 == 7) {
+		var j: number = 0;
 	} else {
-		var a = 7; 
+		var j: number = 0;
 	}
 }
-
-var a;
-if(x == y) {
-	a = 1; 
-} else {
-	a = 2; 
-}
-
-var str = cat("Good Bye");

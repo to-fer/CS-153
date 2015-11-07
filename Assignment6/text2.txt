@@ -3,4 +3,5 @@
 var isDone: boolean = -32+(centigrade/ratio);
 var isDone: boolean;
 var t: boolean = true; 
+0
 }
