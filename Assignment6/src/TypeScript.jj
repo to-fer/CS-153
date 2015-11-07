@@ -196,7 +196,8 @@ TOKEN : {//Numbers
 
 void Statement() : {}
 {
-  Compound_stmt() | Assignment() | Expression() <SEMICOLON> | FunctionDeclaration() | If_stmt()
+  // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
+  Compound_stmt() | Assignment() | FunctionDeclaration() | If_stmt()
 }
 
 
