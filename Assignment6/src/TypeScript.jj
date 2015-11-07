@@ -258,13 +258,12 @@ void FunctionDeclaration():{}
     {System.out.println("FunctionDeclaration END");}
 }
 
-
-
 void Assignment():{}
 {
+  {System.out.println("Assignment STARTS");}
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
 		identifier() <EQ> Expression() <SEMICOLON>
-	{System.out.println("ComplexAssignmentStatement ENDS");}
+	{System.out.println("Assignment ENDS");}
 }
 
 void VarIdentifierType(): {}
@@ -295,18 +294,19 @@ void Expression() : {}
   {System.out.println("SimpleExpression ENDS");}
 }
 
-void SimpleExpression() : {}
+void SimpleExpression() : {System.out.println("SimpleExpression START");}
 {
-  //LOOKAHEAD(2)
+  LOOKAHEAD(2)
  	( (<PLUS> | <MINUS>)? term()
 	  	(
 	  	  (<PLUS> | <MINUS> | <OR>)
 	  	  term()
 	  	)*
   	) | term()
+  {System.out.println("SimpleExpression END");}
 }
 
-void term() : {}
+void term() : {System.out.println("term START");}
 {
 
   LOOKAHEAD(2)
@@ -317,13 +317,14 @@ void term() : {}
 			factor()
 		)*
   ) | factor()
-  
+  {System.out.println("term END");}
 }
 
-void factor() : {}
+void factor() : {System.out.println("Factor START");}
 {
   <NOT> factor() | identifier() | number() | string() |
   <LEFT_PARAN> Expression() <RIGHT_PARAN>
+  {System.out.println("factor END");}
 }
 
 
