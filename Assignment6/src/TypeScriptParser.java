@@ -18,7 +18,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.Statement();
+            parser.Statement_list();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -31,6 +31,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
       Compound_stmt();
       break;
     case VAR:
+    case IDENTIFIER:
       Assignment();
       break;
     case NOT:
@@ -38,10 +39,12 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     case PLUS:
     case LEFT_PARAN:
     case STRING_LITERAL:
-    case IDENTIFIER:
     case NUM:
       Expression();
       jj_consume_token(SEMICOLON);
+      break;
+    case FUNCTION:
+      FunctionDeclaration();
       break;
     case IF:
       If_stmt();
@@ -65,6 +68,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VAR:
       case IF:
+      case FUNCTION:
       case NOT:
       case MINUS:
       case PLUS:
@@ -84,22 +88,10 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void If_stmt() throws ParseException {
-    if (jj_2_1(2)) {
          System.out.println("IF_STATEMENT START");
-      If_part();
-      Else_part();
-    } else {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IF:
-        If_part();
+    If_part();
+    Else_part();
          System.out.println("IF_STATEMENT END");
-        break;
-      default:
-        jj_la1[2] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
   }
 
   static final public void If_part() throws ParseException {
@@ -111,20 +103,21 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void Else_part() throws ParseException {
-    jj_consume_token(ELSE);
-    Statement();
-  }
-
-  static final public void IdentifierType() throws ParseException {
-    identifier();
-    jj_consume_token(COLON);
-    typeSignature();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ELSE:
+      jj_consume_token(ELSE);
+      Statement();
+      break;
+    default:
+      jj_la1[2] = jj_gen;
+      ;
+    }
   }
 
   static final public void ArgumentList() throws ParseException {
     jj_consume_token(LEFT_PARAN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENTIFIER:
+    case VAR:
       IdentifierType();
       label_2:
       while (true) {
@@ -212,23 +205,37 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void Assignment() throws ParseException {
-    AssignmentVar();
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case EQ:
-      jj_consume_token(EQ);
-      Expression();
-      break;
-    default:
-      jj_la1[8] = jj_gen;
-      ;
-    }
-    jj_consume_token(SEMICOLON);
+    if (jj_2_1(5)) {
+      IdentifierType();
+      jj_consume_token(SEMICOLON);
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case VAR:
+        IdentifierType();
+        jj_consume_token(EQ);
+        Expression();
+        jj_consume_token(SEMICOLON);
+        break;
+      case IDENTIFIER:
+        identifier();
+        jj_consume_token(EQ);
+        Expression();
+        jj_consume_token(SEMICOLON);
          System.out.println("ComplexAssignmentStatement ENDS");
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
   }
 
-  static final public void AssignmentVar() throws ParseException {
+  static final public void IdentifierType() throws ParseException {
     jj_consume_token(VAR);
-    IdentifierType();
+    identifier();
+    jj_consume_token(COLON);
+    typeSignature();
   }
 
   static final public void typeSignature() throws ParseException {
@@ -254,56 +261,50 @@ public class TypeScriptParser implements TypeScriptParserConstants {
 
 // all the Expression 
   static final public void Expression() throws ParseException {
-    if (jj_2_2(2)) {
    System.out.println("SimpleExpression STARTS");
-      SimpleExpression();
-   System.out.println("SimpleExpression ENDS");
-    } else {
+    SimpleExpression();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case LT:
+    case GT:
+    case LE:
+    case GE:
+    case DOUBLE_EQ:
+    case NOT_EQ:
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NOT:
-      case MINUS:
-      case PLUS:
-      case LEFT_PARAN:
-      case STRING_LITERAL:
-      case IDENTIFIER:
-      case NUM:
-        SimpleExpression();
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case DOUBLE_EQ:
-          jj_consume_token(DOUBLE_EQ);
-          break;
-        case NOT_EQ:
-          jj_consume_token(NOT_EQ);
-          break;
-        case LT:
-          jj_consume_token(LT);
-          break;
-        case LE:
-          jj_consume_token(LE);
-          break;
-        case GT:
-          jj_consume_token(GT);
-          break;
-        case GE:
-          jj_consume_token(GE);
-          break;
-        default:
-          jj_la1[10] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
-        SimpleExpression();
+      case DOUBLE_EQ:
+        jj_consume_token(DOUBLE_EQ);
+        break;
+      case NOT_EQ:
+        jj_consume_token(NOT_EQ);
+        break;
+      case LT:
+        jj_consume_token(LT);
+        break;
+      case LE:
+        jj_consume_token(LE);
+        break;
+      case GT:
+        jj_consume_token(GT);
+        break;
+      case GE:
+        jj_consume_token(GE);
         break;
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[10] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
+      SimpleExpression();
+      break;
+    default:
+      jj_la1[11] = jj_gen;
+      ;
     }
+   System.out.println("SimpleExpression ENDS");
   }
 
   static final public void SimpleExpression() throws ParseException {
-    if (jj_2_3(2)) {
+    if (jj_2_2(2)) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case MINUS:
       case PLUS:
@@ -372,7 +373,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void term() throws ParseException {
-    if (jj_2_4(2)) {
+    if (jj_2_3(2)) {
       factor();
       label_4:
       while (true) {
@@ -484,19 +485,150 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     finally { jj_save(2, xla); }
   }
 
-  static private boolean jj_2_4(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return !jj_3_4(); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(3, xla); }
-  }
-
-  static private boolean jj_3R_12() {
-    if (jj_3R_8()) return true;
+  static private boolean jj_3R_11() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_15()) {
+    jj_scanpos = xsp;
+    if (jj_3R_16()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(16)) return true;
+    }
+    }
     return false;
   }
 
-  static private boolean jj_3R_11() {
+  static private boolean jj_3R_15() {
+    if (jj_scan_token(NUMBER)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_5() {
+    if (jj_scan_token(VAR)) return true;
+    if (jj_scan_token(57)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_14() {
+    if (jj_scan_token(LEFT_PARAN)) return true;
+    if (jj_3R_17()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_9() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_13()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(57)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(58)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(56)) {
+    jj_scanpos = xsp;
+    if (jj_3R_14()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_13() {
+    if (jj_scan_token(NOT)) return true;
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_12() {
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_8() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(29)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(28)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(53)) return true;
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_19() {
+    if (jj_3R_7()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_1() {
+    if (jj_3R_5()) return true;
+    if (jj_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_7() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_3()) {
+    jj_scanpos = xsp;
+    if (jj_3R_12()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3_3() {
+    if (jj_3R_9()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_10()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_6() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(29)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(28)) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3_2() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_6()) jj_scanpos = xsp;
+    if (jj_3R_7()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_8()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_18() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_2()) {
+    jj_scanpos = xsp;
+    if (jj_3R_19()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_17() {
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_10() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(27)) {
@@ -512,135 +644,8 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     return false;
   }
 
-  static private boolean jj_3_4() {
-    if (jj_3R_10()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_11()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_8() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_4()) {
-    jj_scanpos = xsp;
-    if (jj_3R_13()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_7() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(29)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(28)) return true;
-    }
-    return false;
-  }
-
   static private boolean jj_3R_16() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_2()) {
-    jj_scanpos = xsp;
-    if (jj_3R_17()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3_2() {
-    if (jj_3R_6()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_1() {
-    if (jj_3R_5()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_15() {
-    if (jj_scan_token(LEFT_PARAN)) return true;
-    if (jj_3R_16()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_14() {
-    if (jj_scan_token(NOT)) return true;
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_10() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_14()) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(57)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(58)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(56)) {
-    jj_scanpos = xsp;
-    if (jj_3R_15()) return true;
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3_3() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_7()) jj_scanpos = xsp;
-    if (jj_3R_8()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_9()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_6() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_3()) {
-    jj_scanpos = xsp;
-    if (jj_3R_12()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_13() {
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_5() {
-    if (jj_scan_token(IF)) return true;
-    if (jj_scan_token(LEFT_PARAN)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_17() {
-    if (jj_3R_6()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_9() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(29)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(53)) return true;
-    }
-    }
+    if (jj_scan_token(BOOLEAN)) return true;
     return false;
   }
 
@@ -664,12 +669,12 @@ public class TypeScriptParser implements TypeScriptParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x30400c00,0x30400c00,0x800,0x0,0x0,0x80000,0x11c000,0x0,0x40000000,0x1c000,0x0,0x30400000,0x30000000,0x30000000,0x30000000,0x30000000,0x400000,0x9000000,0x9000000,0x400000,0x400000,};
+      jj_la1_0 = new int[] {0x30402c00,0x30402c00,0x1000,0x0,0x400,0x80000,0x11c000,0x0,0x400,0x1c000,0x0,0x0,0x30000000,0x30000000,0x30000000,0x30000000,0x400000,0x9000000,0x9000000,0x400000,0x400000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x7004400,0x7004400,0x0,0x40,0x2000000,0x0,0x0,0x4002,0x0,0x0,0x950030,0x7000400,0x0,0x0,0x200000,0x200000,0x7000400,0x400001,0x400001,0x7000400,0x7000400,};
+      jj_la1_1 = new int[] {0x7004400,0x7004400,0x0,0x40,0x0,0x0,0x0,0x4002,0x2000000,0x0,0x950030,0x950030,0x0,0x0,0x200000,0x200000,0x7000400,0x400001,0x400001,0x7000400,0x7000400,};
    }
-  static final private JJCalls[] jj_2_rtns = new JJCalls[4];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[3];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -918,7 +923,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
 
   static private void jj_rescan_token() {
     jj_rescan = true;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
     try {
       JJCalls p = jj_2_rtns[i];
       do {
@@ -928,7 +933,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
             case 0: jj_3_1(); break;
             case 1: jj_3_2(); break;
             case 2: jj_3_3(); break;
-            case 3: jj_3_4(); break;
           }
         }
         p = p.next;

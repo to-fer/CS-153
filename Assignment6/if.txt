@@ -4,12 +4,16 @@ if (i < 0 )
 	var j: number = 0;	
 } else {
 	var j: number = 0;
-	if(t =5) {
-		var j: number = 0;
-	} else if (6 == 7) {
-		var j: number = 0;
+	
+	if(0) {
+		j=5;
+		j=5;
+	}else if(2) {
+		j=5;
+		j=5;
+		var j: number = 0;	
 	} else {
-		var j: number = 0;
+		g = 93*56/6.644;
 	}
 }
 

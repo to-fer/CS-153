@@ -26,7 +26,7 @@ public class TypeScriptParser
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.Statement();
+            parser.Statement_list();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -212,26 +212,23 @@ void Statement_list() : {}
 
 void If_stmt():{}
 {
-  LOOKAHEAD(2)
   	{System.out.println("IF_STATEMENT START");}
-	If_part() Else_part() | If_part()
+	If_part() Else_part() 
 	{System.out.println("IF_STATEMENT END");}
 }
 
 void If_part():{}
 {
 	<IF> <LEFT_PARAN> Expression() <RIGHT_PARAN> Statement()
+	
 }
 
 void Else_part():{}
 {
-	< ELSE > Statement() 
+	(	  < ELSE > Statement()
+	)?
 }
 
-void IdentifierType():{}
-{
-    identifier() <COLON> typeSignature()
-}
 
 void ArgumentList(): {}
 {
@@ -262,13 +259,16 @@ void FunctionDeclaration():{}
 
 void Assignment():{}
 {
-	AssignmentVar() (<EQ> Expression())? <SEMICOLON>
+  LOOKAHEAD(5)
+  IdentifierType() <SEMICOLON>|
+	IdentifierType() <EQ> Expression() <SEMICOLON>|
+		identifier() <EQ> Expression() <SEMICOLON>
 	{System.out.println("ComplexAssignmentStatement ENDS");}
 }
 
-void AssignmentVar():{}
+void IdentifierType():{}
 {
-    <VAR> IdentifierType()
+    <VAR> identifier() <COLON> typeSignature()
 }
 
 void typeSignature():{}
