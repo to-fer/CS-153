@@ -99,13 +99,13 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   static final public void If_part() throws ParseException {
     jj_consume_token(IF);
     Expression();
-    Statement();
+    Compound_stmt();
   }
 
 //void Else_if_part():{}//{//	<ELSE> <IF> Expression() Statement()//}
   static final public void Else_part() throws ParseException {
     jj_consume_token(ELSE);
-    Statement();
+    Compound_stmt();
   }
 
   static final public void Assignment() throws ParseException {

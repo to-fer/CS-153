@@ -215,13 +215,13 @@ void If_stmt():{}
 
 void If_part():{}
 {
-	<IF> Expression() Statement()
+	<IF> Expression() Compound_stmt()
 }
 
 //void Else_if_part():{}//{//	<ELSE> <IF> Expression() Statement()//}
 void Else_part():{}
 {
-	< ELSE > Statement()
+	< ELSE > Compound_stmt()
 }
 
 void Assignment():{}{
