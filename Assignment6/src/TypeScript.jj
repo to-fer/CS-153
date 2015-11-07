@@ -214,7 +214,8 @@ void Statement_list() : {}
 void If_stmt():{}
 {
   	{System.out.println("IF_STATEMENT START");}
-	If_part() Else_part() 
+  	// The else part of if statements is forced to be present.
+	If_part() Else_part()
 	{System.out.println("IF_STATEMENT END");}
 }
 
@@ -226,9 +227,7 @@ void If_part():{}
 
 void Else_part():{}
 {
-	(
 	  < ELSE > Statement()
-	)?
 }
 
 
