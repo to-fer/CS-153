@@ -8,8 +8,8 @@ function with_no_arguments(): string {
     return x;
 }
 
-function with_one_argument(weee: number): number
+function with_one_argument(weee: number): number { return weee; }
 
-function with_multiple_arguments(one: number, two: number, three: number): number
+function with_multiple_arguments(one: number, two: number, three: number): number { return one + two + three; }
 
 function explicit_void_function(): void {}

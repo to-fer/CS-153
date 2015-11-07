@@ -1,7 +1,7 @@
 options {
     BUILD_PARSER=true;
     IGNORE_CASE=true;
-    DEBUG_TOKEN_MANAGER=true;
+    DEBUG_TOKEN_MANAGER=false;
 }
 
 PARSER_BEGIN(TypeScriptParser)
@@ -196,7 +196,7 @@ TOKEN : {//Numbers
 
 void Statement() : {}
 {
-  Compound_stmt() | Assignment() | Expression() <SEMICOLON> | If_stmt() 
+  Compound_stmt() | Assignment() | Expression() <SEMICOLON> | FunctionDeclaration() | If_stmt()
 }
 
 
