@@ -18,7 +18,7 @@ public class TypeScriptParser implements TypeScriptParserConstants {
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.Expression();
+            parser.Statement();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -620,6 +620,12 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     return false;
   }
 
+  static private boolean jj_3R_5() {
+    if (jj_scan_token(IF)) return true;
+    if (jj_scan_token(LEFT_PARAN)) return true;
+    return false;
+  }
+
   static private boolean jj_3R_17() {
     if (jj_3R_6()) return true;
     return false;
@@ -635,12 +641,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     if (jj_scan_token(53)) return true;
     }
     }
-    return false;
-  }
-
-  static private boolean jj_3R_5() {
-    if (jj_scan_token(IF)) return true;
-    if (jj_scan_token(LEFT_PARAN)) return true;
     return false;
   }
 
