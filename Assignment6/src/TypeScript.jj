@@ -97,6 +97,8 @@ TOKEN : {//Reserved words
  	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
  	| <VOID : "void">
  	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+ 	| <WHILE : "while">
+ 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
 }
 
 TOKEN : {//Symbols
@@ -191,10 +193,12 @@ TOKEN : {//Numbers
 }
 
 
+
 void Statement() : {}
 {
-  Compound_stmt() | Assignment() | Expression() <SEMICOLON>
+  Compound_stmt() | Assignment() | Expression() | If_stmt() //<SEMICOLON>
 }
+
 
 void Compound_stmt() : {}
 {
@@ -208,17 +212,25 @@ void Statement_list() : {}
 
 void If_stmt():{}
 {
-	<SEMICOLON>
+  	{System.out.println("IF_STATEMENT START");}
+	If_part() (Else_part())?
+	{System.out.println("IF_STATEMENT END");}
+
+	  
 }
 
 void If_part():{}
 {
-	<SEMICOLON>
+	<IF> Expression() Compound_stmt()
 }
 
+//void Else_if_part():{}
+//{
+//	<ELSE> <IF> Expression() Statement()
+//}
 void Else_part():{}
 {
-	<SEMICOLON>
+	< ELSE > Compound_stmt()
 }
 
 void IdentifierType():{}
