@@ -26,7 +26,7 @@ public class TypeScriptParser
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.Statement();
+            parser.FunctionDeclaration();
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -191,8 +191,10 @@ TOKEN : {//Numbers
 }
 
 
-void Statement() : {}{
-  Compound_stmt() | Assignment() | Expression() <SEMICOLON>}
+void Statement() : {}
+{
+  Compound_stmt() | Assignment() | Expression() <SEMICOLON>
+}
 
 void Compound_stmt() : {}
 {
@@ -219,13 +221,48 @@ void Else_part():{}
 	<SEMICOLON>
 }
 
-void Assignment():{}{
-	AssignmentVar() (<EQ> Expression())? <SEMICOLON>
-	{System.out.println("ComplexAssignmentStatement ENDS");}  }
+void IdentifierType():{}
+{
+    identifier() <COLON> typeSignature()
+}
 
+void ArgumentList(): {}
+{
+    <LEFT_PARAN> (IdentifierType() (<COMMA> IdentifierType())* )? <RIGHT_PARAN>
+}
+
+void PureFunction(): {}
+{
+    {System.out.println("PureFunction START");}
+    // If at some point typeSignature() includes void, then we'll need to do something else here because of
+    // how SideEffectFunction() is defined with <VOID> at the front.
+    <LEFT_BRACE> Statement_list() <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>
+    {System.out.println("PureFunction END");}
+}
+
+void SideEffectFunction(): {}
+{
+    {System.out.println("SideEffectFunction START");}
+    <LEFT_BRACE> Statement_list() (<RETURN> <SEMICOLON>)? <RIGHT_BRACE>
+    {System.out.println("SideEffectFunction END");}
+}
+
+void FunctionDeclaration():{}
+{
+    {System.out.println("FunctionDeclaration START");}
+    <FUNCTION> identifier() ArgumentList() (<COLON> (typeSignature() PureFunction() | <VOID> SideEffectFunction()) | SideEffectFunction())
+    {System.out.println("FunctionDeclaration END");}
+}
+
+void Assignment():{}
+{
+	AssignmentVar() (<EQ> Expression())? <SEMICOLON>
+	{System.out.println("ComplexAssignmentStatement ENDS");}
+}
 
 void AssignmentVar():{}
-{	<VAR> identifier() <COLON> typeSignature()
+{
+    <VAR> IdentifierType()
 }
 
 void typeSignature():{}
@@ -245,7 +282,8 @@ void Expression() : {}
   {System.out.println("SimpleExpression STARTS");}
   SimpleExpression()
   {System.out.println("SimpleExpression ENDS");}
-  |  	(  	  SimpleExpression()
+  |  	(
+  	  SimpleExpression()
   		// ==     !=         <      <=     >      >=          
   		( <DOUBLE_EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>)
   		SimpleExpression()
@@ -256,7 +294,8 @@ void SimpleExpression() : {}
 {
   LOOKAHEAD(2)
  	( (<PLUS> | <MINUS>)? term()
-	  	(	  	  (<PLUS> | <MINUS> | <OR>)
+	  	(
+	  	  (<PLUS> | <MINUS> | <OR>)
 	  	  term()
 	  	)*
   	) | term()
