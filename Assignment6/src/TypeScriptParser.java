@@ -47,29 +47,25 @@ public class TypeScriptParser implements TypeScriptParserConstants {
   }
 
   static final public void Assignment() throws ParseException {
+    AssignmentVar();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENTIFIER:
-      identifier();
+    case EQ:
       jj_consume_token(EQ);
       Expression();
-      jj_consume_token(SEMICOLON);
-      break;
-    case VAR:
-         System.out.println("ComplexAssignmentStatement STARTS");
-      jj_consume_token(VAR);
-      identifier();
-      jj_consume_token(COLON);
-      typeSignature();
-      jj_consume_token(EQ);
-      Expression();
-      jj_consume_token(SEMICOLON);
-         System.out.println("ComplexAssignmentStatement ENDS");
       break;
     default:
       jj_la1[1] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+      ;
     }
+    jj_consume_token(SEMICOLON);
+         System.out.println("ComplexAssignmentStatement ENDS");
+  }
+
+  static final public void AssignmentVar() throws ParseException {
+    jj_consume_token(VAR);
+    identifier();
+    jj_consume_token(COLON);
+    typeSignature();
   }
 
 // all the Expression 
@@ -304,24 +300,6 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     finally { jj_save(2, xla); }
   }
 
-  static private boolean jj_3R_14() {
-    if (jj_3R_3()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_6() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(27)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(52)) return true;
-    }
-    }
-    return false;
-  }
-
   static private boolean jj_3R_9() {
     if (jj_3R_5()) return true;
     return false;
@@ -446,6 +424,24 @@ public class TypeScriptParser implements TypeScriptParserConstants {
     return false;
   }
 
+  static private boolean jj_3R_14() {
+    if (jj_3R_3()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_6() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(28)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(27)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(52)) return true;
+    }
+    }
+    return false;
+  }
+
   static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
   static public TypeScriptParserTokenManager token_source;
@@ -466,10 +462,10 @@ public class TypeScriptParser implements TypeScriptParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1c000,0x400,0x0,0x18200000,0x18000000,0x18000000,0x18000000,0x18000000,0x200000,0x84800000,0x84800000,0x200000,0x200000,};
+      jj_la1_0 = new int[] {0x1c000,0x20000000,0x0,0x18200000,0x18000000,0x18000000,0x18000000,0x18000000,0x200000,0x84800000,0x84800000,0x200000,0x200000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x1000000,0x4a8018,0x3800200,0x0,0x0,0x100000,0x100000,0x3800200,0x200000,0x200000,0x3800200,0x3800200,};
+      jj_la1_1 = new int[] {0x0,0x0,0x4a8018,0x3800200,0x0,0x0,0x100000,0x100000,0x3800200,0x200000,0x200000,0x3800200,0x3800200,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[3];
   static private boolean jj_rescan = false;

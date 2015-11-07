@@ -199,11 +199,12 @@ void typeSignature():{}{
   |<STRING>}
 
 void Assignment():{}{
-	identifier() <EQ> Expression() <SEMICOLON> |
-	{System.out.println("ComplexAssignmentStatement STARTS");}
-	<VAR> identifier() <COLON> typeSignature() <EQ> Expression() <SEMICOLON>
+	AssignmentVar() (<EQ> Expression())? <SEMICOLON>
 	{System.out.println("ComplexAssignmentStatement ENDS");}  }
 
+void AssignmentVar():{}
+{	<VAR> identifier() <COLON> typeSignature()
+}
 
 // all the Expression 
 void Expression() : {} 
