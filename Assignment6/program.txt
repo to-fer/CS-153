@@ -1,4 +1,5 @@
-var x = 3;
+var test;
+var x: integer = 3;
 var t = 5 + 6*(9/3.64); 
 
 // a function 
