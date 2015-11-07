@@ -2,7 +2,21 @@ var test : boolean;
 var x: number = 3;
 var t: number = 5 + 6*(9/3.64); 
 
-// No function integrated yet, but no choice conflicts so far
+function explicit_void_and_return_function(): void { return; }
+
+function void_function() {}
+
+function with_no_arguments(): string {
+    var x: string = "test";
+    var y: number = 5;
+    return x;
+}
+
+function with_one_argument(weee: number): number { return weee; }
+
+function with_multiple_arguments(one: number, two: number, three: number): number { return one + two + three; }
+
+function explicit_void_function(): void {}
 
 if(display1 && !display2) {
 	a = 1; 

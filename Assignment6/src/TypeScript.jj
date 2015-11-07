@@ -297,7 +297,7 @@ void Expression() : {}
 
 void SimpleExpression() : {}
 {
-  LOOKAHEAD(2)
+  //LOOKAHEAD(2)
  	( (<PLUS> | <MINUS>)? term()
 	  	(
 	  	  (<PLUS> | <MINUS> | <OR>)
