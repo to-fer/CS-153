@@ -330,17 +330,26 @@ void factor() : {System.out.println("Factor START");}
 }
 
 
-void identifier() : {} 
+void identifier() : {Token t;} 
 {
-  <IDENTIFIER>
+  t = <IDENTIFIER>
+  {jjtThis.jjtSetValue(t);}
 }
 
-void number() : {}
+void number() : {Token t;}
 {
-  <NUM>
+  t = <NUM>
+  { try	  {		jjtThis.jjtSetValue(Integer.valueOf(t.image));
+	  }
+	  catch(Exception e){}
+	  finally
+	  {		jjtThis.jjtSetValue(Double.valueOf(t.image));
+	  }  }    
 }
 
-void string() : {} 
+void string() : {Token t;} 
 {
-  <STRING_LITERAL>
+
+  t = < STRING_LITERAL >
+  {jjtThis.jjtSetValue(t);}
 }
