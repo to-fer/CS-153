@@ -26,7 +26,8 @@ public class TypeScriptParser
         java.io.StringReader sr = new java.io.StringReader(content);
         TypeScriptParser parser = new TypeScriptParser(sr);
         try {
-            parser.Statement_list();
+            SimpleNode root = parser.Statement_list();
+            root.dump(">");
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -206,9 +207,10 @@ void Compound_stmt() : {}
   <LEFT_BRACE> Statement_list() <RIGHT_BRACE>
 }
 
-void Statement_list() : {}
+SimpleNode Statement_list() : {}
 {
   (Statement())*
+  {return jjtThis;}
 }
 
 void If_stmt():{}
