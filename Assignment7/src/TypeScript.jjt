@@ -218,6 +218,7 @@ void If_stmt():{}
   	{System.out.println("IF_STATEMENT START");}
   	// The else part of if statements is forced to be present.
 	If_part() Else_part()
+	
 	{System.out.println("IF_STATEMENT END");}
 }
 
@@ -281,11 +282,11 @@ void IdentifierType():{}
 void typeSignature():{}
 {
   {System.out.println("Type: number");}
-   <NUMBER>
+   <NUMBER> #NUM_TYPE
   {System.out.println("Type: boolean");}
-  |<BOOLEAN>
+  |<BOOLEAN> #BOOL_TYPE
   {System.out.println("Type: string");}
-  |<STRING>
+  |<STRING> #STR_TYPE
 }
 
 // all the Expression 
