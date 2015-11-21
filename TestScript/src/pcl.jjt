@@ -1,0 +1,245 @@
+options{
+    IGNORE_CASE=true;
+    JJTREE_OUTPUT_DIRECTORY="wci/frontend";
+    NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
+    MULTI=true;
+    VISITOR=true;
+}
+
+PARSER_BEGIN(PclParser)
+package wci.frontend;
+
+import java.util.ArrayList;
+import java.io.*;
+
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
+import wci.backend.*;
+import wci.util.*;
+
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+
+public class PclParser
+{
+    private static SymTabStack symTabStack;
+    private static SymTabEntry programId;
+
+    public static void main(String[] args)
+        throws Exception
+    {
+    	// Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+        
+        String sourceFilePath = args[0];
+        
+        // Parse a Pcl program.
+        Reader    reader = new FileReader(sourceFilePath);
+        PclParser parser = new PclParser(reader);
+        SimpleNode rootNode = parser.program();
+		rootNode.dump(">");
+        // Print the cross-reference table.
+        //CrossReferencer crossReferencer = new CrossReferencer();
+        //crossReferencer.print(symTabStack);
+
+//        // Visit the parse tree nodes to decorate them with type information.//        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();//        rootNode.jjtAccept(typeVisitor, null);////        // Create and initialize the ICode wrapper for the parse tree.//        ICode iCode = ICodeFactory.createICode();//        iCode.setRoot(rootNode);//        programId.setAttribute(ROUTINE_ICODE, iCode);//        //        // Print the parse tree.//        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);//        treePrinter.print(symTabStack);
+    }
+}
+PARSER_END(PclParser)
+
+SKIP: {
+    " " | "\r" | "\t" | "\n"
+  | <"//" (~["\n"])* ("\n"|"\r")?>
+  | <COMMENT : "{"(~["}"])*"}">
+}
+
+TOKEN : { //useful regex
+	<#DIGIT  : ["0"-"9"]>
+    |<#ONE_TO_NINE: ["1"-"9"] >
+	  	//A-Z only if ignore case option is false
+	| <#LETTER : ["a"-"z","A"-"Z"]>
+	| <#SPACE: [" "] >
+}
+
+TOKEN : {//Reserved words
+	<VAR : "var">
+	| <IF : "if">
+ 	| <ELSE : "else">
+ 	| <FUNCTION : "function">
+ 	| <BOOLEAN : "boolean">
+ 	| <NUMBER : "number">
+ 	| <STRING : "string">
+ 	| <ENUM : "enum">
+ 	| <INTERFACE : "interface">
+ 	| <RETURN : "return">
+ 	| <VOID : "void">
+ 	| <WHILE : "while">
+}
+
+TOKEN : {//Symbols
+	<NOT : "!">
+	| <AMPRSAND : "&">
+	| <MUL : "*">
+	| <MINUS : "-">
+	| <PLUS : "+">
+	| <EQ : "=">
+	| <BAR : "|">
+	| <DIV : "/">
+	| <COLON : ":">
+	| <SEMICOLON : ";">
+	| <QM : "?">
+	| <LT : "<">
+	| <GT : ">">
+	| <COMMA : ",">
+	| <DOT : ".">
+	| <SINGLE_QUOTE : "'">
+	| <QUOTE : "\"">
+	| <LEFT_PARAN : "(">
+	| <RIGHT_PARAN : ")">
+	| <LEFT_BRAKET : "[">
+	| <RIGHT_BRAKET : "]">
+	| <LEFT_BRACE : "{"> 
+	| <RIGHT_BRACE : "}">
+	| <LE : "<=">
+	| <UNDER_SCORE : "_">
+	| <GE : ">=">
+	| <DOUBLE_EQ : "==">
+	| <OR : "||">
+	| <AND : "&&">
+	| <NOT_EQ : "!=">
+}
+
+TOKEN : {//Character String and Strings
+	<STRING_LITERAL : <QUOTE> (~["\""])* <QUOTE> | <SINGLE_QUOTE> (~[]){1} <SINGLE_QUOTE> >
+}
+
+TOKEN : {//Identifier
+	<IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
+}
+
+/* TypeScript treats real and integers as Numbers*/
+TOKEN : {//Numbers
+	<NUM: <INTEGER> | <REAL>> 
+	| <INTEGER: (<SIGN>)? (<DIGIT>)+ | (<ONE_TO_NINE> (<DIGIT>)+) >
+	| <REAL: (<SIGN>)? (<DIGIT>)+ "." | (<SIGN>)? "." (<DIGIT>)+ | (<SIGN>)? (<DIGIT>)+ "." (<DIGIT>)+ >
+
+	//for simple version you cant have -5 parse as number 
+ 	| <#SIGN: "" >
+}
+
+TOKEN: { /*	Error token */
+    <ERROR : ~["\r", "\n"]>
+}
+
+SimpleNode program() : {}
+{
+    try {
+        Statement_list()
+        (<EOF>)? {
+            return jjtThis;
+        }
+    }
+    catch (ParseException ex) {
+        handleError(ex);
+        return null;
+    }
+}
+
+void Statement() #void: {}
+{
+  // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
+  Compound_stmt() | Assignment()
+  //| FunctionDeclaration() | If_stmt()
+}
+
+
+void Compound_stmt() : {}
+{
+  <LEFT_BRACE> Statement_list() <RIGHT_BRACE>
+}
+
+void Statement_list() #void: {}
+{
+  (Statement())+
+}
+
+
+void Assignment() :{}
+{
+  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
+		identifier() <EQ> Expression() <SEMICOLON>
+}
+
+void VarIdentifierType() #void : {}
+{
+    <VAR> IdentifierType()
+}
+
+void IdentifierType() #void :{}
+{
+    identifier() <COLON> typeSignature()
+}
+
+void typeSignature() #void :{}
+{
+   <NUMBER>
+  |<BOOLEAN>
+  |<STRING>
+}
+
+void Expression() #void : {}
+{
+    term() (
+        "+" term() #add(2)
+      | "-" term() #subtract(2)
+    )*     
+}
+
+void term() #void : {}
+{
+    factor() (
+        "*" factor() #multiply(2)
+      | "/" factor() #divide(2)
+    )*     
+}
+
+void factor() #void : {}
+{
+    identifier()
+  | number()
+}
+
+
+void identifier() : {} 
+{
+  <IDENTIFIER>
+}
+
+void number() : {}
+{
+  <NUM>
+}
+
+void string() : {} 
+{
+  <STRING_LITERAL>
+}
+
+JAVACODE
+
+String handleError(ParseException ex) #void
+{
+    Token token = ex.currentToken;
+    System.out.println(ex.getMessage());
+
+    do {
+    	token = getNextToken();
+    } while (token.kind != SEMICOLON);
+
+	jjtree.popNode();
+    return token.image;
+}
