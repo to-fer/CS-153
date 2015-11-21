@@ -179,9 +179,10 @@ void VarIdentifierType() #void : {}
     <VAR> IdentifierType()
 }
 
-void IdentifierType() #void :{}
+void IdentifierType() #void :{String varName;}
 {
-    identifier() <COLON> typeSignature()
+    varName = identifier()    {
+      SymTabEntry variableId = symTabStack.enterLocal(token.image);    } <COLON> typeSignature()
 }
 
 void typeSignature() #void :{}
@@ -214,9 +215,11 @@ void factor() #void : {}
 }
 
 
-void identifier() : {} 
+String identifier() : {} 
 {
   <IDENTIFIER>
+  {
+    return token.image;  }
 }
 
 void number() : {}
