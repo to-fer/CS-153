@@ -4,15 +4,24 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
 
 /**
 	TypeScriptParser is the class that is doing the parsing of
 	the program file (not implemented)
 */
 public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeConstants, TypeScriptParserConstants {/*@bgen(jjtree)*/
-  protected static JJTTypeScriptParserState jjtree = new JJTTypeScriptParserState();public static void main(String [] args) throws IOException
+  protected static JJTTypeScriptParserState jjtree = new JJTTypeScriptParserState();
+  private static SymTabStack symTabStack;
+    public static void main(String [] args) throws IOException
     {
+
+        // Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+
+
         byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
                 String content = new String(encoded, StandardCharsets.UTF_8);
         java.io.StringReader sr = new java.io.StringReader(content);
@@ -1105,37 +1114,6 @@ therefore match every possible string before the parser reaches Error().
     finally { jj_save(1, xla); }
   }
 
-  static private boolean jj_3R_19() {
-    if (jj_3R_20()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_17() {
-    if (jj_scan_token(NUM)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_9() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(33)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(25)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(55)) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_16() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
   static private boolean jj_3R_15() {
     if (jj_scan_token(LEFT_PARAN)) return true;
     if (jj_3R_19()) return true;
@@ -1220,11 +1198,6 @@ therefore match every possible string before the parser reaches Error().
     return false;
   }
 
-  static private boolean jj_3R_18() {
-    if (jj_scan_token(STRING_LITERAL)) return true;
-    return false;
-  }
-
   static private boolean jj_3R_5() {
     Token xsp;
     xsp = jj_scanpos;
@@ -1232,6 +1205,11 @@ therefore match every possible string before the parser reaches Error().
     jj_scanpos = xsp;
     if (jj_scan_token(29)) return true;
     }
+    return false;
+  }
+
+  static private boolean jj_3R_18() {
+    if (jj_scan_token(STRING_LITERAL)) return true;
     return false;
   }
 
@@ -1259,6 +1237,37 @@ therefore match every possible string before the parser reaches Error().
 
   static private boolean jj_3R_12() {
     if (jj_3R_16()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_19() {
+    if (jj_3R_20()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_17() {
+    if (jj_scan_token(NUM)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_9() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(28)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(33)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(25)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(55)) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_16() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
