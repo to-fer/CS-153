@@ -1,0 +1,54 @@
+var test : boolean;
+var x: number = 3;
+var t: number = 5 + 6*(9/3.64);
+
+function explicit_void_and_return_function(): void { return; }
+
+function void_function() {} THIS_SHOULDNT_BE_HERE
+
+function with_no_arguments(): string {
+    var x: string = "test";
+    var y: number = 5;
+    return x;
+}
+
+function with_one_argument(weee: number): number { return weee; }
+
+function with_multiple_arguments(one: number, two: number, three: number): number { return one + two + three; }
+
+function explicit_void_function(): void {}
+
+if(display1 && !display2) {
+	a = 1;
+} else if(!display1 && !display2) {
+	a = 3;
+} else if(display1 && display2) {
+	a = 5;
+} else {
+	a = 7;
+}
+
+/** block comment
+ block comment
+ block comment
+ \n
+*/
+
+if (i < 0 )
+{
+	var j: number = 0;
+	var j: number = 0;
+} else {
+	var j: number = 0;
+
+	if(0) {
+		j=5;
+		j=5;
+	}else if(2) {
+		j=5;
+		j=5;
+		var j: number = 0;
+	} else {
+		g = 93*56/6.644;
+	}
+}
