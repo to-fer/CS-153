@@ -12,6 +12,7 @@ import wci.intermediate.ICodeNodeType;
  */
 public enum ICodeNodeTypeImpl implements ICodeNodeType
 {
+    // TODO Add TypeScript-specific things here and remove the Pascal-specific things.
     // Program structure
     PROGRAM, PROCEDURE, FUNCTION,
 
@@ -31,17 +32,5 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     // Operands
     VARIABLE, SUBSCRIPTS, FIELD,
     INTEGER_CONSTANT, REAL_CONSTANT,
-    STRING_CONSTANT, BOOLEAN_CONSTANT,
-
-    // Set node
-    SET, //this node type will be the root node of a set expression parse tree
-
-    // Set operation nodes
-    SET_IN,
-
-    // range node
-    RANGE, //this node type will be the root node of a range expression parse tree
-
-    // WRITE parameter
-    WRITE_PARM,
+    STRING_CONSTANT, BOOLEAN_CONSTANT
 }

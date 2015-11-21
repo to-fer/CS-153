@@ -84,11 +84,11 @@ public class ParseTreePrinter
                            " " + routineId.getName() + " ***\n");
 
         // Print the intermediate code in the routine's symbol table entry.
-        ICode iCode = (ICode) routineId.getAttribute(ROUTINE_ICODE);
+        ICode iCode = (ICode) routineId.getAttribute(FUNCTION_ICODE);
         if (iCode.getRoot() != null) {
             printNode((ICodeNodeImpl) iCode.getRoot());
         }
-
+/*
         // Print any procedures and functions defined in the routine.
         ArrayList<SymTabEntry> routineIds =
             (ArrayList<SymTabEntry>) routineId.getAttribute(ROUTINE_ROUTINES);
@@ -96,7 +96,7 @@ public class ParseTreePrinter
             for (SymTabEntry rtnId : routineIds) {
                 printRoutine(rtnId);
             }
-        }
+        }*/
     }
 
     /**

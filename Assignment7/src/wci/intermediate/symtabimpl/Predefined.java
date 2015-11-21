@@ -20,6 +20,8 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
  */
 public class Predefined
 {
+    // TODO Add TypeScript-specific predefined types here in a manner similar to how is done in the commented out code.
+    /*
     // Predefined types.
     public static TypeSpec integerType;
     public static TypeSpec realType;
@@ -34,10 +36,10 @@ public class Predefined
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
-
+*/
     /**
      * Initialize a symbol table stack with predefined identifiers.
-     * @param symTab the symbol table stack to initialize.
+     * @param symTabStack the symbol table stack to initialize.
      */
     public static void initialize(SymTabStack symTabStack)
     {
@@ -50,7 +52,7 @@ public class Predefined
      * @param symTabStack the symbol table stack to initialize.
      */
     private static void initializeTypes(SymTabStack symTabStack)
-    {
+    {/*
         // Type integer.
         integerId = symTabStack.enterLocal("integer");
         integerType = TypeFactory.createType(SCALAR);
@@ -81,6 +83,7 @@ public class Predefined
 
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);
+        */
     }
 
     /**
@@ -89,6 +92,7 @@ public class Predefined
      */
     private static void initializeConstants(SymTabStack symTabStack)
     {
+        /*
         // Boolean enumeration constant false.
         falseId = symTabStack.enterLocal("false");
         falseId.setDefinition(DefinitionImpl.ENUMERATION_CONSTANT);
@@ -106,5 +110,6 @@ public class Predefined
         constants.add(falseId);
         constants.add(trueId);
         booleanType.setAttribute(ENUMERATION_CONSTANTS, constants);
+        */
     }
 }
