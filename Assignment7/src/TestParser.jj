@@ -1,0 +1,67 @@
+/**
+Just a tester to run any weird experiments
+*/ 
+options {
+    BUILD_PARSER=true;
+    IGNORE_CASE=true;
+    DEBUG_TOKEN_MANAGER=false;
+}
+
+PARSER_BEGIN(TestParser)
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+
+/**
+	TypeScriptParser is the class that is doing the parsing of
+	the program file (not implemented)
+*/
+public class TestParser
+{
+    public static void main(String [] args) throws IOException
+    {
+      	byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
+	  	String content = new String(encoded, StandardCharsets.UTF_8);
+        java.io.StringReader sr = new java.io.StringReader(content);
+        TestParser parser = new TestParser(sr);
+        try {
+            TestParser.Expression();
+        }
+        catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+PARSER_END(TestParser)
+
+SKIP : {
+  " "
+}
+
+TOKEN : {
+    <DIGITS : (["0"-"9"])+>
+  | <PLUS : "+">
+}
+
+void Expression() : {} 
+{
+  {System.out.println("EXPRESSION STARTS");}
+  Operator()
+  {System.out.println("EXPRESSION ENDS");}
+}
+
+void Operator() : {} 
+{
+  Operand() 
+  "+" {System.out.println("Operator: " + tokenImage[PLUS]);} 
+  Operand()
+}
+
+void Operand() : {Token t;} 
+{
+  t=<DIGITS> {System.out.println("Operand: " + t.image);}
+}
