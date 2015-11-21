@@ -11,7 +11,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
 
 /**
 	TypeScriptParser is the class that is doing the parsing of
@@ -19,8 +20,16 @@ import java.nio.file.Paths;
 */
 public class TypeScriptParser
 {
+
+  private static SymTabStack symTabStack;
     public static void main(String [] args) throws IOException
     {
+
+        // Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+
+        
       	byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
 	  	String content = new String(encoded, StandardCharsets.UTF_8);
         java.io.StringReader sr = new java.io.StringReader(content);
