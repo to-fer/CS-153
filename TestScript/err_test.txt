@@ -1,0 +1,2 @@
+var i:number = 0 0 0 ;
+car j:numbe = 0;
