@@ -4,3 +4,4 @@ var x: char = "hello person";
 var l: boolean = true;
 var t: number = x + i*j - x;
 var y: number = (1+2+3);
+y = 6 +45;
