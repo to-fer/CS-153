@@ -182,14 +182,16 @@ void VarIdentifierType() #void : {}
 void IdentifierType() #void :{}
 {
     identifier()    {
-      processVariableDecl(token);    } <COLON>
+      processVariableDecl(token.image);    } <COLON>
     typeSignature()
     {
       SymTabEntry typeId = symTabStack.lookup(token.image);
       typeId.appendLineNumber(token.beginLine);
             TypeSpec type = typeId.getTypeSpec();
 
-//            for (SymTabEntry variableId : variableList) {//                variableId.setTypeSpec(type);//            }
+            for (SymTabEntry variableId : variableList) {
+                variableId.setTypeSpec(type);
+            }
     }
 }
 
@@ -231,7 +233,15 @@ void identifier() : {}
 
 void number() : {}
 {
-  <NUM>
+  <NUM>  {
+    try{
+  	  jjtThis.setTypeSpec(Predefined.numberType);
+      jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+  	    	} catch( Exception e)  	{
+  	  	try  	  	{
+        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));   	  	}catch( Exception e2)  	  	{			// must be error go to end of line 
+  	  	}  	}
+  }
 }
 
 void string() : {} 
