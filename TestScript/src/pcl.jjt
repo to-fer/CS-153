@@ -182,7 +182,7 @@ void VarIdentifierType() #void : {}
 void IdentifierType() #void :{String varName;}
 {
     varName = identifier()    {
-      SymTabEntry variableId = symTabStack.enterLocal(token.image);    } <COLON> typeSignature()
+      SymTabEntry variableId = symTabStack.enterLocal(varName);    } <COLON> typeSignature()
 }
 
 void typeSignature() #void :{}
