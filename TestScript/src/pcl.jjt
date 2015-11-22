@@ -4,6 +4,7 @@ options{
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
+    DEBUG_TOKEN_MANAGER=true;
 }
 
 PARSER_BEGIN(PclParser)
@@ -171,7 +172,7 @@ void Statement_list() #void: {}
 void Assignment() :{}
 {
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		identifier() <EQ> Expression() |  <SEMICOLON>
+		<IDENTIFIER> <EQ> Expression() |  <SEMICOLON>
 }
 
 void VarIdentifierType() #void : {}
@@ -179,19 +180,18 @@ void VarIdentifierType() #void : {}
     <VAR> IdentifierType()
 }
 
-void IdentifierType() #void :{String idToken;}
+void IdentifierType() #void :{SymTabEntry someID;}
 {
-    identifier()    {
-      //identifier must not exist in table
-      idToken = processVariableDecl(token);    } <COLON>
+    <IDENTIFIER>    {
+      someID = symTabStack.enterLocal(token.image);
+      processVariableDecl(token, someID);
+    } <COLON>
     typeSignature()
     {
       SymTabEntry typeId = symTabStack.lookup(token.image);
       typeId.appendLineNumber(token.beginLine);
       TypeSpec type = typeId.getTypeSpec();
-      
-      SymTabEntry idferID = symTabStack.lookup(idToken);
-      idferID.setTypeSpec(type);
+      someID.setTypeSpec(type);
     }
 }
 
@@ -260,13 +260,10 @@ void string() : {}
 
 JAVACODE
 //return the token name in string format
-String processVariableDecl(Token token) #void
+void processVariableDecl(Token token, SymTabEntry variableId) #void
 {
-    SymTabEntry variableId = symTabStack.enterLocal(token.image);
     variableId.setDefinition(DefinitionImpl.VARIABLE);
     variableId.appendLineNumber(token.beginLine);
-
-    return token.image;
 }
 
 
