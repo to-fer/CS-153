@@ -182,16 +182,14 @@ void VarIdentifierType() #void : {}
 void IdentifierType() #void :{}
 {
     identifier()    {
-      processVariableDecl(token.image);    } <COLON>
+      processVariableDecl(token);    } <COLON>
     typeSignature()
     {
       SymTabEntry typeId = symTabStack.lookup(token.image);
       typeId.appendLineNumber(token.beginLine);
             TypeSpec type = typeId.getTypeSpec();
 
-            for (SymTabEntry variableId : variableList) {
-                variableId.setTypeSpec(type);
-            }
+//            for (SymTabEntry variableId : variableList) {//                variableId.setTypeSpec(type);//            }
     }
 }
 
