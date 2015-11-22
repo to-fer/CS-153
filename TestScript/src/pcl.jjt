@@ -178,7 +178,10 @@ void Statement_list() #void: {}
 void Assignment() :{}
 {
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		<IDENTIFIER> <EQ> Expression() <SEMICOLON>
+		<IDENTIFIER>
+		{
+		  SymTabEntry typeId = symTabStack.lookup(token.image);
+          typeId.appendLineNumber(token.beginLine);		} <EQ> Expression() <SEMICOLON>
 }
 
 void VarIdentifierType() #void : {}
