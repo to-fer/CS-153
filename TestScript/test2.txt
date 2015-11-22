@@ -1,4 +1,5 @@
 var i: number = 1 -5 + 4;
 var j: number = 2 + i;
 var x: char = "hello person";
+var l: boolean = true;
 var t: number = x + i*j - x;
