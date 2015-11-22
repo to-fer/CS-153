@@ -4,4 +4,8 @@ var x: char = "hello person";
 var l: boolean = true;
 var t: number = x + i*j - x;
 var y: number = (1+2+3);
+<<<<<<< HEAD
 y = 6 +45;
+=======
+y = 6;
+>>>>>>> 17bcb41d1236d54d151f20dbfb26ac85131cd0ae

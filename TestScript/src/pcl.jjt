@@ -178,7 +178,7 @@ void Statement_list() #void: {}
 void Assignment() :{}
 {
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		<IDENTIFIER> <EQ> Expression() | <SEMICOLON>
+		<IDENTIFIER> <EQ> Expression() <SEMICOLON>
 }
 
 void VarIdentifierType() #void : {}
