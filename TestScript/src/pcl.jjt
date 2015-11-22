@@ -179,19 +179,19 @@ void VarIdentifierType() #void : {}
     <VAR> IdentifierType()
 }
 
-void IdentifierType() #void :{}
+void IdentifierType() #void :{String idToken;}
 {
     identifier()    {
-      processVariableDecl(token.image);    } <COLON>
+      //identifier must not exist in table
+      idToken = processVariableDecl(token);    } <COLON>
     typeSignature()
     {
       SymTabEntry typeId = symTabStack.lookup(token.image);
       typeId.appendLineNumber(token.beginLine);
-            TypeSpec type = typeId.getTypeSpec();
-
-            for (SymTabEntry variableId : variableList) {
-                variableId.setTypeSpec(type);
-            }
+      TypeSpec type = typeId.getTypeSpec();
+      
+      SymTabEntry idferID = symTabStack.lookup(idToken);
+      idferID.setTypeSpec(type);
     }
 }
 
@@ -259,11 +259,14 @@ void string() : {}
 }
 
 JAVACODE
-void processVariableDecl(Token token) #void
+//return the token name in string format
+String processVariableDecl(Token token) #void
 {
     SymTabEntry variableId = symTabStack.enterLocal(token.image);
     variableId.setDefinition(DefinitionImpl.VARIABLE);
     variableId.appendLineNumber(token.beginLine);
+
+    return token.image;
 }
 
 
