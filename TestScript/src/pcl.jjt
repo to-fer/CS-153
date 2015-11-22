@@ -72,7 +72,7 @@ TOKEN : {//Reserved words
  	| <FUNCTION : "function">
  	| <BOOLEAN : "boolean">
  	| <NUMBER : "number">
- 	| <STRING : "string">
+ 	| <STRING : "char"> // made string parse as char so we can use pascal string
  	| <ENUM : "enum">
  	| <INTERFACE : "interface">
  	| <RETURN : "return">

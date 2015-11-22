@@ -1,5 +1,5 @@
 var i: number = 1 -5 + 4;
 var j: number = 2 + i;
-var x: string = 3;
+var x: char = 3;
 var t: boolean = true;
 var t: number = x + i*j/k - x/y/z;
