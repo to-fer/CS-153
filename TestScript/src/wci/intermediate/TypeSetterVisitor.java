@@ -18,7 +18,7 @@ public class TypeSetterVisitor extends TSParserVisitorAdapter
             } else if(childType == Predefined.booleanType) {
             	type = Predefined.booleanType;
             } else if(childType == Predefined.charType) {
-            	type = Predefined.booleanType;
+            	type = Predefined.charType;
             } else {
             	type = Predefined.undefinedType;
             }

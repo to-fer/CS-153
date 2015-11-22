@@ -1,4 +1,4 @@
-var i: number = 1 -5 + 4;
+var i: number = 1 -5.653 + 4434;
 var j: number = 2 + i;
 var x: char = "hello person";
 var l: boolean = true;
