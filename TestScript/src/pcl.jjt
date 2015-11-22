@@ -171,7 +171,7 @@ void Statement_list() #void: {}
 void Assignment() :{}
 {
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		identifier() <EQ> Expression() <SEMICOLON>
+		identifier() <EQ> Expression() |  <SEMICOLON>
 }
 
 void VarIdentifierType() #void : {}
@@ -179,7 +179,7 @@ void VarIdentifierType() #void : {}
     <VAR> IdentifierType()
 }
 
-void IdentifierType() #void :{}
+void IdentifierType() #void :{Token t;}
 {
     identifier() <COLON> typeSignature()
 }
@@ -211,6 +211,7 @@ void factor() #void : {}
 {
     identifier()
   | number()
+  | string()
 }
 
 
@@ -228,6 +229,15 @@ void string() : {}
 {
   <STRING_LITERAL>
 }
+
+JAVACODE
+void processVariableDecl(Token token) #void
+{
+    SymTabEntry variableId = symTabStack.enterLocal(token.image);
+    variableId.setDefinition(DefinitionImpl.VARIABLE);
+    variableId.appendLineNumber(token.beginLine);
+}
+
 
 JAVACODE
 

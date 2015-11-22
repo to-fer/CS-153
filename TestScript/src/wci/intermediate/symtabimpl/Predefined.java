@@ -23,15 +23,17 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 public class Predefined
 {
     // Predefined types.
-    public static TypeSpec integerType;
-    public static TypeSpec realType;
+    //public static TypeSpec integerType;
+    //public static TypeSpec realType;
+    public static TypeSpec numberType;
     public static TypeSpec booleanType;
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
 
     // Predefined identifiers.
-    public static SymTabEntry integerId;
-    public static SymTabEntry realId;
+    //public static SymTabEntry integerId;
+    //public static SymTabEntry realId;
+    public static SymTabEntry numberId;
     public static SymTabEntry booleanId;
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
@@ -54,6 +56,7 @@ public class Predefined
      */
     private static void initializeTypes(SymTabStack symTabStack)
     {
+    	/*
         // Type integer.
     	//enter variable name to stack 
         integerId = symTabStack.enterLocal("integer");
@@ -65,13 +68,14 @@ public class Predefined
         integerId.setDefinition(DefinitionImpl.TYPE);
         
         integerId.setTypeSpec(integerType);
-
+		*/
+    	
         // Type real.
-        realId = symTabStack.enterLocal("real");
-        realType = TypeFactory.createType(SCALAR);
-        realType.setIdentifier(realId);
-        realId.setDefinition(DefinitionImpl.TYPE);
-        realId.setTypeSpec(realType);
+    	numberId = symTabStack.enterLocal("number");
+    	numberType = TypeFactory.createType(SCALAR);
+    	numberType.setIdentifier(numberId);
+    	numberId.setDefinition(DefinitionImpl.TYPE);
+    	numberId.setTypeSpec(numberType);
 
         // Type boolean.
         booleanId = symTabStack.enterLocal("boolean");
