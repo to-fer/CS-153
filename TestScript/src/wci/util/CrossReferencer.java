@@ -64,19 +64,19 @@ public class CrossReferencer
         ArrayList<TypeSpec> newRecordTypes = new ArrayList<TypeSpec>();
         printSymTab(symTab, newRecordTypes);
 
-        // Print cross-reference tables for any records defined in the routine.
+        //Print cross-reference tables for any records defined in the routine.
         if (newRecordTypes.size() > 0) {
             printRecords(newRecordTypes);
         }
 
         // Print any procedures and functions defined in the routine.
-        ArrayList<SymTabEntry> routineIds =
-            (ArrayList<SymTabEntry>) routineId.getAttribute(ROUTINE_ROUTINES);
-        if (routineIds != null) {
-            for (SymTabEntry rtnId : routineIds) {
-                printRoutine(rtnId);
-            }
-        }
+//        ArrayList<SymTabEntry> routineIds =
+//            (ArrayList<SymTabEntry>) routineId.getAttribute(ROUTINE_ROUTINES);
+//        if (routineIds != null) {
+//            for (SymTabEntry rtnId : routineIds) {
+//                printRoutine(rtnId);
+//            }
+//        }
     }
 
     /**

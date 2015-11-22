@@ -4,7 +4,7 @@ options{
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
-    DEBUG_TOKEN_MANAGER=true;
+    DEBUG_TOKEN_MANAGER=false;
 }
 
 PARSER_BEGIN(PclParser)
@@ -44,8 +44,7 @@ public class PclParser
         SimpleNode rootNode = parser.program();
 		rootNode.dump(">");
         // Print the cross-reference table.
-        //CrossReferencer crossReferencer = new CrossReferencer();
-        //crossReferencer.print(symTabStack);
+		CrossReferencer crossReferencer = new CrossReferencer();		crossReferencer.print(symTabStack);
 
 //        // Visit the parse tree nodes to decorate them with type information.//        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();//        rootNode.jjtAccept(typeVisitor, null);////        // Create and initialize the ICode wrapper for the parse tree.//        ICode iCode = ICodeFactory.createICode();//        iCode.setRoot(rootNode);//        programId.setAttribute(ROUTINE_ICODE, iCode);//        //        // Print the parse tree.//        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);//        treePrinter.print(symTabStack);
     }
@@ -138,6 +137,13 @@ TOKEN: { /*	Error token */
 
 SimpleNode program() : {}
 {
+	// Cross listing requires a program ID don't wana take it out
+	{	  
+	programId = symTabStack.enterLocal("TypeScript");
+	programId.setDefinition(DefinitionImpl.PROGRAM);
+	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+	symTabStack.setProgramId(programId);
+	}
     try {
         Statement_list()
         (<EOF>)? {
