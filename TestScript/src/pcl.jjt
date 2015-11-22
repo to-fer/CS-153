@@ -228,9 +228,16 @@ void factor() #void : {}
 
 void identifier() : {} 
 {
-  <IDENTIFIER>
+  <IDENTIFIER>  {
+	SymTabEntry variableId = symTabStack.lookup(token.image);
+	variableId.appendLineNumber(token.beginLine);
+	TypeSpec type = variableId.getTypeSpec();
+	jjtThis.setTypeSpec(type);
+	// ID is not really used but might need it later
+	jjtThis.setAttribute(ID, variableId);   }
 }
 
+// try parse integer if not try float if not error 
 void number() : {}
 {
   <NUM>  {
@@ -246,7 +253,9 @@ void number() : {}
 
 void string() : {} 
 {
-  <STRING_LITERAL>
+  <STRING_LITERAL>  {  	  jjtThis.setTypeSpec(Predefined.charType);
+	  jjtThis.setAttribute(VALUE, new String(token.image));
+  }
 }
 
 JAVACODE
