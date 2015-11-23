@@ -1,15 +1,11 @@
 package wci.backend.compiler;
 
-import java.util.ArrayList;
-import java.io.*;
+import wci.backend.Backend;
+import wci.frontend.Node;
+import wci.intermediate.ICode;
+import wci.intermediate.SymTabStack;
 
-import wci.frontend.*;
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.Predefined;
-import wci.backend.*;
-
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import java.io.PrintWriter;
 
 /**
  * <p>The code generator for a compiler back end.</p>
@@ -20,7 +16,8 @@ import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 public class CodeGenerator extends Backend
 {
     private static final int STACK_LIMIT = 16;
-        
+    private static final String PROGRAM_HEADER_CLASS_NAME = "TypeScriptProgram";
+
     static ICode iCode;
     static SymTabStack symTabStack;
     static PrintWriter objectFile;
@@ -30,12 +27,69 @@ public class CodeGenerator extends Backend
      * parser to generate machine-language instructions.
      * @param iCode the intermediate code.
      * @param symTabStack the symbol table stack.
-     * @param objectFile the object file path for the generated code.
+     * @param objectFilePath the object file path for the generated code.
      * @throws Exception if an error occurred.
      */
     public void process(ICode iCode, SymTabStack symTabStack,
                         String objectFilePath)
         throws Exception
     {
+        this.iCode = iCode;
+        this.symTabStack = symTabStack;
+        objectFile = new PrintWriter(objectFilePath);
+
+        writeProgramClassInfo();
+        writeMainMethod();
+
+        objectFile.flush();
+        objectFile.close();
+    }
+
+    private void writeProgramClassInfo() {
+        writeProgramHeader();
+        writeProgramClassConstructor();
+    }
+
+    private void writeMainMethod() {
+        writeMainMethodHeader();
+        writeMainMethodBody();
+        // TODO Count the locals.
+        //objectFile.println(".limit locals " + localsCount);
+        objectFile.println(".limit stack " + STACK_LIMIT);
+        objectFile.println(".end method");
+    }
+
+    private void writeProgramHeader() {
+        objectFile.println(".class public " + PROGRAM_HEADER_CLASS_NAME);
+        objectFile.println(".super java/lang/Object");
+        objectFile.println();
+    }
+
+    private void writeProgramClassConstructor() {
+        objectFile.println(".method public <init>()V");
+        objectFile.println();
+        objectFile.println("	aload_0");
+        objectFile.println("	invokenonvirtual	java/lang/Object/<init>()V");
+        objectFile.println("	return");
+        objectFile.println();
+        objectFile.println(".limit locals 1");
+        objectFile.println(".limit stack 1");
+        objectFile.println(".end method");
+        objectFile.println();
+    }
+
+    private void writeMainMethodHeader() {
+        objectFile.println(".method public static main([Ljava/lang/String;)V");
+        objectFile.println();
+    }
+
+    private void writeMainMethodBody() {
+        CodeGeneratorVisitor codeVisitor = new CodeGeneratorVisitor();
+        Node rootNode = iCode.getRoot();
+        rootNode.jjtAccept(codeVisitor, null);
+
+        objectFile.println();
+        objectFile.println("    return");
+        objectFile.println();
     }
 }

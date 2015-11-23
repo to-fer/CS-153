@@ -44,9 +44,33 @@ public class PclParser
         SimpleNode rootNode = parser.program();
 		rootNode.dump(">");
         // Print the cross-reference table.
-		CrossReferencer crossReferencer = new CrossReferencer();		crossReferencer.print(symTabStack);
+		CrossReferencer crossReferencer = new CrossReferencer();
+		crossReferencer.print(symTabStack);
 
-        // Visit the parse tree nodes to decorate them with type information.        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();        rootNode.jjtAccept(typeVisitor, null);        // Create and initialize the ICode wrapper for the parse tree.        ICode iCode = ICodeFactory.createICode();        iCode.setRoot(rootNode);        programId.setAttribute(ROUTINE_ICODE, iCode);                // Print the parse tree.        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);        treePrinter.print(symTabStack);
+        // Visit the parse tree nodes to decorate them with type information.
+        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        rootNode.jjtAccept(typeVisitor, null);
+
+        // Create and initialize the ICode wrapper for the parse tree.
+        ICode iCode = ICodeFactory.createICode();
+        iCode.setRoot(rootNode);
+        programId.setAttribute(ROUTINE_ICODE, iCode);
+        
+        // Print the parse tree.
+        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
+        treePrinter.print(symTabStack);
+
+        Backend backend = BackendFactory.createBackend("compile");
+        backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
+    }
+
+    private static String fileNameWithoutExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return fileName.substring(0, dotIndex);
+    }
+
+    private static String objectFileName(String fileName) {
+        return fileNameWithoutExtension(fileName) + ".j";
     }
 }
 PARSER_END(PclParser)
@@ -181,7 +205,8 @@ void Assignment() :{}
 		<IDENTIFIER>
 		{
 		  SymTabEntry typeId = symTabStack.lookup(token.image);
-          typeId.appendLineNumber(token.beginLine);		} <EQ> Expression() <SEMICOLON>
+          typeId.appendLineNumber(token.beginLine);
+		} <EQ> Expression() <SEMICOLON>
 }
 
 void VarIdentifierType() #void : {}
@@ -191,7 +216,8 @@ void VarIdentifierType() #void : {}
 
 void IdentifierType() #void :{SymTabEntry someID;}
 {
-    <IDENTIFIER>    {
+    <IDENTIFIER>
+    {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
     } <COLON>
@@ -243,32 +269,44 @@ void factor() #void : {}
 
 void identifier() : {} 
 {
-  <IDENTIFIER>  {
+  <IDENTIFIER>
+  {
 	SymTabEntry variableId = symTabStack.lookup(token.image);
 	variableId.appendLineNumber(token.beginLine);
 	TypeSpec type = variableId.getTypeSpec();
 	jjtThis.setTypeSpec(type);
 	// ID is not really used but might need it later
-	jjtThis.setAttribute(ID, variableId);   }
+	jjtThis.setAttribute(ID, variableId); 
+  }
 }
 
 // try parse integer if not try float if not error 
 void number() : {}
 {
-  <NUM>  {
+  <NUM>
+  {
     try{
   	  jjtThis.setTypeSpec(Predefined.numberType);
       jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-  	    	} catch( Exception e)  	{
-  	  	try  	  	{
-        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));   	  	}catch( Exception e2)  	  	{			// must be error go to end of line 
-  	  	}  	}
+  	  
+  	} catch( Exception e)
+  	{
+  	  	try
+  	  	{
+        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image)); 
+  	  	}catch( Exception e2)
+  	  	{
+			// must be error go to end of line 
+  	  	}
+  	}
   }
 }
 
 void string() : {} 
 {
-  <STRING_LITERAL>  {  	  jjtThis.setTypeSpec(Predefined.charType);
+  <STRING_LITERAL>
+  {
+  	  jjtThis.setTypeSpec(Predefined.charType);
 	  jjtThis.setAttribute(VALUE, new String(token.image));
   }
 }
