@@ -1,67 +1,75 @@
-/**
-Just a tester to run any weird experiments
-*/ 
 options {
-    BUILD_PARSER=true;
-    IGNORE_CASE=true;
-    DEBUG_TOKEN_MANAGER=false;
+  DEBUG_PARSER=true;
 }
 
-PARSER_BEGIN(TestParser)
-
+PARSER_BEGIN(Logo)
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
-
-/**
-	TypeScriptParser is the class that is doing the parsing of
-	the program file (not implemented)
-*/
-public class TestParser
+public class Logo 
 {
-    public static void main(String [] args) throws IOException
-    {
-      	byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
-	  	String content = new String(encoded, StandardCharsets.UTF_8);
-        java.io.StringReader sr = new java.io.StringReader(content);
-        TestParser parser = new TestParser(sr);
-        try {
-            TestParser.Expression();
-        }
-        catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-    }
+  public static void main(String[] args) 
+    throws Exception 
+  {
+    Reader reader = new FileReader(args[0]);
+    Logo parser = new Logo(reader);
+    
+    parser.Program();
+ }
 }
-PARSER_END(TestParser)
+PARSER_END(Logo)
 
 SKIP : {
-  " "
+  " " 
 }
 
 TOKEN : {
-    <DIGITS : (["0"-"9"])+>
-  | <PLUS : "+">
+    <FORWARD : "FORWARD">
+  | <RIGHT   : "RIGHT">
+  | <DIGITS  : (["1"-"9"])+ (["0"-"9"])*>
+  | <EOL     : "\r" | "\n" | "\r\n">
+  | <ERROR   : ~["\r", "\n"]>
 }
 
-void Expression() : {} 
+void Program() : {} 
 {
-  {System.out.println("EXPRESSION STARTS");}
-  Operator()
-  {System.out.println("EXPRESSION ENDS");}
+  (
+    try {
+        MoveForward() {System.out.println("Processed Move FORWARD");}
+      | TurnRight()   {System.out.println("Processed Turn RIGHT");}
+      | Error()       {handleError(token);}
+    }
+    catch (ParseException ex) {
+      handleError(ex.currentToken);
+    }
+  )+ 
 }
 
-void Operator() : {} 
+void MoveForward() : {} 
 {
-  Operand() 
-  "+" {System.out.println("Operator: " + tokenImage[PLUS]);} 
-  Operand()
+  <FORWARD> <DIGITS> (<EOL> | < EOF >)
 }
 
-void Operand() : {Token t;} 
+void TurnRight() : {} 
 {
-  t=<DIGITS> {System.out.println("Operand: " + t.image);}
+  <RIGHT> <DIGITS> (<EOL> | < EOF >)
+}
+
+void Error() : {}
+{
+  <ERROR>
+}
+
+JAVACODE
+String handleError(Token token)
+{
+  System.out.println("*** ERROR: Line " + token.beginLine +
+                     " after \"" + token.image + "\"");
+
+  Token t;
+  
+  do {
+    t = getNextToken();
+  } while (t.kind != EOL && t.kind != EOF);
+  
+  return t.image;
 }
