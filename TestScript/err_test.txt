@@ -1,2 +1,3 @@
 var i:number = 0 0 0 ;
-car j:numbe = 0;
+//var j:numbe = 0; this line crashes the parser
+var z:number = 0;

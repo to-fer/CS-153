@@ -7,6 +7,7 @@ import wci.frontend.ASTsubtract;
 import wci.frontend.ASTmultiply;
 import wci.frontend.ASTnumber;
 import wci.frontend.ASTprogram;
+import wci.frontend.ASTskip_until_new_line;
 import wci.frontend.ASTstring;
 import wci.frontend.ASTdivide;
 import wci.frontend.ASTidentifier;
@@ -79,6 +80,12 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	@Override
 	public Object visit(ASTstring node, Object data) {
         return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTskip_until_new_line node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

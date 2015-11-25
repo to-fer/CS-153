@@ -76,9 +76,12 @@ public class PclParser
 PARSER_END(PclParser)
 
 SKIP: {
-    " " | "\r" | "\t" | "\n"
+    " " | "\r" | "\t" //| "\n"
   | <"//" (~["\n"])* ("\n"|"\r")?>
   | <COMMENT : "{"(~["}"])*"}">
+}
+
+TOKEN:{   <NEW_LINE: "\n" >
 }
 
 TOKEN : { //useful regex
@@ -176,6 +179,7 @@ SimpleNode program() : {}
     }
     catch (ParseException ex) {
         handleError(ex);
+		skip_until_new_line();
         return null;
     }
 }
@@ -183,39 +187,72 @@ SimpleNode program() : {}
 void Statement() #void: {}
 {
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
-  Compound_stmt() | Assignment()
+  try  {     Compound_stmt() | Assignment()   }   catch(ParseException p)   {	 skip_until_new_line();
+   }
+  
   //| FunctionDeclaration() | If_stmt()
 }
+
+JAVACODE
+void skip_until_new_line(){
+  Token t;
+  do {
+    t = getNextToken();
+  } while (t.kind != NEW_LINE && t.kind != EOF);}
 
 
 void Compound_stmt() : {}
 {
-  <LEFT_BRACE> Statement_list() <RIGHT_BRACE>
+  try  {    
+  	<LEFT_BRACE> Statement_list() <RIGHT_BRACE>
+   }
+   catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 void Statement_list() #void: {}
 {
-  (Statement())+
+  try  {    
+  	(Statement())+  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 
 void Assignment() :{}
 {
-  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		<IDENTIFIER>
-		{
-		  SymTabEntry typeId = symTabStack.lookup(token.image);
-          typeId.appendLineNumber(token.beginLine);
-		} <EQ> Expression() <SEMICOLON>
+  try  {    
+	  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
+			<IDENTIFIER>
+			{
+			  SymTabEntry typeId = symTabStack.lookup(token.image);
+	          typeId.appendLineNumber(token.beginLine);
+			} <EQ> Expression() <SEMICOLON>
+	}
+   catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 void VarIdentifierType() #void : {}
 {
+  try  {    
     <VAR> IdentifierType()
+  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 void IdentifierType() #void :{SymTabEntry someID;}
 {
+  try  {    
     <IDENTIFIER>
     {
       someID = symTabStack.enterLocal(token.image);
@@ -228,17 +265,28 @@ void IdentifierType() #void :{SymTabEntry someID;}
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
     }
+  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 void typeSignature() #void :{}
 {
-   <NUMBER>
-  |<BOOLEAN>
-  |<STRING>
+  try  {    
+	   <NUMBER>
+	  |<BOOLEAN>
+	  |<STRING>  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 void Expression() #void : {}
 {
+  try  {    
     term() (
         "+" term() #add(2)
       | "-" term() #subtract(2)
@@ -247,28 +295,46 @@ void Expression() #void : {}
         "+" term() #add(2)
       | "-" term() #subtract(2)
     )* < RIGHT_PARAN >
+  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
     
          
 }
 
 void term() #void : {}
 {
+  try  {    
     factor() (
         "*" factor() #multiply(2)
       | "/" factor() #divide(2)
-    )*     
+    )*
+  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }    
 }
 
 void factor() #void : {}
 {
+  try  {    
     identifier()
   | number()
   | string()
+	}
+	catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 
 void identifier() : {} 
 {
+  try  {    
   <IDENTIFIER>
   {
 	SymTabEntry variableId = symTabStack.lookup(token.image);
@@ -278,37 +344,54 @@ void identifier() : {}
 	// ID is not really used but might need it later
 	jjtThis.setAttribute(ID, variableId); 
   }
+  }
+  catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 // try parse integer if not try float if not error 
 void number() : {}
 {
-  <NUM>
-  {
-    try{
-  	  jjtThis.setTypeSpec(Predefined.numberType);
-      jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-  	  
-  	} catch( Exception e)
-  	{
-  	  	try
-  	  	{
-        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image)); 
-  	  	}catch( Exception e2)
-  	  	{
-			// must be error go to end of line 
-  	  	}
-  	}
-  }
+  try  {    
+	  <NUM>
+	  {
+	    try{
+	  	  jjtThis.setTypeSpec(Predefined.numberType);
+	      jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+	  	  
+	  	} catch( Exception e)
+	  	{
+	  	  	try
+	  	  	{
+	        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image)); 
+	  	  	}catch( Exception e2)
+	  	  	{
+				// must be error go to end of line 
+	  	  	}
+	  	}
+	  }
+	}
+	catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 void string() : {} 
 {
-  <STRING_LITERAL>
-  {
-  	  jjtThis.setTypeSpec(Predefined.charType);
-	  jjtThis.setAttribute(VALUE, new String(token.image));
-  }
+  try  {    
+	  <STRING_LITERAL>
+	  {
+	  	  jjtThis.setTypeSpec(Predefined.charType);
+		  jjtThis.setAttribute(VALUE, new String(token.image));
+	  }
+   }
+   catch(ParseException p)
+   {
+	 skip_until_new_line();
+   }
 }
 
 JAVACODE
