@@ -184,7 +184,7 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
 
   	   	try
-	{     Compound_stmt() (<EOL> | <EOF>) | Assignment() (<EOL> | <EOF>)| error() { handleError(token); }
+	{     Compound_stmt()  | Assignment() (<EOL>)| error() { handleError(token); }
     } catch(ParseException ex)
    {
 		handleError(ex.currentToken); 
