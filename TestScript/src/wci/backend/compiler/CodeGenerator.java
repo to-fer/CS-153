@@ -1,11 +1,15 @@
 package wci.backend.compiler;
 
+import com.sun.org.apache.xpath.internal.operations.Variable;
 import wci.backend.Backend;
 import wci.frontend.Node;
-import wci.intermediate.ICode;
-import wci.intermediate.SymTabStack;
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.DefinitionImpl;
+import wci.intermediate.symtabimpl.Predefined;
+import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * <p>The code generator for a compiler back end.</p>
@@ -17,6 +21,10 @@ public class CodeGenerator extends Backend
 {
     private static final int STACK_LIMIT = 16;
     private static final String PROGRAM_HEADER_CLASS_NAME = "TypeScriptProgram";
+
+    private static final String INTEGER_TYPECODE = "I";
+    // TODO Make sure this is the right type code for doubles.
+    private static final String DOUBLE_TYPECODE = "D";
 
     static ICode iCode;
     static SymTabStack symTabStack;
@@ -47,6 +55,7 @@ public class CodeGenerator extends Backend
 
     private void writeProgramClassInfo() {
         writeProgramHeader();
+        writeLocalVarFields();
         writeProgramClassConstructor();
     }
 
@@ -62,6 +71,31 @@ public class CodeGenerator extends Backend
     private void writeProgramHeader() {
         objectFile.println(".class public " + PROGRAM_HEADER_CLASS_NAME);
         objectFile.println(".super java/lang/Object");
+        objectFile.println();
+    }
+
+    private void writeLocalVarFields() {
+        SymTab routineSymTab = (SymTab) symTabStack.getProgramId().getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
+        List<SymTabEntry> locals = routineSymTab.sortedEntries();
+        for (SymTabEntry id : locals) {
+            Definition definition = id.getDefinition();
+            if (definition == DefinitionImpl.VARIABLE) {
+                String fieldName = id.getName();
+                TypeSpec type = id.getTypeSpec();
+                String typeCode;
+                if (type == Predefined.booleanType || type == Predefined.charType) {
+                    typeCode = INTEGER_TYPECODE;
+                }
+                else if (type == Predefined.numberType) {
+                    typeCode = DOUBLE_TYPECODE;
+                }
+                else {
+                    throw new UnsupportedOperationException("That type is not yet implemented in the code generator!");
+                }
+
+                objectFile.println(".field private static " + fieldName + " " + typeCode);
+            }
+        }
         objectFile.println();
     }
 
