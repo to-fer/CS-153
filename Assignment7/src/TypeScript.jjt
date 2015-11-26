@@ -1,407 +1,81 @@
 options {
-    BUILD_PARSER=true;
-    IGNORE_CASE=true;
-    DEBUG_TOKEN_MANAGER=false;
+  VISITOR=true;
+  MULTI=true;
+  DEBUG_PARSER=true;
 }
 
-PARSER_BEGIN(TypeScriptParser)
-
+PARSER_BEGIN(Logo)
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.*;
 
-/**
-	TypeScriptParser is the class that is doing the parsing of
-	the program file (not implemented)
-*/
-public class TypeScriptParser
+public class Logo 
 {
-
-  private static SymTabStack symTabStack;
-    public static void main(String [] args) throws IOException
-    {
-
-        // Create and initialize the symbol table stack.
-        symTabStack = SymTabFactory.createSymTabStack();
-        Predefined.initialize(symTabStack);
-
-        
-      	byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
-	  	String content = new String(encoded, StandardCharsets.UTF_8);
-        java.io.StringReader sr = new java.io.StringReader(content);
-        TypeScriptParser parser = new TypeScriptParser(sr);
-        try {
-            SimpleNode root = parser.Program();
-            root.dump(">");
-        }
-        catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-    }
+  public static void main(String[] args) 
+    throws Exception 
+  {
+    Reader reader = new FileReader(args[0]);
+    Logo parser = new Logo(reader);
+    
+    ASTProgram program = parser.Program();
+    program.dump(">");
+ }
 }
-PARSER_END(TypeScriptParser)
-
-/**
-	TypeScriptParserTokenManager class is used to just test if the
-	TOKENS that are difined actually work as planned It does not do
-	any parsing
-*/
-TOKEN_MGR_DECLS : {
-    public static void main(String [] args) throws IOException
-    {
-	  byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
-	  String content = new String(encoded, StandardCharsets.UTF_8);
-        java.io.StringReader sr = new java.io.StringReader(content);
-        SimpleCharStream scs = new SimpleCharStream(sr);
-        TypeScriptParserTokenManager mgr = new TypeScriptParserTokenManager(scs);
-
-		while (mgr.getNextToken().kind != EOF) {}
-    }
-}
-
+PARSER_END(Logo)
 
 SKIP : {
-    <IGNORE : [" ", "\n", "\t", "\r"]>
-   | <"//" (~["\n"])* ("\n"|"\r")? >
-   | <"/*" > : ML_COMMENT
-}
-
-<ML_COMMENT> SKIP :
-{
-  <"*/" >: DEFAULT
-  |<~[]>
-}
-
-TOKEN : { //useful regex
-	<#DIGIT  : ["0"-"9"]>
-    |<#ONE_TO_NINE: ["1"-"9"] >
-	  	//A-Z only if ignore case option is false
-	| <#LETTER : ["a"-"z","A"-"Z"]>
-	| <#SPACE: [" "] >
-	| <#EOL : "\r" | "\n" | "\r\n">
-}
-
-TOKEN : {//Reserved words
-	<VAR : "var">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-	| <IF : "if">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <ELSE : "else">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <FUNCTION : "function">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <BOOLEAN : "boolean">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <NUMBER : "number">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <STRING : "string">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <ENUM : "enum">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <INTERFACE : "interface">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <RETURN : "return">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <VOID : "void">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
- 	| <WHILE : "while">
- 	{ debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-}
-
-TOKEN : {//Symbols
-	<NOT : "!">
-	{ debugStream.println("NOT SYMBOL token: " + matchedToken.image); }
-	| <AT : "@">
-	{ debugStream.println("AT SYMBOL token: " + matchedToken.image); }
-	| <MOD : "%">
-	{ debugStream.println("MOD SYMBOL token: " + matchedToken.image); }
-	| <CARROT : "^">
-	{ debugStream.println("CARROT SYMBOL token: " + matchedToken.image); }
-	| <AMPRSAND : "&">
-	{ debugStream.println("AMPRSAND SYMBOL token: " + matchedToken.image); }
-	| <MUL : "*">
-	{ debugStream.println("MUL SYMBOL token: " + matchedToken.image); }
-	| <MINUS : "-">
-	{ debugStream.println("MINUS SYMBOL token: " + matchedToken.image); }
-	| <PLUS : "+">
-	{ debugStream.println("PLUS SYMBOL token: " + matchedToken.image); }
-	| <EQ : "=">
-	{ debugStream.println("SINGLE_EQ SYMBOL token: " + matchedToken.image); }
-	| <BAR : "|">
-	{ debugStream.println("BAR SYMBOL token: " + matchedToken.image); }
-	| <DIV : "/">
-	{ debugStream.println("DIV SYMBOL token: " + matchedToken.image); }
-	| <COLON : ":">
-	{ debugStream.println("COLON SYMBOL token: " + matchedToken.image); }
-	| <SEMICOLON : ";">
-	{ debugStream.println("SEMICOLON SYMBOL token: " + matchedToken.image); }
-	| <QM : "?">
-	{ debugStream.println("QM SYMBOL token: " + matchedToken.image); }
-	| <LT : "<">
-	{ debugStream.println("LT SYMBOL token: " + matchedToken.image); }
-	| <GT : ">">
-	{ debugStream.println("GT SYMBOL token: " + matchedToken.image); }
-	| <COMMA : ",">
-	{ debugStream.println("COMMA SYMBOL token: " + matchedToken.image); }
-	| <DOT : ".">
-	{ debugStream.println("DOT SYMBOL token: " + matchedToken.image); }
-	| <SINGLE_QUOTE : "'">
-	{ debugStream.println("SINGLE_QUOTE SYMBOL token: " + matchedToken.image); }
-	| <QUOTE : "\"">
-	{ debugStream.println("QUOTE SYMBOL token: " + matchedToken.image); }
-	| <LEFT_PARAN : "(">
-	{ debugStream.println("LEFT_PARAN SYMBOL token: " + matchedToken.image); }
-	| <RIGHT_PARAN : ")">
-	{ debugStream.println("RIGHT_PARAN SYMBOL token: " + matchedToken.image); }
-	| <LEFT_BRAKET : "[">
-	{ debugStream.println("LEFT_BRAKET SYMBOL token: " + matchedToken.image); }
-	| <RIGHT_BRAKET : "]">
-	{ debugStream.println("RIGHT_BRAKET SYMBOL token: " + matchedToken.image); }
-	| <LEFT_BRACE : "{"> 
-	{ debugStream.println("LEFT_BRACE SYMBOL token: " + matchedToken.image); }
-	| <RIGHT_BRACE : "}">
-	{ debugStream.println("RIHGT_BRACE SYMBOL token: " + matchedToken.image); }
-	| <LE : "<=">
-	{ debugStream.println("LT EQUAL SYMBOL token: " + matchedToken.image); }
-	| <UNDER_SCORE : "_">
-	{ debugStream.println("UNDER_SCORE EQUAL SYMBOL token: " + matchedToken.image); }
-	| <GE : ">=">
-	{ debugStream.println("GT EQUAL SYMBOL token: " + matchedToken.image); }
-	| <PLUS_EQ : "+=">
-	{ debugStream.println("PLUS EQAUALS SYMBOL token: " + matchedToken.image); }
-	| <DOUBLE_EQ : "==">
-	{ debugStream.println("DOUBLE_EQ SYMBOL token: " + matchedToken.image); }
-	| <OR : "||">
-	{ debugStream.println("OR SYMBOL token: " + matchedToken.image); }
-	| <AND : "&&">
-	{ debugStream.println("AND SYMBOL token: " + matchedToken.image); }
-	| <NOT_EQ : "!=">
-	{ debugStream.println("NOT EQUAL SYMBOL token: " + matchedToken.image); }
-}
-
-/* TypeScript treats char as a string of length 1*/
-TOKEN : {//Character String and Strings
-	<STRING_LITERAL : <QUOTE> (~["\""])* <QUOTE> | <SINGLE_QUOTE> (~[]){1} <SINGLE_QUOTE> >
-	{ debugStream.println("STRING token: " + matchedToken.image); }
-}
-
-TOKEN : {//Identifier
-	<IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
-	{ debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-}
-
-/* TypeScript treats real and integers as Numbers*/
-TOKEN : {//Numbers
-	<NUM: <INTEGER> | <REAL>> 
-     { debugStream.println("NUMBER TOKEN: " + matchedToken.image); }
-	| <INTEGER: (<SIGN>)? (<DIGIT>)+ | (<ONE_TO_NINE> (<DIGIT>)+) >
-	| <REAL: (<SIGN>)? (<DIGIT>)+ "." | (<SIGN>)? "." (<DIGIT>)+ | (<SIGN>)? (<DIGIT>)+ "." (<DIGIT>)+ >
- 	| <#SIGN: "-" | "+" >
+  " " 
 }
 
 TOKEN : {
-	<ERROR : ~["\r", "\n"]>
+    <FORWARD : "FORWARD">
+  | <RIGHT   : "RIGHT">
+  | <DIGITS  : (["1"-"9"])+ (["0"-"9"])*>
+  | <EOL     : "\r" | "\n" | "\r\n">
+  | <ERROR   : ~["\r", "\n"]>
+}
+
+ASTProgram Program() : {} 
+{
+  (
+    try {
+        MoveForward() {System.out.println("Processed Move FORWARD");}
+      | TurnRight()   {System.out.println("Processed Turn RIGHT");}
+      | Error()       {handleError(token);}
+    }
+    catch (ParseException ex) {
+      handleError(ex.currentToken);
+    }
+  )+
+  
+  {return jjtThis;}
+}
+
+void MoveForward() : {} 
+{
+  <FORWARD> <DIGITS> (<EOL> | <EOF>)
+}
+
+void TurnRight() : {} 
+{
+  <RIGHT> <DIGITS> (<EOL> | <EOF>)
 }
 
 void Error() : {}
 {
-	<ERROR>
-}
-
-/*
-TODO Figure out how to continue parsing after an exception occurs. Note: choice conflict happens if a "+" is placed
-after the body of this production rule. That's the obvious way to continue parsing when an error is encountered, but
-that choice conflict causes it to fail.
-*/
-SimpleNode Program(): {}
-{
-	(
-		try {
-			Statement_list()
-        	| Error() { handleError(token); }
-		} catch (ParseException ex) {
-			handleError(ex.currentToken);
-		}
-	)
-	{ return jjtThis; }
-}
-
-void Statement() : {}
-{
-  // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
-  Compound_stmt() | Assignment() | FunctionDeclaration() | If_stmt()
-}
-
-void Compound_stmt() : {}
-{
-  <LEFT_BRACE> (Statement_list())? <RIGHT_BRACE>
-}
-
-/*
-Needs to always contain at least one statement so we have a chance of matching Error() in Program().
-Otherwise no error handling would ever be performed because Statement_list() would match the empty string, and
-therefore match every possible string before the parser reaches Error().
-*/
-void Statement_list() : {}
-{
-  (Statement())+
-}
-
-void If_stmt():{}
-{
-  	{System.out.println("IF_STATEMENT START");}
-  	// The else part of if statements is forced to be present.
-	If_part() Else_part()
-	
-	{System.out.println("IF_STATEMENT END");}
-}
-
-void If_part():{}
-{
-	<IF> <LEFT_PARAN> Expression() <RIGHT_PARAN> Statement()
-	
-}
-
-void Else_part():{}
-{
-	  < ELSE > Statement()
-}
-
-
-void ArgumentList(): {}
-{
-    <LEFT_PARAN> (IdentifierType() (<COMMA> IdentifierType())* )? <RIGHT_PARAN>
-}
-
-void PureFunction(): {}
-{
-    {System.out.println("PureFunction START");}
-    <LEFT_BRACE> (Statement_list())? <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>
-    {System.out.println("PureFunction END");}
-}
-
-void SideEffectFunction(): {}
-{
-    {System.out.println("SideEffectFunction START");}
-    <LEFT_BRACE> (Statement_list())? (<RETURN> <SEMICOLON>)? <RIGHT_BRACE>
-    {System.out.println("SideEffectFunction END");}
-}
-
-void FunctionDeclaration():{}
-{
-    {System.out.println("FunctionDeclaration START");}
-    // If at some point typeSignature() includes void, then we'll need to do something else here.
-    <FUNCTION> identifier() ArgumentList() (<COLON> (typeSignature() PureFunction() | <VOID> SideEffectFunction()) | SideEffectFunction())
-    {System.out.println("FunctionDeclaration END");}
-}
-
-void Assignment():{}
-{
-  {System.out.println("Assignment STARTS");}
-  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		identifier() <EQ> Expression() <SEMICOLON>
-	{System.out.println("Assignment ENDS");}
-}
-
-void VarIdentifierType(): {}
-{
-    <VAR> IdentifierType()
-}
-
-void IdentifierType():{}
-{
-    identifier() <COLON> typeSignature()
-}
-
-void typeSignature():{}
-{
-  {System.out.println("Type: number");}
-   <NUMBER> #NUM_TYPE
-  {System.out.println("Type: boolean");}
-  |<BOOLEAN> #BOOL_TYPE
-  {System.out.println("Type: string");}
-  |<STRING> #STR_TYPE
-}
-
-// all the Expression 
-void Expression() : {} 
-{
-  {System.out.println("SimpleExpression STARTS");}
-  SimpleExpression() (( <DOUBLE_EQ> | <NOT_EQ> | <LT> | <LE> | <GT> | <GE>) SimpleExpression())?
-  {System.out.println("SimpleExpression ENDS");}
-}
-
-void SimpleExpression() : {System.out.println("SimpleExpression START");}
-{
-  LOOKAHEAD(2)
- 	( (<PLUS> | <MINUS>)? term()
-	  	(
-	  	  (<PLUS> | <MINUS> | <OR>)
-	  	  term()
-	  	)*
-  	) | term()
-  {System.out.println("SimpleExpression END");}
-}
-
-void term() : {System.out.println("term START");}
-{
-
-  LOOKAHEAD(2)
-  (
-    factor()
-    	(  
-			(<MUL>| <DIV> | <MOD> | <AND>)
-			factor()
-		)*
-  ) | factor()
-  {System.out.println("term END");}
-}
-
-void factor() : {System.out.println("Factor START");}
-{
-  <NOT> factor() | identifier() | number() | string() |
-  <LEFT_PARAN> Expression() <RIGHT_PARAN>
-  {System.out.println("factor END");}
-}
-
-
-void identifier() : {Token t;} 
-{
-  t = <IDENTIFIER>
-  {jjtThis.jjtSetValue(t);}
-}
-
-void number() : {Token t;}
-{
-  t = <NUM>
-  { try
-	  {
-		jjtThis.jjtSetValue(Integer.valueOf(t.image));
-	  }
-	  catch(Exception e){}
-	  finally
-	  {
-		jjtThis.jjtSetValue(Double.valueOf(t.image));
-	  }
-  }
-
-    
-}
-
-void string() : {Token t;} 
-{
-
-  t = < STRING_LITERAL >
-  {jjtThis.jjtSetValue(t);}
+  <ERROR>
 }
 
 JAVACODE
-String handleError(Token token) {
-	System.err.println("### ERROR: Line " + token.beginLine + " after \"" + token.image + "\"");
-	Token nextGoodToken = getNextToken(); // TODO This does not synchronize, it just skips the bad token.
-	return nextGoodToken.image;
+String handleError(Token token) #void
+{
+  System.out.println("*** ERROR: Line " + token.beginLine +
+                     " after \"" + token.image + "\"");
+  
+  Token t;
+  
+  do {
+    t = getNextToken();
+  } while (t.kind != EOL);
+  
+  jjtree.popNode();
+  return t.image;
 }
