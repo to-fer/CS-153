@@ -4,7 +4,7 @@
 .field private static i D
 .field private static j D
 .field private static l B
-.field private static t D
+.field private static s D
 .field private static x C
 .field private static y D
 
@@ -20,19 +20,32 @@
 
 .method public static main([Ljava/lang/String;)V
 
-    putstatic TypeScriptProgram/i D
+      ldc 1.0
+      ldc 5.653
+      dsub
+      ldc 4434.0
+      dadd
+      putstatic TypeScriptProgram/i D
+      ldc 2.0
       getstatic TypeScriptProgram/i D
-    putstatic TypeScriptProgram/j D
-    putstatic TypeScriptProgram/x C
+      dadd
+      putstatic TypeScriptProgram/j D
+      ldc "hello person"
+      putstatic TypeScriptProgram/x C
       getstatic TypeScriptProgram/true B
-    putstatic TypeScriptProgram/l B
-      getstatic TypeScriptProgram/x C
-      getstatic TypeScriptProgram/i D
-      getstatic TypeScriptProgram/j D
-      getstatic TypeScriptProgram/x C
-    putstatic TypeScriptProgram/t D
-    putstatic TypeScriptProgram/y D
-    putstatic TypeScriptProgram/y D
+      putstatic TypeScriptProgram/l B
+      ldc 1.0
+      ldc 2.0
+      dadd
+      ldc 3.0
+      dadd
+      putstatic TypeScriptProgram/y D
+      ldc 10.0
+      ldc 5.0
+      ddiv
+      putstatic TypeScriptProgram/s D
+      ldc 6.0
+      putstatic TypeScriptProgram/y D
 
     return
 

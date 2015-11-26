@@ -25,7 +25,7 @@ public class CodeGeneratorVisitor
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
-                                                 "/" + identifier + " " + typeCode);
+                        "/" + identifier + " " + typeCode);
                 return data;
         }
 
@@ -41,12 +41,90 @@ public class CodeGeneratorVisitor
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 // Emit the appropriate store instruction.
-                CodeGenerator.objectFile.println("    putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
+                CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
                         "/" + fieldName + " " + typeCode);
                 CodeGenerator.objectFile.flush();
 
                 return data;
         }
 
-    // TODO Implement code generation for each of the types of AST nodes via visit methods here.
+        public Object visit(ASTnumber node, Object data) {
+            double value = (Double) node.getAttribute(VALUE);
+            CodeGenerator.objectFile.println("      ldc " + value);
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
+
+        public Object visit(ASTstring node, Object data) {
+            String value = (String) node.getAttribute(VALUE);
+            CodeGenerator.objectFile.println("      ldc " + value);
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
+
+        public Object visit(ASTadd node, Object data) {
+            SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
+            SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
+
+            TypeSpec type = node.getTypeSpec();
+            String typePrefix = TypeCode.typeSpecToTypeCode(type).toLowerCase();
+
+            addend0Node.jjtAccept(this, data);
+            addend1Node.jjtAccept(this, data);
+
+            CodeGenerator.objectFile.println("      " + typePrefix + "add");
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
+
+        public Object visit(ASTsubtract node, Object data) {
+            SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
+            SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
+
+            TypeSpec type = node.getTypeSpec();
+            String typePrefix = TypeCode.typeSpecToTypeCode(type).toLowerCase();
+
+            addend0Node.jjtAccept(this, data);
+            addend1Node.jjtAccept(this, data);
+
+            CodeGenerator.objectFile.println("      " + typePrefix + "sub");
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
+
+        public Object visit(ASTdivide node, Object data) {
+            SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
+            SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
+
+            TypeSpec type = node.getTypeSpec();
+            String typePrefix = TypeCode.typeSpecToTypeCode(type).toLowerCase();
+
+            addend0Node.jjtAccept(this, data);
+            addend1Node.jjtAccept(this, data);
+
+            CodeGenerator.objectFile.println("      " + typePrefix + "div");
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
+
+        public Object visit(ASTmultiply node, Object data) {
+            SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
+            SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
+
+            TypeSpec type = node.getTypeSpec();
+            String typePrefix = TypeCode.typeSpecToTypeCode(type).toLowerCase();
+
+            addend0Node.jjtAccept(this, data);
+            addend1Node.jjtAccept(this, data);
+
+            CodeGenerator.objectFile.println("      " + typePrefix + "mul");
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
 }
