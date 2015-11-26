@@ -41,7 +41,7 @@ public class CodeGeneratorVisitor
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 // Emit the appropriate store instruction.
-                CodeGenerator.objectFile.println("    putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
+                CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
                         "/" + fieldName + " " + typeCode);
                 CodeGenerator.objectFile.flush();
 
