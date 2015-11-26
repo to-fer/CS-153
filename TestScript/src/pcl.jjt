@@ -19,6 +19,7 @@ import wci.intermediate.symtabimpl.*;
 import wci.backend.*;
 import wci.util.*;
 
+import wci.intermediate.icodeimpl.ICodeNodeImpl;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -225,12 +226,13 @@ void VarIdentifierType() #void : {}
     <VAR> IdentifierType()
 }
 
-void IdentifierType() #void :{SymTabEntry someID;}
+void IdentifierType() #void :{SymTabEntry someID; ICodeNodeImpl old;}
 {
     <IDENTIFIER> 
     {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
+      old = jjtThis;
 	  jjtThis.setAttribute(ID, someID);  
       
     } #identifier <COLON>
@@ -240,6 +242,7 @@ void IdentifierType() #void :{SymTabEntry someID;}
       typeId.appendLineNumber(token.beginLine);
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
+      old.setTypeSpec(type);
     }
 }
 
