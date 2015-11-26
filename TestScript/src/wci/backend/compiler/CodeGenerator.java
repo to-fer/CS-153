@@ -20,11 +20,7 @@ import java.util.List;
 public class CodeGenerator extends Backend
 {
     private static final int STACK_LIMIT = 16;
-    private static final String PROGRAM_HEADER_CLASS_NAME = "TypeScriptProgram";
-
-    private static final String INTEGER_TYPECODE = "I";
-    // TODO Make sure this is the right type code for doubles.
-    private static final String DOUBLE_TYPECODE = "D";
+    public static final String PROGRAM_HEADER_CLASS_NAME = "TypeScriptProgram";
 
     static ICode iCode;
     static SymTabStack symTabStack;
@@ -82,16 +78,7 @@ public class CodeGenerator extends Backend
             if (definition == DefinitionImpl.VARIABLE) {
                 String fieldName = id.getName();
                 TypeSpec type = id.getTypeSpec();
-                String typeCode;
-                if (type == Predefined.booleanType || type == Predefined.charType) {
-                    typeCode = INTEGER_TYPECODE;
-                }
-                else if (type == Predefined.numberType) {
-                    typeCode = DOUBLE_TYPECODE;
-                }
-                else {
-                    throw new UnsupportedOperationException("That type is not yet implemented in the code generator!");
-                }
+                String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 objectFile.println(".field private static " + fieldName + " " + typeCode);
             }
