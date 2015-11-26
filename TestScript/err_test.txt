@@ -1,3 +1,5 @@
 var i:number = 0 0 0 ;
-//var j:numbe = 0; this line crashes the parser
+var j:numbe = 0; 
 var z:number = 0;
+var k:integer - dfv;
+var j:number =-43223423r2345234 0;

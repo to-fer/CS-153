@@ -176,7 +176,9 @@ public class Logo/*@bgen(jjtree)*/implements LogoTreeConstants, LogoConstants {/
 
   do {
     t = getNextToken();
+
   } while (t.kind != EOL);
+
 
   jjtree.popNode();
   return t.image;

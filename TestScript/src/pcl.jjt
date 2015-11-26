@@ -4,7 +4,8 @@ options{
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
-    DEBUG_TOKEN_MANAGER=false;
+   DEBUG_PARSER=true;
+   DEBUG_TOKEN_MANAGER=false;
 }
 
 PARSER_BEGIN(PclParser)
@@ -76,12 +77,13 @@ public class PclParser
 PARSER_END(PclParser)
 
 SKIP: {
-    " " | "\r" | "\t" //| "\n"
+    " " //|  "\r" | "\t" | "\n"
   | <"//" (~["\n"])* ("\n"|"\r")?>
   | <COMMENT : "{"(~["}"])*"}">
 }
 
-TOKEN:{   <NEW_LINE: "\n" >
+TOKEN:{   //<NEW_LINE: "\n" >
+ <EOL : "\r" | "\n" | "\r\n">
 }
 
 TOKEN : { //useful regex
@@ -171,88 +173,58 @@ SimpleNode program() : {}
 	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
 	symTabStack.setProgramId(programId);
 	}
-    try {
         Statement_list()
         (<EOF>)? {
             return jjtThis;
         }
-    }
-    catch (ParseException ex) {
-        handleError(ex);
-		skip_until_new_line();
-        return null;
-    }
 }
 
-void Statement() #void: {}
+void Statement()#void : {}
 {
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
-  try  {     Compound_stmt() | Assignment()   }   catch(ParseException p)   {	 skip_until_new_line();
+
+  	   	try
+	{     Compound_stmt() (<EOL> | <EOF>) | Assignment() (<EOL> | <EOF>)| error() { handleError(token); }
+    } catch(ParseException ex)
+   {
+		handleError(ex.currentToken); 
    }
-  
   //| FunctionDeclaration() | If_stmt()
 }
 
-JAVACODE
-void skip_until_new_line(){
-  Token t;
-  do {
-    t = getNextToken();
-  } while (t.kind != NEW_LINE && t.kind != EOF);}
 
 
 void Compound_stmt() : {}
 {
-  try  {    
   	<LEFT_BRACE> Statement_list() <RIGHT_BRACE>
-   }
-   catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
 }
 
 void Statement_list() #void: {}
-{
-  try  {    
-  	(Statement())+  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
+{
+  		(
+  	  		Statement()
+
+  	  	)+
 }
 
 
 void Assignment() :{}
 {
-  try  {    
-	  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-			<IDENTIFIER>
-			{
-			  SymTabEntry typeId = symTabStack.lookup(token.image);
-	          typeId.appendLineNumber(token.beginLine);
-			} <EQ> Expression() <SEMICOLON>
-	}
-   catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
+  VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
+		<IDENTIFIER>
+		{
+		  SymTabEntry typeId = symTabStack.lookup(token.image);
+          typeId.appendLineNumber(token.beginLine);
+		} <EQ> Expression() <SEMICOLON> 
 }
 
 void VarIdentifierType() #void : {}
 {
-  try  {    
     <VAR> IdentifierType()
-  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
 }
 
 void IdentifierType() #void :{SymTabEntry someID;}
 {
-  try  {    
     <IDENTIFIER>
     {
       someID = symTabStack.enterLocal(token.image);
@@ -265,28 +237,17 @@ void IdentifierType() #void :{SymTabEntry someID;}
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
     }
-  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
 }
 
 void typeSignature() #void :{}
 {
-  try  {    
 	   <NUMBER>
 	  |<BOOLEAN>
-	  |<STRING>  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
+	  |<STRING>
 }
 
 void Expression() #void : {}
 {
-  try  {    
     term() (
         "+" term() #add(2)
       | "-" term() #subtract(2)
@@ -294,47 +255,27 @@ void Expression() #void : {}
     < LEFT_PARAN > term() (
         "+" term() #add(2)
       | "-" term() #subtract(2)
-    )* < RIGHT_PARAN >
-  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
-    
-         
+    )* < RIGHT_PARAN >  
 }
 
 void term() #void : {}
 {
-  try  {    
     factor() (
         "*" factor() #multiply(2)
       | "/" factor() #divide(2)
     )*
-  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }    
 }
 
 void factor() #void : {}
 {
-  try  {    
     identifier()
   | number()
   | string()
-	}
-	catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
 }
 
 
 void identifier() : {} 
 {
-  try  {    
   <IDENTIFIER>
   {
 	SymTabEntry variableId = symTabStack.lookup(token.image);
@@ -344,56 +285,42 @@ void identifier() : {}
 	// ID is not really used but might need it later
 	jjtThis.setAttribute(ID, variableId); 
   }
-  }
-  catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
 }
 
 // try parse integer if not try float if not error 
 void number() : {}
 {
-  try  {    
-	  <NUM>
-	  {
-	    try{
-	  	  jjtThis.setTypeSpec(Predefined.numberType);
-	      jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-	  	  
-	  	} catch( Exception e)
-	  	{
-	  	  	try
-	  	  	{
-	        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image)); 
-	  	  	}catch( Exception e2)
-	  	  	{
-				// must be error go to end of line 
-	  	  	}
-	  	}
-	  }
-	}
-	catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
+  <NUM>
+  {
+    try{
+  	  jjtThis.setTypeSpec(Predefined.numberType);
+      jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+  	  
+  	} catch( Exception e)
+  	{
+  	  	try
+  	  	{
+        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image)); 
+  	  	}catch( Exception e2)
+  	  	{
+			// must be error go to end of line 
+  	  	}
+  	}
+  }
 }
 
 void string() : {} 
 {
-  try  {    
-	  <STRING_LITERAL>
-	  {
-	  	  jjtThis.setTypeSpec(Predefined.charType);
-		  jjtThis.setAttribute(VALUE, new String(token.image));
-	  }
-   }
-   catch(ParseException p)
-   {
-	 skip_until_new_line();
-   }
+  <STRING_LITERAL>
+  {
+  	  jjtThis.setTypeSpec(Predefined.charType);
+	  jjtThis.setAttribute(VALUE, new String(token.image));
+  }
 }
 
+void error() : {}
+{	<ERROR>
+}  
 JAVACODE
 //return the token name in string format
 void processVariableDecl(Token token, SymTabEntry variableId) #void
@@ -403,17 +330,22 @@ void processVariableDecl(Token token, SymTabEntry variableId) #void
 }
 
 
+
 JAVACODE
-
-String handleError(ParseException ex) #void
+String handleError(Token token) #void
 {
-    Token token = ex.currentToken;
-    System.out.println(ex.getMessage());
+  System.out.println("*** ERROR: Line " + token.beginLine +
+                     " after \"" + token.image + "\"");
+  
+  Token t;
+  
+  do {
+    t = getNextToken();  	
+  } while (t.kind != EOL && t.kind != EOF);
 
-    do {
-    	token = getNextToken();
-    } while (token.kind != SEMICOLON);
+  System.out.println("*** ERROR: EXIT LOOP");
 
-	jjtree.popNode();
-    return token.image;
+  //jjtree.popNode();
+ 
+  return t.image;
 }

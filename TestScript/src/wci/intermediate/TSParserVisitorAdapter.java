@@ -2,14 +2,15 @@ package wci.intermediate;
 
 import wci.frontend.ASTAssignment;
 import wci.frontend.ASTCompound_stmt;
+import wci.frontend.ASTStatement;
 import wci.frontend.ASTadd;
 import wci.frontend.ASTsubtract;
 import wci.frontend.ASTmultiply;
 import wci.frontend.ASTnumber;
 import wci.frontend.ASTprogram;
-import wci.frontend.ASTskip_until_new_line;
 import wci.frontend.ASTstring;
 import wci.frontend.ASTdivide;
+import wci.frontend.ASTerror;
 import wci.frontend.ASTidentifier;
 import wci.frontend.PclParserVisitor;
 import wci.frontend.SimpleNode;
@@ -81,12 +82,12 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	public Object visit(ASTstring node, Object data) {
         return node.childrenAccept(this, data);
 	}
-
 	@Override
-	public Object visit(ASTskip_until_new_line node, Object data) {
+	public Object visit(ASTerror node, Object data) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 
 }
