@@ -217,7 +217,8 @@ void Assignment() :{}
 		  SymTabEntry typeId = symTabStack.lookup(token.image);
           typeId.appendLineNumber(token.beginLine);
           SymTabEntry variableId = symTabStack.lookup(token.image);
-		  jjtThis.setAttribute(ID, variableId);  
+		  jjtThis.setAttribute(ID, variableId);
+		  jjtThis.setTypeSpec(typeId.getTypeSpec());
 		} #identifier  <EQ> Expression() <SEMICOLON> 
 }
 
