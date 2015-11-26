@@ -211,10 +211,12 @@ void Statement_list() #void: {}
 void Assignment() :{}
 {
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-		<IDENTIFIER>
+		<IDENTIFIER> 
 		{
 		  SymTabEntry typeId = symTabStack.lookup(token.image);
           typeId.appendLineNumber(token.beginLine);
+          SymTabEntry variableId = symTabStack.lookup(token.image);
+		  jjtThis.setAttribute(ID, variableId);  
 		} #identifier  <EQ> Expression() <SEMICOLON> 
 }
 
@@ -225,10 +227,12 @@ void VarIdentifierType() #void : {}
 
 void IdentifierType() #void :{SymTabEntry someID;}
 {
-    <IDENTIFIER>
+    <IDENTIFIER> 
     {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
+	  jjtThis.setAttribute(ID, someID);  
+      
     } #identifier <COLON>
     typeSignature()
     {
@@ -284,7 +288,7 @@ void identifier() : {}
 	jjtThis.setTypeSpec(type);
 	// ID is not really used but might need it later
 	jjtThis.setAttribute(ID, variableId); 
-  }
+  } 
 }
 
 // try parse integer if not try float if not error 
