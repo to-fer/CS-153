@@ -55,5 +55,14 @@ public class CodeGeneratorVisitor
 
             return data;
         }
+
+        public Object visit(ASTstring node, Object data) {
+            String value = (String) node.getAttribute(VALUE);
+            CodeGenerator.objectFile.println("      ldc " + value);
+            CodeGenerator.objectFile.flush();
+
+            return data;
+        }
+
     // TODO Implement code generation for each of the types of AST nodes via visit methods here.
 }
