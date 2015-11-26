@@ -82,7 +82,9 @@ SKIP: {
   | <COMMENT : "{"(~["}"])*"}">
 }
 
-TOKEN:{   //<NEW_LINE: "\n" >
+TOKEN:
+{
+   //<NEW_LINE: "\n" >
  <EOL : "\r" | "\n" | "\r\n">
 }
 
@@ -184,7 +186,8 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
 
   	   	try
-	{     Compound_stmt()  | Assignment() (<EOL>)| error() { handleError(token); }
+	{
+     Compound_stmt()  | Assignment() (<EOL>)| error() { handleError(token); }
     } catch(ParseException ex)
    {
 		handleError(ex.currentToken); 
@@ -200,7 +203,8 @@ void Compound_stmt() : {}
 }
 
 void Statement_list() #void: {}
-{
+{
+
   		(
   	  		Statement()
 
@@ -296,20 +300,8 @@ void number() : {}
 {
   <NUM>
   {
-    try{
   	  jjtThis.setTypeSpec(Predefined.numberType);
-      jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-  	  
-  	} catch( Exception e)
-  	{
-  	  	try
-  	  	{
-        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image)); 
-  	  	}catch( Exception e2)
-  	  	{
-			// must be error go to end of line 
-  	  	}
-  	}
+      jjtThis.setAttribute(VALUE, Double.parseDouble(token.image));
   }
 }
 
@@ -323,8 +315,11 @@ void string() : {}
 }
 
 void error() : {}
-{	<ERROR>
-}  
+{
+	<ERROR>
+}
+
+  
 JAVACODE
 //return the token name in string format
 void processVariableDecl(Token token, SymTabEntry variableId) #void
