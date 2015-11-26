@@ -2,7 +2,6 @@ package wci.intermediate;
 
 import wci.frontend.ASTAssignment;
 import wci.frontend.ASTCompound_stmt;
-import wci.frontend.ASTStatement;
 import wci.frontend.ASTadd;
 import wci.frontend.ASTsubtract;
 import wci.frontend.ASTmultiply;
