@@ -100,6 +100,7 @@ TOKEN : { //useful regex
 TOKEN : {//Reserved words
 	<VAR : "var">
 	| <IF : "if">
+	| <ELSE_IF :"else if">
  	| <ELSE : "else">
  	| <FUNCTION : "function">
  	| <BOOLEAN : "boolean">
@@ -124,8 +125,6 @@ TOKEN : {//Symbols
 	| <COLON : ":">
 	| <SEMICOLON : ";">
 	| <QM : "?">
-	| <LT : "<">
-	| <GT : ">">
 	| <COMMA : ",">
 	| <DOT : ".">
 	| <SINGLE_QUOTE : "'">
@@ -136,8 +135,10 @@ TOKEN : {//Symbols
 	| <RIGHT_BRAKET : "]">
 	| <LEFT_BRACE : "{"> 
 	| <RIGHT_BRACE : "}">
-	| <LE : "<=">
 	| <UNDER_SCORE : "_">
+	| <LT : "<">
+	| <GT : ">">
+	| <LE : "<=">
 	| <GE : ">=">
 	| <DOUBLE_EQ : "==">
 	| <OR : "||">
@@ -182,6 +183,38 @@ SimpleNode program() : {}
         }
 }
 
+
+/*if statements*/
+void boolean_op()#void : {}
+{
+	<LT> #LESS_THAN |
+	 <GT> #GREATER_THAN |
+	  <LE> #LESS_THAN_OR_EQUALS |
+	   <GE> #GREATER_THAN_OR_EQUALS |
+	    <DOUBLE_EQ> #EQUALITY |
+	     <OR> #OR |
+	      <AND> #AND |
+	       <NOT_EQ> #NOT_EQUALS 
+}
+
+void condition()#void : {}
+{	<LEFT_PARAN> Expression() boolean_op() Expression() <RIGHT_PARAN>
+}
+
+void if_part() : {}
+{	<IF> condition() Compound_stmt()
+}
+
+void else_if_part(): {}
+{	<ELSE_IF> condition() Compound_stmt()
+}
+
+void else_part(): {}
+{	<ELSE> Compound_stmt()
+}
+
+void if_stmt() :{}
+{	if_part() (else_if_part())* (else_part())?}
 void Statement()#void : {}
 {
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
@@ -207,7 +240,7 @@ void Statement_list() #void: {}
 {
 
   		(
-  	  		Statement()
+  	  		Statement() | if_stmt()
 
   	  	)+
 }

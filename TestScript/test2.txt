@@ -6,3 +6,7 @@ var l: boolean = true;
 var y: number = (1+2+3);
 var s: number = 10 / 5;
 y = 6;
+if( y < x ) {
+	x = 6;
+}
+
