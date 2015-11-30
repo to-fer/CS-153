@@ -69,6 +69,7 @@ public class CodeGeneratorVisitor
             SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
 
             TypeSpec type = node.getTypeSpec();
+
             String typePrefix = TypeCode.typeSpecToTypeCode(type).toLowerCase();
 
             addend0Node.jjtAccept(this, data);
@@ -134,7 +135,7 @@ public class CodeGeneratorVisitor
             SimpleNode nodeToPrint = (SimpleNode) node.jjtGetChild(0);
             nodeToPrint.jjtAccept(this, data);
 
-            CodeGenerator.objectFile.println("      java/io/PrintStream/println(Ljava/lang/String;)V");
+            CodeGenerator.objectFile.println("      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
 
             return data;
         }
