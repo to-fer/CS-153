@@ -5,6 +5,7 @@ var l: boolean = true;
 var t: number = x + i*j - x;
 var y: number = (1+2+3);
 var s: number = 10 / 5;
+y = 6;
 if(y < s) {
-	var i:number = 0.3;
+	i = 0.3;
 }

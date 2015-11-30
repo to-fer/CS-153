@@ -228,7 +228,7 @@ void else_part(): {}
 void if_body(): {}
 {
   <LEFT_BRACE>
-		(Expression())*
+		(Assignment())*
   <RIGHT_BRACE>
 }
 void if_stmt() :{}
@@ -241,7 +241,7 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
-     Expression()//| error() { handleError(token); }
+     Assignment() | if_stmt()//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -344,10 +344,9 @@ void typeSignature() #void :{}
 
 void Expression() #void : {}
 {
-    LOOKAHEAD(3)    term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* |    LOOKAHEAD(3)    < LEFT_PARAN > term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* < RIGHT_PARAN >  |
-	LOOKAHEAD(3)
-    Assignment() |
-    if_stmt()
+    LOOKAHEAD(3)    term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* |    LOOKAHEAD(3)    < LEFT_PARAN > term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* < RIGHT_PARAN >  //|
+	//LOOKAHEAD(3)
+    //Assignment() //| if_stmt()
 }
 
 void simple_expression() #void :{}
