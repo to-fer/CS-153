@@ -127,4 +127,15 @@ public class CodeGeneratorVisitor
 
             return data;
         }
+
+        public Object visit(ASTprintln node, Object data) {
+            CodeGenerator.objectFile.println("      getstatic java/lang/System/out Ljava/io/PrintStream;");
+
+            SimpleNode nodeToPrint = (SimpleNode) node.jjtGetChild(0);
+            nodeToPrint.jjtAccept(this, data);
+
+            CodeGenerator.objectFile.println("      java/io/PrintStream/println(Ljava/lang/String;)V");
+
+            return data;
+        }
 }
