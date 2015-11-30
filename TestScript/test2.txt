@@ -1,11 +1,9 @@
 var i: number = 1 -5.653 + 4434;
 var j: number = 2 + i;
-var x: char = "hello person";
-var l: boolean = true;
+//var x: char = "hello person";
+//var l: boolean = true;
 var y: number = (1+2+3);
 var s: number = 10 / 5;
 y = 6;
-if(y < s) {
-	i = 0.3;
-}
+y = 6 + 7;
 println(y);
