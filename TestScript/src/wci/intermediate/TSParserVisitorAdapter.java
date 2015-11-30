@@ -84,6 +84,11 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	}
 
 	@Override
+	public Object visit(ASTprintln node, Object data) {
+		return null;
+	}
+
+	@Override
 	public Object visit(ASTCompound_stmt node, Object data) {
         return node.childrenAccept(this, data);
 
