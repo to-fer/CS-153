@@ -4,7 +4,7 @@ import wci.intermediate.TypeSpec;
 import wci.intermediate.symtabimpl.Predefined;
 
 public class TypeCode {
-    private static final String BOOLEAN_TYPECODE = "B";
+    private static final String BOOLEAN_TYPECODE = "Z";
     private static final String CHAR_TYPECODE = "C";
     private static final String DOUBLE_TYPECODE = "D";
     private static final String FLOAT_TYPECODE = "F";
