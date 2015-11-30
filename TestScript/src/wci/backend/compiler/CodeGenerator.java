@@ -1,6 +1,6 @@
 package wci.backend.compiler;
 
-import com.sun.org.apache.xpath.internal.operations.Variable;
+//import com.sun.org.apache.xpath.internal.operations.Variable;
 import wci.backend.Backend;
 import wci.frontend.Node;
 import wci.intermediate.*;
