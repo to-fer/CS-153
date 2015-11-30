@@ -1,18 +1,6 @@
 package wci.intermediate;
 
-import wci.frontend.ASTAssignment;
-import wci.frontend.ASTCompound_stmt;
-import wci.frontend.ASTadd;
-import wci.frontend.ASTsubtract;
-import wci.frontend.ASTmultiply;
-import wci.frontend.ASTnumber;
-import wci.frontend.ASTprogram;
-import wci.frontend.ASTstring;
-import wci.frontend.ASTdivide;
-import wci.frontend.ASTerror;
-import wci.frontend.ASTidentifier;
-import wci.frontend.PclParserVisitor;
-import wci.frontend.SimpleNode;
+import wci.frontend.*;
 import wci.intermediate.symtabimpl.Predefined;
 
 public class TSParserVisitorAdapter implements PclParserVisitor
@@ -30,9 +18,84 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	}
 
 	@Override
+	public Object visit(ASTLESS_THAN node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTGREATER_THAN node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTLESS_THAN_OR_EQUALS node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTGREATER_THAN_OR_EQUALS node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTEQUALITY node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTOR node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTAND node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTNOT_EQUALS node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTif_part node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTelse_if_part node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTelse_part node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTif_body node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTif_stmt node, Object data) {
+		return null;
+	}
+
+	@Override
 	public Object visit(ASTCompound_stmt node, Object data) {
         return node.childrenAccept(this, data);
 
+	}
+
+	@Override
+	public Object visit(ASTdeclaration node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTassignment_2 node, Object data) {
+		return null;
 	}
 
 	@Override
