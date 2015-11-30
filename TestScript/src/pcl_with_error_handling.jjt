@@ -144,6 +144,9 @@ TOKEN : {//Symbols
 	| <NOT_EQ : "!=">
 }
 
+TOKEN :{
+  <MATH_OP : <PLUS> | <MINUS> | <MUL> | <DIV> > }
+
 TOKEN : {//Character String and Strings
 	<STRING_LITERAL : <QUOTE> (~["\""])* <QUOTE> | <SINGLE_QUOTE> (~[]){1} <SINGLE_QUOTE> >
 }
@@ -225,7 +228,7 @@ void else_part(): {}
 void if_body(): {}
 {
   <LEFT_BRACE>
-		(Assignment() | Expression())*
+		(Expression())*
   <RIGHT_BRACE>
 }
 void if_stmt() :{}
@@ -238,7 +241,7 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
-     Compound_stmt()  | Assignment() | if_stmt()//| error() { handleError(token); }
+     Expression()//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -246,11 +249,10 @@ void Statement()#void : {}
      System.out.println("token :"+ex.currentToken.image);
 //		handleError(ex.currentToken);
 		HashSet syncSet = new HashSet();
-        syncSet.add(EOF);
         syncSet.add(SEMICOLON);
         syncSet.add(LEFT_BRACE);
         syncSet.add(RIGHT_BRACE);
-        
+        syncSet.add(EOF);
         handleError(ex, syncSet, true);
    }
   //| FunctionDeclaration() | If_stmt()
@@ -293,7 +295,9 @@ void assignment_2() :{}
 
 void Assignment() :{}
 {
+  LOOKAHEAD(3)
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
+  LOOKAHEAD(3)
 		<IDENTIFIER> 
 		{
 		  SymTabEntry typeId = symTabStack.lookup(token.image);
@@ -336,16 +340,19 @@ void typeSignature() #void :{}
 	  |<STRING>
 }
 
+
+
 void Expression() #void : {}
 {
-    term() (
-        "+" term() #add(2)
-      | "-" term() #subtract(2)
-    )* |
-    < LEFT_PARAN > term() (
-        "+" term() #add(2)
-      | "-" term() #subtract(2)
-    )* < RIGHT_PARAN >  
+    LOOKAHEAD(3)    term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* |    LOOKAHEAD(3)    < LEFT_PARAN > term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* < RIGHT_PARAN >  |
+	LOOKAHEAD(3)
+    Assignment() |
+    if_stmt()
+}
+
+void simple_expression() #void :{}
+{	//factor()  //(MATH_OP factor())?
+	factor() (("+"|"-"|"/"|"*") simple_expression())? //< SEMICOLON >
 }
 
 void term() #void : {}
@@ -356,8 +363,18 @@ void term() #void : {}
     )*
 }
 
+void simple_term() #void : {}
+{
+  	LOOKAHEAD(3)
+    factor() "*" factor() #multiply(2) |
+    LOOKAHEAD(3)
+    factor() "/" factor() #divide(2) |
+    factor()
+}
+
 void factor() #void : {}
 {
+  LOOKAHEAD(3)
     identifier()
   | number()
   | string()
