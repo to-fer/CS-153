@@ -148,13 +148,21 @@ public class CodeGeneratorVisitor
           String typePrefix = TypeCode.typeSpecToTypeCode(nodeToPrint.getTypeSpec());
           SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
           SymTabEntry id = (SymTabEntry) addend0Node.getAttribute(ID);
-          System.out.println( "name " + id.getName());
+//          System.out.println( "name " + id.getName());
 //          System.out.println( id.getAttribute());
           if(typePrefix.equals("F")) {
         	  
 //          	generate_float_print_code(nodeToPrint, data);
+        	  	//generate code for printing an identifier to a float
           		if(nodeToPrint.toString().equals("identifier")) {
           			generate_float_print_code(id.getName(), 0f, data);
+          		}
+          		//generate code for printing number literal
+          		else if(nodeToPrint.toString().equals("number")) {
+//          			System.out.println("NUMBER!!!!!!!!!!!!");
+//          			System.out.println("value "+nodeToPrint.getAttribute(VALUE).toString());
+          			float val = Float.parseFloat( nodeToPrint.getAttribute(VALUE).toString() );
+          			generate_float_print_code(null, val, data);
           		}
           }
           
@@ -173,6 +181,12 @@ public class CodeGeneratorVisitor
         	      //invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
         		CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
         		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/"+id+" F");
+        		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;");
+        		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
+        	}
+        	else {
+        		CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
+        		CodeGenerator.objectFile.println("       ldc "+value);
         		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;");
         		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
         	}
