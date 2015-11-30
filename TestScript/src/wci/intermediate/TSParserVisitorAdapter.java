@@ -156,5 +156,11 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 		return null;
 	}
 
+	@Override
+	public Object visit(ASTcondition node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

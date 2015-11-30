@@ -215,7 +215,7 @@ void boolean_op()#void : {}
 	       <NOT_EQ> #NOT_EQUALS 
 }
 
-void condition()#void : {}
+void condition() : {}
 {
     {
       System.out.println("before condition");
@@ -246,9 +246,11 @@ void else_part(): {}
 
 void if_body(): {}
 {
-  <LEFT_BRACE>
-		(Assignment())*
-  <RIGHT_BRACE>
+  //<LEFT_BRACE>
+
+		//( Assignment())*
+		Compound_stmt()
+  //<RIGHT_BRACE>
 }
 void if_stmt() :{}
 {
@@ -260,7 +262,9 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
-     Assignment() | if_stmt() | println()//| error() { handleError(token); }
+  LOOKAHEAD(4)
+	  
+     Assignment() | if_stmt() | println() | Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
