@@ -278,7 +278,7 @@ void Statement()#void : {}
 }
 
 // TODO We need to implement general function parsing instead of just parsing println().
-void println() #println : {}
+void println() : {}
 {
     // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
     <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>
