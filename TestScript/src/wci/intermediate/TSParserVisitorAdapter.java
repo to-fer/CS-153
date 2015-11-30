@@ -1,5 +1,6 @@
 package wci.intermediate;
 
+
 import wci.frontend.*;
 import wci.intermediate.symtabimpl.Predefined;
 
@@ -149,7 +150,4 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-
 }
