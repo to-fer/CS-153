@@ -85,7 +85,11 @@ SKIP: {
   //| <COMMENT : "{"(~["}"])*"}">
 }
 
-//TOKEN://{////   //<NEW_LINE: "\n" >//    <EOL : "\r" | "\n" | "\r\n">//}
+//TOKEN:
+//{
+////   //<NEW_LINE: "\n" >
+//    <EOL : "\r" | "\n" | "\r\n">
+//}
 
 TOKEN : { //useful regex
 	<#DIGIT  : ["0"-"9"]>
@@ -109,6 +113,8 @@ TOKEN : {//Reserved words
  	| <RETURN : "return">
  	| <VOID : "void">
  	| <WHILE : "while">
+ 	// Println is considered a reserved word for now. Might just want to make it part of the runtime library later.
+ 	| <PRINTLN : "println">
 }
 
 TOKEN : {//Symbols
@@ -144,8 +150,10 @@ TOKEN : {//Symbols
 	| <NOT_EQ : "!=">
 }
 
-TOKEN :{
-  <MATH_OP : <PLUS> | <MINUS> | <MUL> | <DIV> > }
+TOKEN :
+{
+  <MATH_OP : <PLUS> | <MINUS> | <MUL> | <DIV> > 
+}
 
 TOKEN : {//Character String and Strings
 	<STRING_LITERAL : <QUOTE> (~["\""])* <QUOTE> | <SINGLE_QUOTE> (~[]){1} <SINGLE_QUOTE> >
@@ -165,7 +173,9 @@ TOKEN : {//Numbers
  	| <#SIGN: "" >
 }
 
-TOKEN: { /*	Error token */    <ERROR : ~["\r", "\n"]>}
+TOKEN: { /*	Error token */
+    <ERROR : ~["\r", "\n"]>
+}
 
 SimpleNode program() : {}
 {
@@ -185,7 +195,10 @@ SimpleNode program() : {}
             return jjtThis;
             System.out.println("after");
         }
-        {          System.out.println("done parsing");        }        
+        {
+          System.out.println("done parsing");
+        }
+        
 }
 
 
@@ -204,9 +217,15 @@ void boolean_op()#void : {}
 
 void condition()#void : {}
 {
-    {      System.out.println("before condition");    }    
+    {
+      System.out.println("before condition");
+    }
+    
 	<LEFT_PARAN> Expression() boolean_op() Expression() <RIGHT_PARAN>
-	{	  System.out.println("after condition");	}	
+	{
+	  System.out.println("after condition");
+	}
+	
 }
 
 void if_part() : {}
@@ -241,7 +260,7 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
-     Assignment() | if_stmt()//| error() { handleError(token); }
+     Assignment() | if_stmt() | println()//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -258,7 +277,12 @@ void Statement()#void : {}
   //| FunctionDeclaration() | If_stmt()
 }
 
-
+// TODO We need to implement general function parsing instead of just parsing println().
+void println() #void : {}
+{
+    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
+    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>
+}
 
 void Compound_stmt() : {}
 {
@@ -267,13 +291,19 @@ void Compound_stmt() : {}
 
 void Statement_list() #void: {}
 {
-  {    System.out.println("before stmt");  }  
+  {
+    System.out.println("before stmt");
+  }
+  
 
   		(
   	  		Statement()
 
   	  	)+
-  	  	{  	  	  System.out.println("after stmt");  	  	}  	  	
+  	  	{
+  	  	  System.out.println("after stmt");
+  	  	}
+  	  	
 }
 
 void declaration() :{}
@@ -344,13 +374,23 @@ void typeSignature() #void :{}
 
 void Expression() #void : {}
 {
-    LOOKAHEAD(3)    term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* |    LOOKAHEAD(3)    < LEFT_PARAN > term() (        "+" term() #add(2)      | "-" term() #subtract(2)    )* < RIGHT_PARAN >  //|
+    LOOKAHEAD(3)
+    term() (
+        "+" term() #add(2)
+      | "-" term() #subtract(2)
+    )* |
+    LOOKAHEAD(3)
+    < LEFT_PARAN > term() (
+        "+" term() #add(2)
+      | "-" term() #subtract(2)
+    )* < RIGHT_PARAN >  //|
 	//LOOKAHEAD(3)
     //Assignment() //| if_stmt()
 }
 
 void simple_expression() #void :{}
-{	//factor()  //(MATH_OP factor())?
+{
+	//factor()  //(MATH_OP factor())?
 	factor() (("+"|"-"|"/"|"*") simple_expression())? //< SEMICOLON >
 }
 
@@ -412,7 +452,10 @@ void string() : {}
   }
 }
 
-void error() : {}{	<ERROR>}
+void error() : {}
+{
+	<ERROR>
+}
 
   
 JAVACODE

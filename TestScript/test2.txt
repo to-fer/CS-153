@@ -9,3 +9,4 @@ y = 6;
 if(y < s) {
 	i = 0.3;
 }
+println(y)
