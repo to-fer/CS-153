@@ -221,7 +221,7 @@ void Statement()#void : {}
 
   	   	try
 	{
-     Compound_stmt()  | Assignment() (<EOL>)| error() { handleError(token); }
+     Compound_stmt()  | Assignment() (<EOL>)| if_stmt() <EOL> | error() { handleError(token); }
     } catch(ParseException ex)
    {
 		handleError(ex.currentToken); 
@@ -240,7 +240,7 @@ void Statement_list() #void: {}
 {
 
   		(
-  	  		Statement() | if_stmt()
+  	  		Statement()
 
   	  	)+
 }

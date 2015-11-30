@@ -1,12 +1,12 @@
 .class public TypeScriptProgram
 .super java/lang/Object
 
-.field private static i D
-.field private static j D
+.field private static i F
+.field private static j F
 .field private static l B
-.field private static s D
+.field private static s F
 .field private static x C
-.field private static y D
+.field private static y F
 
 .method public <init>()V
 
@@ -22,30 +22,30 @@
 
       ldc 1.0
       ldc 5.653
-      dsub
+      fsub
       ldc 4434.0
-      dadd
-      putstatic TypeScriptProgram/i D
+      fadd
+      putstatic TypeScriptProgram/i F
       ldc 2.0
-      getstatic TypeScriptProgram/i D
-      dadd
-      putstatic TypeScriptProgram/j D
+      getstatic TypeScriptProgram/i F
+      fadd
+      putstatic TypeScriptProgram/j F
       ldc "hello person"
       putstatic TypeScriptProgram/x C
       getstatic TypeScriptProgram/true B
       putstatic TypeScriptProgram/l B
       ldc 1.0
       ldc 2.0
-      dadd
+      fadd
       ldc 3.0
-      dadd
-      putstatic TypeScriptProgram/y D
+      fadd
+      putstatic TypeScriptProgram/y F
       ldc 10.0
       ldc 5.0
-      ddiv
-      putstatic TypeScriptProgram/s D
+      fdiv
+      putstatic TypeScriptProgram/s F
       ldc 6.0
-      putstatic TypeScriptProgram/y D
+      putstatic TypeScriptProgram/y F
 
     return
 
