@@ -9,6 +9,9 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 public class CodeGeneratorVisitor
         extends TSParserVisitorAdapter
         implements PclParserTreeConstants {
+	
+		int label_count = 0;
+		String label_suffix = "Label";
 
         /*
          Note that once we implement functions, this will have to be changed because we currently implement identifiers
@@ -19,6 +22,8 @@ public class CodeGeneratorVisitor
          retrieve local variables in functions and global variables in a uniform way.
           */
         public Object visit(ASTidentifier node, Object data) {
+        		label_count = 0;
+        		label_suffix = "Label";
                 SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
                 String identifier = id.getName();
                 TypeSpec type = id.getTypeSpec();
@@ -192,4 +197,93 @@ public class CodeGeneratorVisitor
         	}
         	return data;
         }
+        //LT GT LE GE DOUBLE_EQ NOT_EQ OR AND
+        public Object visit(ASTboolean_op node, Object data) {
+        	String boolOpString = "       ";
+        	String op = ( (SimpleNode) node.jjtGetChild(0)).toString();
+        	System.out.println("OP "+op);
+        	if(op.equals("LESS_THAN")) {
+        		boolOpString = "fcmpl "+label_suffix + ++label_count;
+        	}
+        	else if(op.equals("GREATER_THAN")) {
+        		boolOpString = "if_icmple "+label_suffix + ++label_count;
+        	}
+        	else if(op.equals("LESS_THAN_OR_EQUALS")) {
+        		boolOpString = "if_icmpgt "+label_suffix + ++label_count;
+        	}
+        	else if(op.equals("GREATER_THAN_OR_EQUALS")) {
+        		boolOpString = "if_icmplt "+label_suffix + ++label_count;
+        	}
+        	else if(op.equals("EQUALITY")) {
+        		boolOpString = "if_acmpne "+label_suffix + ++label_count;
+        	}
+        	else if(op.equals("NOT_EQUALS")) {
+        		boolOpString = "if_acmpeq "+label_suffix + ++label_count;
+        	}
+        	CodeGenerator.objectFile.println(boolOpString);
+        	return data;
+        }
+        public Object visit(ASTcondition node, Object data) {
+        	SimpleNode exp1 = (SimpleNode) node.jjtGetChild(0);
+        	SimpleNode op = (SimpleNode) node.jjtGetChild(1);
+        	SimpleNode exp2 = (SimpleNode) node.jjtGetChild(2);
+        	exp1.jjtAccept(this, data);
+        	exp2.jjtAccept(this, data);
+        	op.jjtAccept(this, data);
+        	return data;
+        }
+        
+        public Object visit(ASTif_body node, Object data) {
+        	if(node.jjtGetNumChildren() > 0) {
+        	SimpleNode body = (SimpleNode) node.jjtGetChild(0);
+        	body.jjtAccept(this, data);
+        	}
+        	return data;
+        }
+        
+        public Object visit(ASTCompound_stmt node, Object data) {
+        	for(int i = 0; i < node.jjtGetNumChildren(); i++) {
+        		SimpleNode curr = (SimpleNode) node.jjtGetChild(i);
+        		curr.jjtAccept(this, data);
+        	}
+        	return data;
+        }
+        
+        public Object visit(ASTelse_part node, Object data) {
+        	if(node.jjtGetNumChildren() > 0) {
+            	SimpleNode body = (SimpleNode) node.jjtGetChild(0);
+            	body.jjtAccept(this, data);
+            }
+        	return data;
+        }
+        
+        public Object visit(ASTif_part node, Object data) {
+        	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
+        	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
+        	condition.jjtAccept(this, data);
+        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
+        	body.jjtAccept(this, data);
+        	return data;
+        }
+        
+        public Object visit(ASTif_stmt node, Object data) {
+//        	SimpleNode if_part = (SimpleNode) node.jjtGetChild(0);
+//        	if_part.jjtAccept(this, data);
+//        	if(node.jjtGetNumChildren() > 1){
+//        		SimpleNode else_part = (SimpleNode) node.jjtGetChild(1);
+//        		else_part.jjtAccept(this, data);
+//        	}
+        	
+        	SimpleNode condition = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0);
+        	SimpleNode branch1 = (SimpleNode) node.jjtGetChild(0).jjtGetChild(1);
+        	SimpleNode branch2 = (SimpleNode) node.jjtGetChild(1);
+        	condition.jjtAccept(this, data);
+        	branch1.jjtAccept(this, data);
+        	CodeGenerator.objectFile.println("goto Empty");
+        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
+        	branch2.jjtAccept(this, data);
+        	CodeGenerator.objectFile.println("Empty:");
+        	return data;
+        }
+        
 }

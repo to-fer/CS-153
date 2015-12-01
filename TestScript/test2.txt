@@ -1,18 +1,7 @@
-var i: number = 1 -5.653 + 4434;
-println(i);
-var j: number = 2 + i;
-println(j);
-var y: number = (1+2+3);
-println(y);
-var s: number = 10 / 5;
-println(s);
-y = 6;
-println(y);
-y = y + 7;
-println(y);
-y+7;
-println(4);
-if(y < s) {
-	y+7;
-	y = 7;
+if(1 < 2) {
+
+	println(1);
+}
+else {
+	println(3);
 }
