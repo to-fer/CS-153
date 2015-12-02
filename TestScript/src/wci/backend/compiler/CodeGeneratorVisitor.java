@@ -12,6 +12,7 @@ public class CodeGeneratorVisitor
 	
 		int label_count = 0;
 		String label_suffix = "Label";
+		int empty_count = 0;
 
         /*
          Note that once we implement functions, this will have to be changed because we currently implement identifiers
@@ -22,8 +23,9 @@ public class CodeGeneratorVisitor
          retrieve local variables in functions and global variables in a uniform way.
           */
         public Object visit(ASTidentifier node, Object data) {
-        		label_count = 0;
+//        		label_count = 0;
         		label_suffix = "Label";
+//        		empty_count = 0;
                 SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
                 String identifier = id.getName();
                 TypeSpec type = id.getTypeSpec();
@@ -203,22 +205,28 @@ public class CodeGeneratorVisitor
         	String op = ( (SimpleNode) node.jjtGetChild(0)).toString();
         	System.out.println("OP "+op);
         	if(op.equals("LESS_THAN")) {
-        		boolOpString = "fcmpl "+label_suffix + ++label_count;
+        		boolOpString = "fcmpl \n";
+        		boolOpString += "ifge "+label_suffix + ++label_count;
         	}
         	else if(op.equals("GREATER_THAN")) {
-        		boolOpString = "if_icmple "+label_suffix + ++label_count;
+        		boolOpString = "fcmpg \n";
+        		boolOpString += "ifle "+label_suffix + ++label_count;
         	}
         	else if(op.equals("LESS_THAN_OR_EQUALS")) {
-        		boolOpString = "if_icmpgt "+label_suffix + ++label_count;
+        		boolOpString = "fcmpl \n";
+        		boolOpString += "ifgt "+label_suffix + ++label_count;
         	}
         	else if(op.equals("GREATER_THAN_OR_EQUALS")) {
-        		boolOpString = "if_icmplt "+label_suffix + ++label_count;
+        		boolOpString = "fcmpg \n";
+        		boolOpString += "iflt "+label_suffix+ ++label_count;
         	}
         	else if(op.equals("EQUALITY")) {
-        		boolOpString = "if_acmpne "+label_suffix + ++label_count;
+        		boolOpString = "fcmpg \n";
+        		boolOpString += "ifne "+label_suffix+ ++label_count;
         	}
         	else if(op.equals("NOT_EQUALS")) {
-        		boolOpString = "if_acmpeq "+label_suffix + ++label_count;
+        		boolOpString = "fcmpg \n";
+        		boolOpString += "ifeq "+label_suffix+ ++label_count;
         	}
         	CodeGenerator.objectFile.println(boolOpString);
         	return data;
@@ -279,10 +287,10 @@ public class CodeGeneratorVisitor
         	SimpleNode branch2 = (SimpleNode) node.jjtGetChild(1);
         	condition.jjtAccept(this, data);
         	branch1.jjtAccept(this, data);
-        	CodeGenerator.objectFile.println("goto Empty");
+        	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
         	branch2.jjtAccept(this, data);
-        	CodeGenerator.objectFile.println("Empty:");
+        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
         

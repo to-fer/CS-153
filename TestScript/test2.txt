@@ -5,3 +5,28 @@ if(1 < 2) {
 else {
 	println(3);
 }
+
+
+var y:number = 3;
+var z:number = 6;
+
+if(z > y) {
+	println(z);
+}
+else{
+	println(y);
+}
+
+if(z == 3){
+	println(y);
+}
+else {
+	println(z);
+}
+
+if(z != 3){
+	println(100);
+}
+else {
+	println(50);
+}

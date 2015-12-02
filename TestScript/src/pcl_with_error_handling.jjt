@@ -203,16 +203,16 @@ SimpleNode program() : {}
 
 
 /*if statements*/
-void boolean_op()#void : {}
+void boolean_op() : {}
 {
 	<LT> #LESS_THAN |
 	 <GT> #GREATER_THAN |
 	  <LE> #LESS_THAN_OR_EQUALS |
 	   <GE> #GREATER_THAN_OR_EQUALS |
 	    <DOUBLE_EQ> #EQUALITY |
+	     <NOT_EQ> #NOT_EQUALS | 
 	     <OR> #OR |
-	      <AND> #AND |
-	       <NOT_EQ> #NOT_EQUALS 
+	      <AND> #AND 
 }
 
 void condition() : {}
@@ -228,7 +228,7 @@ void condition() : {}
 	
 }
 
-void if_part() : {}
+void if_part(): {}
 {
 	<IF> condition() if_body()
 }
@@ -254,7 +254,7 @@ void if_body(): {}
 }
 void if_stmt() :{}
 {
-	if_part() (else_if_part())* (else_part())?
+	if_part() (else_part())?
 }
 
 void Statement()#void : {}
