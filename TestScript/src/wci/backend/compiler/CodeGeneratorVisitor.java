@@ -65,6 +65,7 @@ public class CodeGeneratorVisitor
 
         public Object visit(ASTstring node, Object data) {
             String value = (String) node.getAttribute(VALUE);
+            
             CodeGenerator.objectFile.println("      ldc " + value);
             CodeGenerator.objectFile.flush();
 
@@ -135,17 +136,6 @@ public class CodeGeneratorVisitor
 
             return data;
         }
-
-//        public Object visit(ASTprintln node, Object data) {
-//            CodeGenerator.objectFile.println("      getstatic java/lang/System/out Ljava/io/PrintStream;");
-//
-//            SimpleNode nodeToPrint = (SimpleNode) node.jjtGetChild(0);
-//            nodeToPrint.jjtAccept(this, data);
-//
-//            CodeGenerator.objectFile.println("      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
-//
-//            return data;
-//        }
         
         public Object visit(ASTprintln node, Object data) {
 //          CodeGenerator.objectFile.println("      getstatic java/lang/System/out Ljava/io/PrintStream;");
@@ -172,6 +162,18 @@ public class CodeGeneratorVisitor
           			generate_float_print_code(null, val, data);
           		}
           }
+          if(typePrefix.equals("Ljava/lang/String;")) {
+        	  System.out.println("FOUND A STRING!!!!!");
+        	  if(nodeToPrint.toString().equals("identifier")) {
+        			System.out.println("found string var!!!!!");
+        			generate_string_print_code(id.getName(), "", data);
+        	  }
+        	  else if(nodeToPrint.toString().equals("string")) {
+        		  System.out.println("found string literal!!!!!");
+        		  String val = nodeToPrint.getAttribute(VALUE).toString();
+        		  generate_string_print_code(null, val, data);
+        	  }
+          }
           
 //          nodeToPrint.jjtAccept(this, data);
 
@@ -179,7 +181,25 @@ public class CodeGeneratorVisitor
 
           return data;
       }
-        
+        public Object generate_string_print_code(String id, String val, Object data) {
+        	if(id != null) {
+      	      //getstatic    java/lang/System/out Ljava/io/PrintStream;
+      	      //getstatic     TypeScriptProgram/y F
+      	      //invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
+      	      //invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      		CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
+      		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/"+id+" Ljava/lang/String;");
+//      		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;");
+      		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
+	      	}
+	      	else {
+	      		CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
+	      		CodeGenerator.objectFile.println("       ldc "+val);
+//	      		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;");
+	      		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
+	      	}
+	      	return data;
+        }
         public Object generate_float_print_code(String id, float value, Object data ) {
         	if(id != null) {
         	      //getstatic    java/lang/System/out Ljava/io/PrintStream;
