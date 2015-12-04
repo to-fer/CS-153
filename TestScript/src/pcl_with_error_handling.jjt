@@ -262,7 +262,7 @@ void Statement()#void : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
-  LOOKAHEAD(4)
+  LOOKAHEAD(2)
 	  
      Assignment() | if_stmt() | println() | Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
@@ -329,9 +329,7 @@ void assignment_2() :{}
 
 void Assignment() :{}
 {
-  LOOKAHEAD(3)
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>|
-  LOOKAHEAD(3)
 		<IDENTIFIER> 
 		{
 		  SymTabEntry typeId = symTabStack.lookup(token.image);
@@ -378,12 +376,10 @@ void typeSignature() #void :{}
 
 void Expression() #void : {}
 {
-    LOOKAHEAD(3)
     term() (
         "+" term() #add(2)
       | "-" term() #subtract(2)
     )* |
-    LOOKAHEAD(3)
     < LEFT_PARAN > term() (
         "+" term() #add(2)
       | "-" term() #subtract(2)
@@ -406,18 +402,18 @@ void term() #void : {}
     )*
 }
 
+/*
 void simple_term() #void : {}
 {
-  	LOOKAHEAD(3)
     factor() "*" factor() #multiply(2) |
-    LOOKAHEAD(3)
     factor() "/" factor() #divide(2) |
     factor()
 }
 
+*/
+
 void factor() #void : {}
 {
-  LOOKAHEAD(3)
     identifier()
   | number()
   | string()

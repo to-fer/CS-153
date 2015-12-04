@@ -23,16 +23,13 @@ public class CodeGeneratorVisitor
          retrieve local variables in functions and global variables in a uniform way.
           */
         public Object visit(ASTidentifier node, Object data) {
-//        		label_count = 0;
-        		label_suffix = "Label";
-//        		empty_count = 0;
                 SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
                 String identifier = id.getName();
                 TypeSpec type = id.getTypeSpec();
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
-                        "/" + identifier + " " + typeCode);
+                        "/" + identifier + " " + typeCode + CodeGenerator.writeComment("assingment of identifier"));
                 return data;
         }
 

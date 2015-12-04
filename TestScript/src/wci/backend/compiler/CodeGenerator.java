@@ -114,4 +114,8 @@ public class CodeGenerator extends Backend
         objectFile.println("    return");
         objectFile.println();
     }
+    
+    public static String writeComment(String comment) {
+    	return " ;" + comment;
+    }
 }

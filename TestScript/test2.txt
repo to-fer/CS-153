@@ -7,7 +7,7 @@ else {
 }
 
 
-var y:number = 3;
+var y:number = 3+3+3;
 var z:number = 6;
 
 if(z > y) {
