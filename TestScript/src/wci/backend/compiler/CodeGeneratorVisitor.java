@@ -172,6 +172,14 @@ public class CodeGeneratorVisitor
         		  generate_string_print_code(null, val, data);
         	  }
           }
+          if(typePrefix.equals("Z")) {
+        	  if( id.getName().equals("true") )
+        	  {
+        		  System.out.println("generating true print code");
+        		  generate_string_print_code(null, "\"true\"", data);
+        	  }
+        	  else if( id.getName().equals("false") ) generate_string_print_code(null, "\"false\"", data);
+          }
           
 //          nodeToPrint.jjtAccept(this, data);
 
@@ -309,6 +317,20 @@ public class CodeGeneratorVisitor
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
         	branch2.jjtAccept(this, data);
         	CodeGenerator.objectFile.println("Empty"+empty_count+":");
+        	return data;
+        }
+        
+        public Object visit(ASTboolean_node node, Object data) {
+        	SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
+            String identifier = id.getName();
+            TypeSpec type = id.getTypeSpec();
+            String typeCode = TypeCode.typeSpecToTypeCode(type);
+        	if(identifier.equals("true")) {
+        		CodeGenerator.objectFile.println("ldc 1");
+        	}
+        	else if(identifier.equals("false")) {
+        		CodeGenerator.objectFile.println("ldc 0");
+        	}
         	return data;
         }
         

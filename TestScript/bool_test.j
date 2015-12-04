@@ -2,6 +2,7 @@
 .super java/lang/Object
 
 .field private static bool_test Z
+.field private static z Z
 
 .method public <init>()V
 
@@ -15,8 +16,16 @@
 
 .method public static main([Ljava/lang/String;)V
 
-      getstatic TypeScriptProgram/true Z
+ldc 1
+      putstatic TypeScriptProgram/z Z
+      getstatic TypeScriptProgram/z Z ;assingment of identifier
       putstatic TypeScriptProgram/bool_test Z
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "true"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "false"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
 
     return
 

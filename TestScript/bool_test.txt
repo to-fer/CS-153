@@ -1,1 +1,6 @@
-var bool_test:boolean = true;
+var z:boolean = true;
+var bool_test:boolean = z;
+
+println(z);
+println(true);
+println(false);
