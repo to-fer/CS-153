@@ -179,6 +179,7 @@ public class CodeGeneratorVisitor
         		  generate_string_print_code(null, "\"true\"", data);
         	  }
         	  else if( id.getName().equals("false") ) generate_string_print_code(null, "\"false\"", data);
+        	  else generate_bool_var_print_code(id.getName(), data);
           }
           
 //          nodeToPrint.jjtAccept(this, data);
@@ -187,6 +188,13 @@ public class CodeGeneratorVisitor
 
           return data;
       }
+        public Object generate_bool_var_print_code(String id, Object data) {
+        	CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
+    		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/"+id+" Z");
+    		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(Z)Ljava/lang/String;");
+    		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
+        	return data;
+        }
         public Object generate_string_print_code(String id, String val, Object data) {
         	if(id != null) {
       	      //getstatic    java/lang/System/out Ljava/io/PrintStream;
