@@ -120,7 +120,7 @@ TOKEN : {//Reserved words
 }
 
 TOKEN : {//Symbols
-	<NOT : "!">
+	<NOT : "!"> 
 	| <AMPRSAND : "&">
 	| <MUL : "*">
 	| <MINUS : "-">
@@ -222,7 +222,9 @@ void condition() : {}
     {
       System.out.println("before condition");
     }
-	<LEFT_PARAN> Expression() (boolean_op() Expression())?  <RIGHT_PARAN>
+	<LEFT_PARAN>
+	( (<NOT> #NOT)? Expression() (boolean_op() Expression())? )
+	<RIGHT_PARAN>
 	{
 	  System.out.println("after condition");
 	}

@@ -3,7 +3,7 @@ var b: number = 1;
 if(a < b){
 	println(1);
 }
-else if(a == 0){
+else if(a){
 	println(2);
 }
 else {

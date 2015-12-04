@@ -124,7 +124,7 @@ TOKEN : {//Reserved words
 }
 
 TOKEN : {//Symbols
-	<NOT : "!">
+	<NOT : "!"> 
 	| <AMPRSAND : "&">
 	| <MUL : "*">
 	| <MINUS : "-">
@@ -379,7 +379,22 @@ void condition() : {/*@bgen(jjtree) condition */
     {
       System.out.println("before condition");
     }
-	<LEFT_PARAN> Expression() (boolean_op() Expression())?  <RIGHT_PARAN>/*@bgen(jjtree)*/
+	<LEFT_PARAN>
+	( (/*@bgen(jjtree) NOT */
+           {
+             ASTNOT jjtn001 = new ASTNOT(JJTNOT);
+             boolean jjtc001 = true;
+             jjtree.openNodeScope(jjtn001);
+           }
+           try {
+/*@egen*/<NOT>/*@bgen(jjtree)*/
+           } finally {
+             if (jjtc001) {
+               jjtree.closeNodeScope(jjtn001, true);
+             }
+           }
+/*@egen*/     )? Expression() (boolean_op() Expression())? )
+	<RIGHT_PARAN>/*@bgen(jjtree)*/
         {
           jjtree.closeNodeScope(jjtn000, true);
           jjtc000 = false;

@@ -6,3 +6,10 @@ println(y);
 
 println(true);
 println(false);
+
+if(!z) {
+	println("hello");
+}
+else {
+	println("bye");
+}
