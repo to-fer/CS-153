@@ -13,3 +13,14 @@
 /TypeScriptParserTreeConstants.java
 /TypeScriptTreeGen.jj
 /TypeScriptParserTokenManager.java
+/TestParser.java
+/TestParserConstants.java
+/TestParserTokenManager.java
+/LogoConstants.java
+/ASTError.java
+/ASTMoveForward.java
+/ASTProgram.java
+/ASTTurnRight.java
+/JJTLogoState.java
+/LogoTreeConstants.java
+/LogoVisitor.java

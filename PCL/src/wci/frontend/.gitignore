@@ -8,3 +8,15 @@
 /SimpleCharStream.java
 /Token.java
 /TokenMgrError.java
+/ASTadd.java
+/ASTassignmentStatement.java
+/ASTcompoundStatement.java
+/ASTdivide.java
+/ASTintegerConstant.java
+/ASTmultiply.java
+/ASTrealConstant.java
+/ASTsubtract.java
+/ASTvariable.java
+/PclParser.java
+/PclParserTokenManager.java
+/SimpleNode.java

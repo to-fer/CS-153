@@ -1,3 +1,4 @@
 var str:char = "hello world"; 
 println(str); //test string variable printing
 println("hello world"); //test string literal printing
+//println(1+2);

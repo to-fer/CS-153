@@ -6,3 +6,9 @@
 /TypeScriptParserConstants.java
 /PhoneParserConstants.java
 /AtScriptParserConstants.java
+/JJTTypeScriptParserState.java
+/Node.java
+/SimpleNode.java
+/TypeScript.jj
+/TypeScriptParserTreeConstants.java
+/TypeScriptTreeGen.jj
