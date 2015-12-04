@@ -30,9 +30,10 @@ public class CodeGeneratorVisitor
                 String identifier = id.getName();
                 TypeSpec type = id.getTypeSpec();
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
-
-                CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
-                        "/" + identifier + " " + typeCode);
+                if(typeCode.equals("Z")) {
+                	CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
+                            "/" + identifier + " " + typeCode);
+                }
                 return data;
         }
 

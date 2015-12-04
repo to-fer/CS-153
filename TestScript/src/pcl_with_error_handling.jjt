@@ -117,6 +117,10 @@ TOKEN : {//Reserved words
  	| <PRINTLN : "println">
 }
 
+TOKEN :{
+   	  <TRUE : "true">
+ 	| <FALSE : "false"> }
+
 TOKEN : {//Symbols
 	<NOT : "!">
 	| <AMPRSAND : "&">
@@ -160,7 +164,7 @@ TOKEN : {//Character String and Strings
 }
 
 TOKEN : {//Identifier
-	<IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
+	<IDENTIFIER : (<LETTER> (<LETTER> | <DIGIT> | "_")*) >
 }
 
 /* TypeScript treats real and integers as Numbers*/
@@ -327,6 +331,15 @@ void assignment_2() :{}
 		} #identifier  <EQ> Expression() <SEMICOLON>
 }
 
+
+void bool_true() : {}
+{	< TRUE >
+}
+
+void bool_false() : {}
+{	< FALSE >
+}
+
 void Assignment() :{}
 {
   LOOKAHEAD(3)
@@ -339,7 +352,10 @@ void Assignment() :{}
           SymTabEntry variableId = symTabStack.lookup(token.image);
 		  jjtThis.setAttribute(ID, variableId);
 		  jjtThis.setTypeSpec(typeId.getTypeSpec());
-		} #identifier  <EQ> Expression() <SEMICOLON> 
+		} #identifier  <EQ> Expression() <SEMICOLON> |
+		 LOOKAHEAD(3)
+		 VarIdentifierType() <EQ> <IDENTIFIER> <SEMICOLON>
+		 | VarIdentifierType() <EQ> (bool_true() | bool_false()) <SEMICOLON>
 }
 
 void VarIdentifierType() #void : {}
