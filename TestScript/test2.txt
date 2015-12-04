@@ -1,4 +1,4 @@
-if(1 < 2) {
+if(true) {
 
 	println(1);
 }
@@ -10,23 +10,9 @@ else {
 var y:number = 3+3+3;
 var z:number = 6;
 
-if(z > y) {
+if(4 > 6) {
 	println(z);
 }
 else{
 	println(y);
-}
-
-if(z == 3){
-	println(y);
-}
-else {
-	println(z);
-}
-
-if(z != 3){
-	println(100);
-}
-else {
-	println(50);
 }

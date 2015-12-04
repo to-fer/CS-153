@@ -119,6 +119,8 @@ TOKEN : {//Reserved words
  	| <WHILE : "while">
  	// Println is considered a reserved word for now. Might just want to make it part of the runtime library later.
  	| <PRINTLN : "println">
+ 	| <TRUE: "true" >
+ 	| < FALSE: "false" >
 }
 
 TOKEN : {//Symbols
@@ -377,8 +379,7 @@ void condition() : {/*@bgen(jjtree) condition */
     {
       System.out.println("before condition");
     }
-    
-	<LEFT_PARAN> Expression() boolean_op() Expression() <RIGHT_PARAN>/*@bgen(jjtree)*/
+	<LEFT_PARAN> Expression() (boolean_op() Expression())?  <RIGHT_PARAN>/*@bgen(jjtree)*/
         {
           jjtree.closeNodeScope(jjtn000, true);
           jjtc000 = false;
@@ -574,9 +575,8 @@ void Statement()      : {}
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
-  LOOKAHEAD(2)
 	  
-     Assignment() | if_stmt() | println() | Expression() < SEMICOLON >//| error() { handleError(token); }
+     Assignment() | if_stmt() | println()  //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -929,65 +929,7 @@ void Expression()       : {}
               }
             }
 /*@egen*/             
-    )* |
-    < LEFT_PARAN > term() (
-        "+"/*@bgen(jjtree) #add( 2) */
-            {
-              ASTadd jjtn003 = new ASTadd(JJTADD);
-              boolean jjtc003 = true;
-              jjtree.openNodeScope(jjtn003);
-            }
-            try {
-/*@egen*/ term()/*@bgen(jjtree)*/
-            } catch (Throwable jjte003) {
-              if (jjtc003) {
-                jjtree.clearNodeScope(jjtn003);
-                jjtc003 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte003 instanceof RuntimeException) {
-                throw (RuntimeException)jjte003;
-              }
-              if (jjte003 instanceof ParseException) {
-                throw (ParseException)jjte003;
-              }
-              throw (Error)jjte003;
-            } finally {
-              if (jjtc003) {
-                jjtree.closeNodeScope(jjtn003,  2);
-              }
-            }
-/*@egen*/        
-      | "-"/*@bgen(jjtree) #subtract( 2) */
-            {
-              ASTsubtract jjtn004 = new ASTsubtract(JJTSUBTRACT);
-              boolean jjtc004 = true;
-              jjtree.openNodeScope(jjtn004);
-            }
-            try {
-/*@egen*/ term()/*@bgen(jjtree)*/
-            } catch (Throwable jjte004) {
-              if (jjtc004) {
-                jjtree.clearNodeScope(jjtn004);
-                jjtc004 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte004 instanceof RuntimeException) {
-                throw (RuntimeException)jjte004;
-              }
-              if (jjte004 instanceof ParseException) {
-                throw (ParseException)jjte004;
-              }
-              throw (Error)jjte004;
-            } finally {
-              if (jjtc004) {
-                jjtree.closeNodeScope(jjtn004,  2);
-              }
-            }
-/*@egen*/             
-    )* < RIGHT_PARAN >  //|
+    )*
 	//LOOKAHEAD(3)
     //Assignment() //| if_stmt()
 }
@@ -1072,11 +1014,38 @@ void simple_term() #void : {}
 
 void factor()       : {}
 {
+  boolean_node()|
     identifier()
   | number()
   | string()
 }
 
+void boolean_node() : {/*@bgen(jjtree) boolean_node */
+  ASTboolean_node jjtn000 = new ASTboolean_node(JJTBOOLEAN_NODE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}{/*@bgen(jjtree) boolean_node */
+  try {
+/*@egen*/
+  (<TRUE> | <FALSE>)/*@bgen(jjtree)*/
+  {
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+  }
+/*@egen*/
+  {
+	SymTabEntry variableId = symTabStack.lookup(token.image);
+	variableId.appendLineNumber(token.beginLine);
+	TypeSpec type = variableId.getTypeSpec();
+	jjtn000.setTypeSpec(type);
+	jjtn000.setAttribute(ID, variableId);	 
+  }/*@bgen(jjtree)*/
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
+/*@egen*/ }
 
 void identifier() : {/*@bgen(jjtree) identifier */
   ASTidentifier jjtn000 = new ASTidentifier(JJTIDENTIFIER);
