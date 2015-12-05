@@ -117,6 +117,7 @@ TOKEN : {//Reserved words
  	| <PRINTLN : "println">
  	| <TRUE: "true" >
  	| < FALSE: "false" >
+ 	| < WHILE: "WHILE" >
 }
 
 TOKEN : {//Symbols
@@ -259,6 +260,8 @@ void if_stmt() :{}
 {
 	if_part() (else_part())?
 }
+
+void while() : {}{  
 
 void Statement()#void : {}
 {

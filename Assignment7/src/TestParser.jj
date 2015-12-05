@@ -26,7 +26,7 @@ TOKEN : {
     <FORWARD : "FORWARD">
   | <RIGHT   : "RIGHT">
   | <DIGITS  : (["1"-"9"])+ (["0"-"9"])*>
-  | <EOL     : "\r" | "\n" | "\r\n">
+  | <EOL     : "\r" | "\n">
   | <ERROR   : ~["\r", "\n"]>
 }
 
@@ -46,12 +46,12 @@ void Program() : {}
 
 void MoveForward() : {} 
 {
-  <FORWARD> <DIGITS> (<EOL> | < EOF >)
+  <FORWARD> <DIGITS> (<EOL>|<EOF>)
 }
 
 void TurnRight() : {} 
 {
-  <RIGHT> <DIGITS> (<EOL> | < EOF >)
+  <RIGHT> <DIGITS> (<EOL>|<EOF>)
 }
 
 void Error() : {}
