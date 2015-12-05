@@ -35,13 +35,22 @@ public class CodeGeneratorVisitor
         }
 
         public Object visit(ASTAssignment node, Object data) {
+        		System.out.println("STARTED ASSIGNMENT");
                 SimpleNode variableNode   = (SimpleNode) node.jjtGetChild(0);
                 SimpleNode expressionNode = (SimpleNode) node.jjtGetChild(1);
-
+                System.out.println("BEFORE EXPRESSION!!");
+                SymTabEntry id1 = (SymTabEntry) variableNode.getAttribute(ID);
+                String fieldName1 = id1.getName();
+                System.out.println("FIELD "+fieldName1);
+                TypeSpec type1 = id1.getTypeSpec();
+                String typeCode1 = TypeCode.typeSpecToTypeCode(type1);
+                System.out.println("EXP type: "+typeCode1);
                 expressionNode.jjtAccept(this, data);
+                System.out.println("AFTER EXPRESSION!!");
 
                 SymTabEntry id = (SymTabEntry) variableNode.getAttribute(ID);
                 String fieldName = id.getName();
+                System.out.println("FIELD "+fieldName);
                 TypeSpec type = id.getTypeSpec();
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
@@ -49,7 +58,7 @@ public class CodeGeneratorVisitor
                 CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
                         "/" + fieldName + " " + typeCode);
                 CodeGenerator.objectFile.flush();
-
+                System.out.println("done with assignment!!!!");
                 return data;
         }
 
@@ -77,7 +86,7 @@ public class CodeGeneratorVisitor
             TypeSpec type = node.getTypeSpec();
 
             String typePrefix = TypeCode.typeSpecToTypeCode(type).toLowerCase();
-
+            System.out.println("TYPE PREFIX "+typePrefix);
             addend0Node.jjtAccept(this, data);
             addend1Node.jjtAccept(this, data);
 
@@ -284,10 +293,13 @@ public class CodeGeneratorVisitor
         }
         
         public Object visit(ASTCompound_stmt node, Object data) {
+        	System.out.println("VISITED COMPUND STMT");
         	for(int i = 0; i < node.jjtGetNumChildren(); i++) {
         		SimpleNode curr = (SimpleNode) node.jjtGetChild(i);
         		curr.jjtAccept(this, data);
+        		System.out.println(i);
         	}
+        	System.out.println("EXITED COMPOUND STMT");
         	return data;
         }
         
@@ -339,6 +351,19 @@ public class CodeGeneratorVisitor
         	else if(identifier.equals("false")) {
         		CodeGenerator.objectFile.println("ldc 0");
         	}
+        	return data;
+        }
+        
+        public Object visit(ASTwhile_node node, Object data) {
+        	System.out.println("WHILE has "+node.jjtGetNumChildren());
+        	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
+        	condition.jjtAccept(this, data);
+        	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
+        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
+        	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
+        	body.jjtAccept(this, data);
+        	//CodeGenerator.objectFile.println("goto "+label_suffix+label_count);
+        	//CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
         
