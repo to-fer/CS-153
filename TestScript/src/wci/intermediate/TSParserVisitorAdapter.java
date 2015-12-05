@@ -179,4 +179,10 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Object visit(ASTwhile_node node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

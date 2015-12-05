@@ -120,7 +120,7 @@ TOKEN : {//Reserved words
  	// Println is considered a reserved word for now. Might just want to make it part of the runtime library later.
  	| <PRINTLN : "println">
  	| <TRUE: "true" >
- 	| < FALSE: "false" >
+ 	| <FALSE: "false" >
 }
 
 TOKEN : {//Symbols
@@ -585,13 +585,42 @@ void if_stmt() :{/*@bgen(jjtree) if_stmt */
 /*@egen*/
 }
 
+void while_node() : {/*@bgen(jjtree) while_node */
+  ASTwhile_node jjtn000 = new ASTwhile_node(JJTWHILE_NODE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}{/*@bgen(jjtree) while_node */
+        try {
+/*@egen*/	<WHILE> condition() Compound_stmt()/*@bgen(jjtree)*/
+        } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            throw (RuntimeException)jjte000;
+          }
+          if (jjte000 instanceof ParseException) {
+            throw (ParseException)jjte000;
+          }
+          throw (Error)jjte000;
+        } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+        }
+/*@egen*/
+} 
+
 void Statement()      : {}
 {
   // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
   	   	try
 	{
 	  
-     Assignment() | if_stmt() | println()  //| Expression() < SEMICOLON >//| error() { handleError(token); }
+     Assignment() | if_stmt() | while_node() | println()  //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -883,8 +912,6 @@ void typeSignature()       :{}
 	  |<STRING>
 }
 
-
-
 void Expression()       : {}
 {
     term() (
@@ -1016,16 +1043,6 @@ void term()       : {}
 /*@egen*/           
     )*
 }
-
-/*
-void simple_term() #void : {}
-{
-    factor() "*" factor() #multiply(2) |
-    factor() "/" factor() #divide(2) |
-    factor()
-}
-
-*/
 
 void factor()       : {}
 {

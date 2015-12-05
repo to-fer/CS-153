@@ -13,3 +13,11 @@ if(!z) {
 else {
 	println("bye");
 }
+
+while(true) {
+	println("bye");
+}
+
+while(6 > 10) {
+	println("hi");
+}
