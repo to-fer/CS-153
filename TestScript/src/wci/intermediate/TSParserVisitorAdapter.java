@@ -93,10 +93,6 @@ public class TSParserVisitorAdapter implements PclParserVisitor
         return node.childrenAccept(this, data);
 	}
 
-	@Override
-	public Object visit(ASTassignment_2 node, Object data) {
-        return node.childrenAccept(this, data);
-	}
 
 	@Override
 	public Object visit(ASTAssignment node, Object data) {

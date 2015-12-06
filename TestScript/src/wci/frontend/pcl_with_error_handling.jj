@@ -541,15 +541,6 @@ void else_part(): {/*@bgen(jjtree) else_part */
 /*@egen*/
 }
 
-/* no else if for now
-void else_if_part(): {}
-{
-	<ELSE_IF> condition() if_body() //Compound_stmt()
-}
-*/
-
-
-
 
 void while_node() : {/*@bgen(jjtree) while_node */
   ASTwhile_node jjtn000 = new ASTwhile_node(JJTWHILE_NODE);
@@ -582,17 +573,14 @@ void while_node() : {/*@bgen(jjtree) while_node */
 
 void Statement()      : {}
 {
-  // Might want to add "| Expression() <SEMICOLON>" here later, but doing so right now causes a choice conflict.
-  	   	try
+   	try
 	{
-	  
      Assignment() | if_stmt() | while_node() | println()  //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
      System.out.println("Exception!!!!");
      System.out.println("token :"+ex.currentToken.image);
-//		handleError(ex.currentToken);
 		HashSet syncSet = new HashSet();
         syncSet.add(SEMICOLON);
         syncSet.add(LEFT_BRACE);
@@ -600,10 +588,8 @@ void Statement()      : {}
         syncSet.add(EOF);
         handleError(ex, syncSet, true);
    }
-  //| FunctionDeclaration() | If_stmt()
 }
 
-// TODO We need to implement general function parsing instead of just parsing println().
 void println() : {/*@bgen(jjtree) println */
   ASTprintln jjtn000 = new ASTprintln(JJTPRINTLN);
   boolean jjtc000 = true;
@@ -672,15 +658,13 @@ void Statement_list()      : {}
   {
     System.out.println("before stmt");
   }
-  
-
   		(
   	  		Statement()
 
   	  	)+
-  	  	{
-  	  	  System.out.println("after stmt");
-  	  	}
+  	{
+  	  System.out.println("after stmt");
+  	}
   	  	
 }
 
@@ -693,62 +677,6 @@ void declaration() :{/*@bgen(jjtree) declaration */
   try {
 /*@egen*/
   VarIdentifierType() (<EQ> Expression())? <SEMICOLON>/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/
-}
-
-void assignment_2() :{/*@bgen(jjtree) assignment_2 */
-  ASTassignment_2 jjtn000 = new ASTassignment_2(JJTASSIGNMENT_2);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) assignment_2 */
-  try {
-/*@egen*/
-  <IDENTIFIER>/*@bgen(jjtree) identifier */
-                {
-                  ASTidentifier jjtn001 = new ASTidentifier(JJTIDENTIFIER);
-                  boolean jjtc001 = true;
-                  jjtree.openNodeScope(jjtn001);
-                }
-                try {
-/*@egen*//*@bgen(jjtree)*/
-                {
-                  jjtree.closeNodeScope(jjtn001, true);
-                  jjtc001 = false;
-                }
-/*@egen*/ 
-		{
-		  SymTabEntry typeId = symTabStack.lookup(token.image);
-          typeId.appendLineNumber(token.beginLine);
-          SymTabEntry variableId = symTabStack.lookup(token.image);
-		  jjtn001.setAttribute(ID, variableId);
-		  jjtn001.setTypeSpec(typeId.getTypeSpec());
-		}/*@bgen(jjtree)*/
-                } finally {
-                  if (jjtc001) {
-                    jjtree.closeNodeScope(jjtn001, true);
-                  }
-                }
-/*@egen*/              <EQ> Expression() <SEMICOLON>/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1125,9 +1053,6 @@ void processVariableDecl(Token token, SymTabEntry variableId)
     variableId.setDefinition(DefinitionImpl.VARIABLE);
     variableId.appendLineNumber(token.beginLine);
 }
-
-
-
 
 JAVACODE
 String handleError(ParseException ex, HashSet syncSet, boolean doPop)      
