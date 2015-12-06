@@ -194,7 +194,7 @@ Label20:
        fload_0
        fload_1
 fcmpg 
-ifne Label21
+ifeq Label21
        goto Label22
 Label21:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
@@ -208,7 +208,7 @@ Label22:
        fload_0
        fload_1
 fcmpg 
-ifne Label23
+ifeq Label23
        goto Label24
 Label23:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
@@ -219,17 +219,49 @@ Label23:
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
 Label24:
+      ldc 2.44
+       fstore_0
+      ldc 2.44
+       fstore_1
+       fload_0
+       fload_1
+fcmpg 
+ifne Label25
+       goto Label26
+Label25:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "WRONG: 2.44 != 2.44"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      getstatic TypeScriptProgram/wrong F                                     ;identifier
+      ldc 1.0
+      fadd
+      putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
+Label26:
+      ldc 2.0
+       fstore_0
+      ldc 3.0
+       fstore_1
+       fload_0
+       fload_1
+fcmpg 
+ifne Label27
+       goto Label28
+Label27:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "CORRECT: 2.0 != 3.0"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+Label28:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "total test:"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       ldc 12.0
+       ldc 14.0
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "total test passed:"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-      ldc 12.0
+      ldc 14.0
       getstatic TypeScriptProgram/wrong F                                     ;identifier
       fsub
       putstatic TypeScriptProgram/result F                                     ;pop value: assingment_node

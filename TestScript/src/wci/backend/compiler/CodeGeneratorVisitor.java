@@ -255,12 +255,13 @@ public class CodeGeneratorVisitor
         		boolOpString += "ifge "+label_suffix+ ++label_count;
         	}
         	else if(op.equals("EQUALITY")) {
+        		System.out.println("equality op");
         		boolOpString = "fcmpg \n";
-        		boolOpString += "ifne "+label_suffix+ ++label_count;
+        		boolOpString += "ifeq "+label_suffix+ ++label_count;
         	}
         	else if(op.equals("NOT_EQUALS")) {
         		boolOpString = "fcmpg \n";
-        		boolOpString += "ifeq "+label_suffix+ ++label_count;
+        		boolOpString += "ifne "+label_suffix+ ++label_count;
         	}
         	CodeGenerator.objectFile.println(boolOpString);
         	//CodeGenerator.objectFile.println("       iconst_0");

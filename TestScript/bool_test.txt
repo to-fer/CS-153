@@ -61,8 +61,19 @@ if(2.00 == 3.0) {
 	wrong = wrong + 1;
 }
 
+
+//not equals 
+if(2.44 != 2.44) {
+	println("WRONG: 2.44 != 2.44");
+	wrong = wrong + 1;
+}
+
+if(2.00 != 3.0) {
+	println("CORRECT: 2.0 != 3.0");
+}
+
 println("total test:"); 
-println(12); 
+println(14); 
 println("total test passed:");
-var result:number = 12 - wrong;  
+var result:number = 14 - wrong;  
 println(result); 
