@@ -356,7 +356,7 @@ public class CodeGeneratorVisitor
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         	
         	CodeGenerator.objectFile.println("loop: ");
-        	condition.jjtAccept(this, data);
+        	generate_code_for_while_condition(condition, data);
         	
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");

@@ -12,11 +12,10 @@ var limit: number = 100;
 var curr_fib_count: number = 2;
 
 var curr_fib_num: number = 0;
-second_fibo = first_fibo + second_fibo;
+//second_fibo = first_fibo + second_fibo;
 
 var z: number = limit + limit;
 while(curr_fib_count < limit) {
-	//second_fibo = first_fibo + second_fibo;
 	var this_fibo:number = first_fibo + second_fibo;
 	first_fibo = second_fibo;
 	second_fibo = this_fibo;

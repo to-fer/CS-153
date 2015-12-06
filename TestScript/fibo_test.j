@@ -45,10 +45,6 @@
       putstatic TypeScriptProgram/curr_fib_count F                                     ;pop value: assingment_node
       ldc 0.0
       putstatic TypeScriptProgram/curr_fib_num F                                     ;pop value: assingment_node
-      getstatic TypeScriptProgram/first_fibo F                                     ;identifier
-      getstatic TypeScriptProgram/second_fibo F                                     ;identifier
-      fadd
-      putstatic TypeScriptProgram/second_fibo F                                     ;pop value: assingment_node
       getstatic TypeScriptProgram/limit F                                     ;identifier
       getstatic TypeScriptProgram/limit F                                     ;identifier
       fadd
@@ -62,13 +58,9 @@ loop:
        fload_1
 fcmpl 
 iflt Label1
-       goto Empty1
-goto Label1
+       ;goto Label2
+goto Empty1
 Label1:
-      getstatic TypeScriptProgram/first_fibo F                                     ;identifier
-      getstatic TypeScriptProgram/second_fibo F                                     ;identifier
-      fadd
-      putstatic TypeScriptProgram/second_fibo F                                     ;pop value: assingment_node
       getstatic TypeScriptProgram/first_fibo F                                     ;identifier
       getstatic TypeScriptProgram/second_fibo F                                     ;identifier
       fadd
