@@ -318,12 +318,12 @@ public class CodeGeneratorVisitor
         	
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0);
         	SimpleNode branch1 = (SimpleNode) node.jjtGetChild(0).jjtGetChild(1);
-        	//SimpleNode branch2 = (SimpleNode) node.jjtGetChild(1);
+        	SimpleNode branch2 = (SimpleNode) node.jjtGetChild(1);
         	condition.jjtAccept(this, data);
         	branch1.jjtAccept(this, data);
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
-        	//branch2.jjtAccept(this, data);
+        	branch2.jjtAccept(this, data);
         	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
@@ -342,15 +342,18 @@ public class CodeGeneratorVisitor
         
         public Object visit(ASTwhile_node node, Object data) {
         	System.out.println("WHILE has "+node.jjtGetNumChildren());
-
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
+        	
+        	CodeGenerator.objectFile.println("loop: ");
         	condition.jjtAccept(this, data);
+        	
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
         	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
         	body.jjtAccept(this, data);
         	//CodeGenerator.objectFile.println("goto "+label_suffix+label_count);
-        	//CodeGenerator.objectFile.println("Empty"+empty_count+":");
+        	CodeGenerator.objectFile.println("goto loop");
+        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
         

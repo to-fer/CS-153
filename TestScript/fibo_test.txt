@@ -16,8 +16,8 @@ second_fibo = first_fibo + second_fibo;
 
 var z: number = limit + limit;
 while(curr_fib_count < limit) {
-	//second_fibo = first_fibo + second_fibo;
-	//println("The next fibonacci number is: ");
-	//println(second_fibo);
+	second_fibo = first_fibo + second_fibo;
+	println("The next fibonacci number is: ");
+	println(second_fibo);
 	curr_fib_count = curr_fib_count+1;
 }
