@@ -264,7 +264,7 @@ public class CodeGeneratorVisitor
         	}
         	CodeGenerator.objectFile.println(boolOpString);
         	//CodeGenerator.objectFile.println("       iconst_0");
-        	CodeGenerator.objectFile.println("       goto " +label_suffix + ++label_count);
+        	CodeGenerator.objectFile.println("       goto " +label_suffix + label_count);
         	return data;
         }
         
