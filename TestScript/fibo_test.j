@@ -21,7 +21,7 @@
 .method public static main([Ljava/lang/String;)V
 
       ldc 0.0
-      putstatic TypeScriptProgram/first_fibo F
+      putstatic TypeScriptProgram/first_fibo F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "The first fibonacci number is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -30,7 +30,7 @@
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       ldc 1.0
-      putstatic TypeScriptProgram/second_fibo F
+      putstatic TypeScriptProgram/second_fibo F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "The second fibonacci number is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -39,16 +39,46 @@
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       ldc 100.0
-      putstatic TypeScriptProgram/limit F
+      putstatic TypeScriptProgram/limit F                                     ;pop value: assingment_node
       ldc 2.0
-      putstatic TypeScriptProgram/curr_fib_count F
+      putstatic TypeScriptProgram/curr_fib_count F                                     ;pop value: assingment_node
       ldc 0.0
-      putstatic TypeScriptProgram/curr_fib_num F
-      getstatic TypeScriptProgram/first_fibo F ;assingment of identifier
-      getstatic TypeScriptProgram/second_fibo F ;assingment of identifier
+      putstatic TypeScriptProgram/curr_fib_num F                                     ;pop value: assingment_node
+      getstatic TypeScriptProgram/first_fibo F                                     ;identifier
+      getstatic TypeScriptProgram/second_fibo F                                     ;identifier
       fadd
-      putstatic TypeScriptProgram/second_fibo F
-      getstatic TypeScriptProgram/limit F ;assingment of identifier
-      getstatic TypeScriptProgram/limit F ;assingment of identifier
+      putstatic TypeScriptProgram/second_fibo F                                     ;pop value: assingment_node
+      getstatic TypeScriptProgram/limit F                                     ;identifier
+      getstatic TypeScriptProgram/limit F                                     ;identifier
       fadd
-      putstatic TypeScriptProgram/z F
+      putstatic TypeScriptProgram/z F                                     ;pop value: assingment_node
+loop: 
+      getstatic TypeScriptProgram/curr_fib_count F                                     ;identifier
+      getstatic TypeScriptProgram/limit F                                     ;identifier
+fcmpl 
+ifge Label1
+goto Empty1
+Label1:
+      getstatic TypeScriptProgram/first_fibo F                                     ;identifier
+      getstatic TypeScriptProgram/second_fibo F                                     ;identifier
+      fadd
+      putstatic TypeScriptProgram/second_fibo F                                     ;pop value: assingment_node
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "The next fibonacci number is: "
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       getstatic     TypeScriptProgram/second_fibo F
+      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      getstatic TypeScriptProgram/curr_fib_count F                                     ;identifier
+      ldc 1.0
+      fadd
+      putstatic TypeScriptProgram/curr_fib_count F                                     ;pop value: assingment_node
+goto loop
+Empty1:
+
+    return
+
+.limit locals 100
+.limit stack 16
+.end method

@@ -337,7 +337,7 @@ public class CodeGeneratorVisitor
         	body.jjtAccept(this, data);
         	return data;
         }
-        
+
         public Object visit(ASTboolean_node node, Object data) {
         	SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
             String identifier = id.getName();
@@ -352,15 +352,18 @@ public class CodeGeneratorVisitor
         
         public Object visit(ASTwhile_node node, Object data) {
         	System.out.println("WHILE has "+node.jjtGetNumChildren());
-
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
+        	
+        	CodeGenerator.objectFile.println("loop: ");
         	condition.jjtAccept(this, data);
+        	
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
         	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
         	body.jjtAccept(this, data);
         	//CodeGenerator.objectFile.println("goto "+label_suffix+label_count);
-        	//CodeGenerator.objectFile.println("Empty"+empty_count+":");
+        	CodeGenerator.objectFile.println("goto loop");
+        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
         
