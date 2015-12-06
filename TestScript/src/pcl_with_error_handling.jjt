@@ -223,12 +223,25 @@ void condition() : {}
       System.out.println("before condition");
     }
 	<LEFT_PARAN>
-	( (<NOT> #NOT)? Expression() (boolean_op() Expression())? )
+	// leave out not for now	( (<NOT> #NOT)? Expression() (boolean_op() Expression())? )
+	(Expression() (boolean_op() Expression())? )
 	<RIGHT_PARAN>
 	{
 	  System.out.println("after condition");
 	}
 	
+}
+
+
+//if statement grammar 
+void if_body(): {}
+{
+	Compound_stmt()
+}
+
+void if_stmt() :{}
+{
+	if_part() (else_part())?
 }
 
 void if_part(): {}
@@ -245,20 +258,7 @@ void else_part(): {}
 {
 	<ELSE> if_body()
 }
-  
 
-void if_body(): {}
-{
-  //<LEFT_BRACE>
-
-		//( Assignment())*
-		Compound_stmt()
-  //<RIGHT_BRACE>
-}
-void if_stmt() :{}
-{
-	if_part() (else_part())?
-}
 
 void while_node() : {}{	<WHILE> condition() Compound_stmt()
 } 
@@ -380,8 +380,12 @@ void typeSignature() #void :{}
 void Expression() #void : {}
 {
     term() (
-        "+" term() #add(2)
-      | "-" term() #subtract(2)
+        "+" term()        {
+           jjtThis.setTypeSpec(Predefined.numberType);
+                  } #add(2)
+      | "-" term()      {
+           jjtThis.setTypeSpec(Predefined.numberType);
+              } #subtract(2)
     )*
 	//LOOKAHEAD(3)
     //Assignment() //| if_stmt()
@@ -396,8 +400,12 @@ void simple_expression() #void :{}
 void term() #void : {}
 {
     factor() (
-        "*" factor() #multiply(2)
-      | "/" factor() #divide(2)
+        "*" factor()        {
+           jjtThis.setTypeSpec(Predefined.numberType);
+                  } #multiply(2)
+      | "/" factor()      {
+           jjtThis.setTypeSpec(Predefined.numberType);
+              } #divide(2)
     )*
 }
 
