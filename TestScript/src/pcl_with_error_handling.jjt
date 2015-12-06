@@ -206,7 +206,7 @@ SimpleNode program() : {}
 
 
 /*if statements*/
-void boolean_op() : {}
+void boolean_op() : {jjtThis.setAttribute(IS_WHILE, false);}
 {
 	<LT> #LESS_THAN |
 	 <GT> #GREATER_THAN |
@@ -215,7 +215,7 @@ void boolean_op() : {}
 	    <DOUBLE_EQ> #EQUALITY |
 	     <NOT_EQ> #NOT_EQUALS | 
 	     <OR> #OR |
-	      <AND> #AND 
+	      <AND> #AND
 }
 
 void condition() : {}

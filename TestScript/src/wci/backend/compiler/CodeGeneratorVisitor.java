@@ -264,7 +264,12 @@ public class CodeGeneratorVisitor
         		boolOpString += "ifne "+label_suffix+ ++label_count;
         	}
         	CodeGenerator.objectFile.println(boolOpString);
-        	CodeGenerator.objectFile.println("       goto " +label_suffix + ++label_count);
+
+        	//CodeGenerator.objectFile.println("       iconst_0");
+        	SimpleNode op_node = (SimpleNode) node;
+        	System.out.println("IS WHILE: "+op_node.getAttribute(IS_WHILE));
+        	if( ! (boolean) op_node.getAttribute(IS_WHILE))
+        		CodeGenerator.objectFile.println("       goto " +label_suffix + ++label_count);
         	return data;
         }
         
@@ -345,7 +350,9 @@ public class CodeGeneratorVisitor
         public Object visit(ASTif_part node, Object data) {
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
+        	condition.setAttribute(IS_WHILE, false);
         	condition.jjtAccept(this, data);
+        	
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
         	body.jjtAccept(this, data);
         	return data;
@@ -363,12 +370,19 @@ public class CodeGeneratorVisitor
         	return data;
         }
         
+        
+        
+        
+        
         public Object visit(ASTwhile_node node, Object data) {
         	System.out.println("WHILE has "+node.jjtGetNumChildren());
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         	
         	CodeGenerator.objectFile.println("loop: ");
-        	//generate_code_for_while_condition(condition, data);
+
+        	((SimpleNode) condition.jjtGetChild(1)).setAttribute(IS_WHILE, true);
+        	condition.jjtAccept(this, data);
+//        	generate_code_for_while_condition(condition, data);
         	
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
