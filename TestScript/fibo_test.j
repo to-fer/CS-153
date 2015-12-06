@@ -62,9 +62,9 @@ loop:
        fload_1
 fcmpl 
 iflt Label1
-       goto Label2
-goto Empty1
-Label2:
+       goto Empty1
+goto Label1
+Label1:
       getstatic TypeScriptProgram/first_fibo F                                     ;identifier
       getstatic TypeScriptProgram/second_fibo F                                     ;identifier
       fadd
