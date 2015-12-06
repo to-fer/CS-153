@@ -63,11 +63,6 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	}
 
 	@Override
-	public Object visit(ASTelse_if_part node, Object data) {
-        return node.childrenAccept(this, data);
-	}
-
-	@Override
 	public Object visit(ASTelse_part node, Object data) {
         return node.childrenAccept(this, data);
 	}

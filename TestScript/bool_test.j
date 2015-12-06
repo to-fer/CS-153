@@ -1,8 +1,11 @@
 .class public TypeScriptProgram
 .super java/lang/Object
 
+.field private static elseCorrect F
+.field private static elseWrong F
 .field private static passed F
 .field private static result F
+.field private static result2 F
 .field private static wrong F
 
 .method public <init>()V
@@ -21,6 +24,10 @@
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
       ldc 0.0
       putstatic TypeScriptProgram/passed F                                     ;pop value: assingment_node
+      ldc 0.0
+      putstatic TypeScriptProgram/elseWrong F                                     ;pop value: assingment_node
+      ldc 0.0
+      putstatic TypeScriptProgram/elseCorrect F                                     ;pop value: assingment_node
       ldc 1.0
        fstore_0
       ldc 1.0
@@ -36,7 +43,16 @@ Label1:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 1 < 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       goto Label3
 Label2:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should not print 1 < 4"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      getstatic TypeScriptProgram/elseWrong F                                     ;identifier
+      ldc 1.0
+      fadd
+      putstatic TypeScriptProgram/elseWrong F                                     ;pop value: assingment_node
+Label3:
       ldc 10.0
        fstore_0
       ldc 1.0
@@ -46,9 +62,9 @@ Label2:
        fload_0
        fload_1
 fcmpl 
-iflt Label3
-       goto Label4
-Label3:
+iflt Label4
+       goto Label5
+Label4:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "WRONG: 10 < 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -56,26 +72,17 @@ Label3:
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
-Label4:
+       goto Label6
+Label5:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should Print else 10 < 4"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+Label6:
       ldc 10.0
        fstore_0
       ldc 1.0
       ldc 3.0
       fadd
-       fstore_1
-       fload_0
-       fload_1
-fcmpg 
-ifgt Label5
-       goto Label6
-Label5:
-       getstatic    java/lang/System/out Ljava/io/PrintStream;
-       ldc "CORRECT: 10 > 4"
-       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label6:
-      ldc 3.0
-       fstore_0
-      ldc 4.0
        fstore_1
        fload_0
        fload_1
@@ -84,13 +91,41 @@ ifgt Label7
        goto Label8
 Label7:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "CORRECT: 10 > 4"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       goto Label9
+Label8:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should not Print else 10 > 4"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      getstatic TypeScriptProgram/elseWrong F                                     ;identifier
+      ldc 1.0
+      fadd
+      putstatic TypeScriptProgram/elseWrong F                                     ;pop value: assingment_node
+Label9:
+      ldc 3.0
+       fstore_0
+      ldc 4.0
+       fstore_1
+       fload_0
+       fload_1
+fcmpg 
+ifgt Label10
+       goto Label11
+Label10:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "WRONG: 3 > 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       getstatic TypeScriptProgram/wrong F                                     ;identifier
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
-Label8:
+       goto Label12
+Label11:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should Print 3 > 4"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+Label12:
       ldc 10.0
        fstore_0
       ldc 1.0
@@ -100,13 +135,15 @@ Label8:
        fload_0
        fload_1
 fcmpg 
-ifge Label9
-       goto Label10
-Label9:
+ifge Label13
+       goto Label14
+Label13:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 10 >= 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label10:
+       goto Label15
+Label14:
+Label15:
       ldc 4.0
        fstore_0
       ldc 4.0
@@ -114,13 +151,15 @@ Label10:
        fload_0
        fload_1
 fcmpg 
-ifge Label11
-       goto Label12
-Label11:
+ifge Label16
+       goto Label17
+Label16:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 4 >= 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label12:
+       goto Label18
+Label17:
+Label18:
       ldc 3.0
        fstore_0
       ldc 4.0
@@ -128,9 +167,9 @@ Label12:
        fload_0
        fload_1
 fcmpg 
-ifge Label13
-       goto Label14
-Label13:
+ifge Label19
+       goto Label20
+Label19:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "WRONG: 3 >= 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -138,7 +177,9 @@ Label13:
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
-Label14:
+       goto Label21
+Label20:
+Label21:
       ldc 1.0
        fstore_0
       ldc 1.0
@@ -148,13 +189,15 @@ Label14:
        fload_0
        fload_1
 fcmpl 
-ifle Label15
-       goto Label16
-Label15:
+ifle Label22
+       goto Label23
+Label22:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 1 <= 4"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label16:
+       goto Label24
+Label23:
+Label24:
       ldc 4.0
        fstore_0
       ldc 3.0
@@ -162,9 +205,9 @@ Label16:
        fload_0
        fload_1
 fcmpl 
-ifle Label17
-       goto Label18
-Label17:
+ifle Label25
+       goto Label26
+Label25:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "WRONG: 4 <= 3"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -172,7 +215,9 @@ Label17:
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
-Label18:
+       goto Label27
+Label26:
+Label27:
       ldc 0.11
        fstore_0
       ldc 0.11
@@ -180,13 +225,22 @@ Label18:
        fload_0
        fload_1
 fcmpl 
-ifle Label19
-       goto Label20
-Label19:
+ifle Label28
+       goto Label29
+Label28:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 0.11 <= 0.11"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label20:
+       goto Label30
+Label29:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should NOT Print else 0.11 <= 0.11"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      getstatic TypeScriptProgram/elseWrong F                                     ;identifier
+      ldc 1.0
+      fadd
+      putstatic TypeScriptProgram/elseWrong F                                     ;pop value: assingment_node
+Label30:
       ldc 2.44
        fstore_0
       ldc 2.44
@@ -194,13 +248,22 @@ Label20:
        fload_0
        fload_1
 fcmpg 
-ifeq Label21
-       goto Label22
-Label21:
+ifeq Label31
+       goto Label32
+Label31:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 2.44 == 2.44"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label22:
+       goto Label33
+Label32:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should Not Print else"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      getstatic TypeScriptProgram/elseWrong F                                     ;identifier
+      ldc 1.0
+      fadd
+      putstatic TypeScriptProgram/elseWrong F                                     ;pop value: assingment_node
+Label33:
       ldc 2.0
        fstore_0
       ldc 3.0
@@ -208,9 +271,9 @@ Label22:
        fload_0
        fload_1
 fcmpg 
-ifeq Label23
-       goto Label24
-Label23:
+ifeq Label34
+       goto Label35
+Label34:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "WRONG: 2.0 == 4.0"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -218,7 +281,9 @@ Label23:
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
-Label24:
+       goto Label36
+Label35:
+Label36:
       ldc 2.44
        fstore_0
       ldc 2.44
@@ -226,9 +291,9 @@ Label24:
        fload_0
        fload_1
 fcmpg 
-ifne Label25
-       goto Label26
-Label25:
+ifne Label37
+       goto Label38
+Label37:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "WRONG: 2.44 != 2.44"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -236,7 +301,12 @@ Label25:
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/wrong F                                     ;pop value: assingment_node
-Label26:
+       goto Label39
+Label38:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Should  Print else  2.44 != 2.44"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+Label39:
       ldc 2.0
        fstore_0
       ldc 3.0
@@ -244,22 +314,27 @@ Label26:
        fload_0
        fload_1
 fcmpg 
-ifne Label27
-       goto Label28
-Label27:
+ifne Label40
+       goto Label41
+Label40:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "CORRECT: 2.0 != 3.0"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-Label28:
+       goto Label42
+Label41:
+Label42:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       ldc "total test:"
+       ldc ""
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Total IF tests:"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc 14.0
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       ldc "total test passed:"
+       ldc "IF test passed:"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       ldc 14.0
       getstatic TypeScriptProgram/wrong F                                     ;identifier
@@ -267,6 +342,34 @@ Label28:
       putstatic TypeScriptProgram/result F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        getstatic     TypeScriptProgram/result F
+      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Total ELSE tests:"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc 7.0
+      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "ELSE test passed:"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      ldc 7.0
+      getstatic TypeScriptProgram/wrong F                                     ;identifier
+      fsub
+      putstatic TypeScriptProgram/result2 F                                     ;pop value: assingment_node
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       getstatic     TypeScriptProgram/result2 F
+      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "-----------------"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Total test"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc 21.0
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
 

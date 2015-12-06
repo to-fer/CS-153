@@ -264,7 +264,6 @@ public class CodeGeneratorVisitor
         		boolOpString += "ifne "+label_suffix+ ++label_count;
         	}
         	CodeGenerator.objectFile.println(boolOpString);
-        	//CodeGenerator.objectFile.println("       iconst_0");
         	CodeGenerator.objectFile.println("       goto " +label_suffix + ++label_count);
         	return data;
         }
@@ -285,8 +284,6 @@ public class CodeGeneratorVisitor
         	//load A
         	CodeGenerator.objectFile.println("       fload_1");
         	op.jjtAccept(this, data); //  [B,A] create a branch if_icmplt L003  ; branch if i < j
-        	//set iconst_0
-        	//set goto lable_2
         	return data;
         }
         
@@ -297,9 +294,24 @@ public class CodeGeneratorVisitor
         	condition.jjtAccept(this, data); //parse condition set labels 
         	int preLabel = label_count -1;
         	CodeGenerator.objectFile.println(label_suffix  + (preLabel) + ":");
-        	branch1.jjtAccept(this, data);// generate the branch code 
-        	//generate label for next branch or empty branch
+        	branch1.jjtAccept(this, data);
+        	// skip all the else
+        	CodeGenerator.objectFile.println("       goto " +label_suffix + (1+label_count));
+
+        	
         	CodeGenerator.objectFile.println(label_suffix +  + (label_count) + ":");
+
+        	//check for else part for now
+        	int numbOfChildren = node.jjtGetNumChildren();
+        	if(numbOfChildren > 1) // not a single if statement
+        	{
+        		for(int i = 1; i < numbOfChildren; i++ ) {
+        			SimpleNode ifChild = (SimpleNode) node.jjtGetChild(i);
+        			ifChild.jjtAccept(this, data);
+        		}
+        	}
+        	CodeGenerator.objectFile.println(label_suffix +  + (++label_count) + ":");
+
         	return data;
         }
         
@@ -356,7 +368,7 @@ public class CodeGeneratorVisitor
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         	
         	CodeGenerator.objectFile.println("loop: ");
-        	generate_code_for_while_condition(condition, data);
+        	//generate_code_for_while_condition(condition, data);
         	
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");

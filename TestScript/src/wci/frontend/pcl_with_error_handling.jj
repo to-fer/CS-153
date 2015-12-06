@@ -510,37 +510,6 @@ void if_part(): {/*@bgen(jjtree) if_part */
 /*@egen*/
 }
 
-void else_if_part(): {/*@bgen(jjtree) else_if_part */
-  ASTelse_if_part jjtn000 = new ASTelse_if_part(JJTELSE_IF_PART);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) else_if_part */
-        try {
-/*@egen*/
-	<ELSE_IF> condition() if_body()/*@bgen(jjtree)*/
-        } catch (Throwable jjte000) {
-          if (jjtc000) {
-            jjtree.clearNodeScope(jjtn000);
-            jjtc000 = false;
-          } else {
-            jjtree.popNode();
-          }
-          if (jjte000 instanceof RuntimeException) {
-            throw (RuntimeException)jjte000;
-          }
-          if (jjte000 instanceof ParseException) {
-            throw (ParseException)jjte000;
-          }
-          throw (Error)jjte000;
-        } finally {
-          if (jjtc000) {
-            jjtree.closeNodeScope(jjtn000, true);
-          }
-        }
-/*@egen*/ //Compound_stmt()
-}
-
 void else_part(): {/*@bgen(jjtree) else_part */
   ASTelse_part jjtn000 = new ASTelse_part(JJTELSE_PART);
   boolean jjtc000 = true;
@@ -571,6 +540,15 @@ void else_part(): {/*@bgen(jjtree) else_part */
         }
 /*@egen*/
 }
+
+/* no else if for now
+void else_if_part(): {}
+{
+	<ELSE_IF> condition() if_body() //Compound_stmt()
+}
+*/
+
+
 
 
 void while_node() : {/*@bgen(jjtree) while_node */

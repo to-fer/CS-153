@@ -250,15 +250,19 @@ void if_part(): {}
 	<IF> condition() if_body()
 }
 
-void else_if_part(): {}
-{
-	<ELSE_IF> condition() if_body() //Compound_stmt()
-}
-
 void else_part(): {}
 {
 	<ELSE> if_body()
 }
+
+/* no else if for now
+void else_if_part(): {}
+{
+	<ELSE_IF> condition() if_body() //Compound_stmt()
+}
+*/
+
+
 
 
 void while_node() : {}{	<WHILE> condition() Compound_stmt()
