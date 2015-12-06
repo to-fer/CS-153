@@ -29,7 +29,7 @@ public class CodeGeneratorVisitor
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
-                        "/" + identifier + " " + typeCode + CodeGenerator.writeComment("assingment of identifier"));
+                        "/" + identifier + " " + typeCode + CodeGenerator.writeComment("identifier"));
 
                 return data;
         }
@@ -56,7 +56,7 @@ public class CodeGeneratorVisitor
 
                 // Emit the appropriate store instruction.
                 CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
-                        "/" + fieldName + " " + typeCode);
+                        "/" + fieldName + " " + typeCode + CodeGenerator.writeComment("pop value: assingment_node"));
                 CodeGenerator.objectFile.flush();
                 System.out.println("done with assignment!!!!");
                 return data;
@@ -145,26 +145,16 @@ public class CodeGeneratorVisitor
         }
         
         public Object visit(ASTprintln node, Object data) {
-//          CodeGenerator.objectFile.println("      getstatic java/lang/System/out Ljava/io/PrintStream;");
-
           SimpleNode nodeToPrint = (SimpleNode) node.jjtGetChild(0);
-//         System.out.println (nodeToPrint.toString());
           String typePrefix = TypeCode.typeSpecToTypeCode(nodeToPrint.getTypeSpec());
           SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
           SymTabEntry id = (SymTabEntry) addend0Node.getAttribute(ID);
-//          System.out.println( "name " + id.getName());
-//          System.out.println( id.getAttribute());
+
           if(typePrefix.equals("F")) {
-        	  
-//          	generate_float_print_code(nodeToPrint, data);
-        	  	//generate code for printing an identifier to a float
           		if(nodeToPrint.toString().equals("identifier")) {
           			generate_float_print_code(id.getName(), 0f, data);
           		}
-          		//generate code for printing number literal
           		else if(nodeToPrint.toString().equals("number")) {
-//          			System.out.println("NUMBER!!!!!!!!!!!!");
-//          			System.out.println("value "+nodeToPrint.getAttribute(VALUE).toString());
           			float val = Float.parseFloat( nodeToPrint.getAttribute(VALUE).toString() );
           			generate_float_print_code(null, val, data);
           		}
@@ -175,7 +165,7 @@ public class CodeGeneratorVisitor
         			System.out.println("found string var!!!!!");
         			generate_string_print_code(id.getName(), "", data);
         	  }
-        	  else if(nodeToPrint.toString().equals("string")) {
+        	  else {
         		  System.out.println("found string literal!!!!!");
         		  String val = nodeToPrint.getAttribute(VALUE).toString();
         		  generate_string_print_code(null, val, data);
@@ -191,10 +181,6 @@ public class CodeGeneratorVisitor
         	  else generate_bool_var_print_code(id.getName(), data);
           }
           
-//          nodeToPrint.jjtAccept(this, data);
-
-//          CodeGenerator.objectFile.println("      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
-
           return data;
       }
         public Object generate_bool_var_print_code(String id, Object data) {
@@ -204,6 +190,7 @@ public class CodeGeneratorVisitor
     		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
         	return data;
         }
+        
         public Object generate_string_print_code(String id, String val, Object data) {
         	if(id != null) {
       	      //getstatic    java/lang/System/out Ljava/io/PrintStream;
@@ -274,6 +261,7 @@ public class CodeGeneratorVisitor
         	CodeGenerator.objectFile.println(boolOpString);
         	return data;
         }
+        
         public Object visit(ASTcondition node, Object data) {
         	SimpleNode exp1 = (SimpleNode) node.jjtGetChild(0);
         	SimpleNode op = (SimpleNode) node.jjtGetChild(1);
@@ -343,13 +331,11 @@ public class CodeGeneratorVisitor
         public Object visit(ASTboolean_node node, Object data) {
         	SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
             String identifier = id.getName();
-            TypeSpec type = id.getTypeSpec();
-            String typeCode = TypeCode.typeSpecToTypeCode(type);
         	if(identifier.equals("true")) {
-        		CodeGenerator.objectFile.println("ldc 1");
+        		CodeGenerator.objectFile.println("ldc 1" + CodeGenerator.writeComment("push boolean value:boolean_node"));
         	}
         	else if(identifier.equals("false")) {
-        		CodeGenerator.objectFile.println("ldc 0");
+        		CodeGenerator.objectFile.println("ldc 0" + CodeGenerator.writeComment("push boolean value:boolean_node"));
         	}
         	return data;
         }

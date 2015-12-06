@@ -447,7 +447,7 @@ void string() : {}
   <STRING_LITERAL>
   {
   	  jjtThis.setTypeSpec(Predefined.charType);
-	  jjtThis.setAttribute(VALUE, new String(token.image));
+	  jjtThis.setAttribute(VALUE, token.image);
   }
 }
 

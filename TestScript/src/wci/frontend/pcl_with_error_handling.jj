@@ -1152,7 +1152,7 @@ void string() : {/*@bgen(jjtree) string */
 /*@egen*/
   {
   	  jjtn000.setTypeSpec(Predefined.charType);
-	  jjtn000.setAttribute(VALUE, new String(token.image));
+	  jjtn000.setAttribute(VALUE, token.image);
   }/*@bgen(jjtree)*/
   } finally {
     if (jjtc000) {

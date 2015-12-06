@@ -1,23 +1,5 @@
-var z:boolean = true;
-var y:boolean = z;
+var t:char = "heeelo";
 
-println(z);
-println(y);
+println(t);
+println("string print works");
 
-println(true);
-println(false);
-
-if(!z) {
-	println("hello");
-}
-else {
-	println("bye");
-}
-
-while(true) {
-	println("bye");
-}
-
-while(6 > 10) {
-	println("hi");
-}

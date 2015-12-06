@@ -14,12 +14,15 @@ public class TypeCode {
             return BOOLEAN_TYPECODE;
         }
         else if (spec == Predefined.charType) {
+        	System.out.println("String type");
             return CHAR_TYPECODE;
+            
         }
         else if (spec == Predefined.numberType) {
             return FLOAT_TYPECODE;
-        }
+        } 
         else {
+        	System.out.println("dadad "  +spec.isPascalString());
             throw new UnsupportedOperationException("That type is not yet implemented in the code generator!");
         }
     }

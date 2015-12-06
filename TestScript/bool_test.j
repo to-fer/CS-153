@@ -1,8 +1,7 @@
 .class public TypeScriptProgram
 .super java/lang/Object
 
-.field private static y Z
-.field private static z Z
+.field private static t Ljava/lang/String;
 
 .method public <init>()V
 
@@ -16,7 +15,17 @@
 
 .method public static main([Ljava/lang/String;)V
 
-ldc 1
-      putstatic TypeScriptProgram/z Z
-      getstatic TypeScriptProgram/z Z ;assingment of identifier
-      putstatic TypeScriptProgram/y Z
+      ldc "heeelo"
+      putstatic TypeScriptProgram/t Ljava/lang/String;                                     ;pop value: assingment_node
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       getstatic     TypeScriptProgram/t Ljava/lang/String;
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "string print works"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+
+    return
+
+.limit locals 100
+.limit stack 16
+.end method

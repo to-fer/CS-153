@@ -116,6 +116,6 @@ public class CodeGenerator extends Backend
     }
     
     public static String writeComment(String comment) {
-    	return " ;" + comment;
+    	return "                                     ;" + comment;
     }
 }
