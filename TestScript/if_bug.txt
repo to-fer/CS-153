@@ -1,7 +1,0 @@
-
-if(3+4+1 > 4+1) {
-	println("yes");
-}
-else {
-	println("no");
-}
