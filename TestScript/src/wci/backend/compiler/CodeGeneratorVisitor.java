@@ -235,8 +235,10 @@ public class CodeGeneratorVisitor
         	String op = ( (SimpleNode) node.jjtGetChild(0)).toString();
         	System.out.println("OP "+op);
         	if(op.equals("LESS_THAN")) {
+//        		boolOpString = "fcmpl \n";
+//        		boolOpString += "ifge "+label_suffix + ++label_count;
         		boolOpString = "fcmpl \n";
-        		boolOpString += "ifge "+label_suffix + ++label_count;
+        		boolOpString += "ifge "+label_suffix + ++label_count;	
         	}
         	else if(op.equals("GREATER_THAN")) {
         		boolOpString = "fcmpg \n";
@@ -267,12 +269,34 @@ public class CodeGeneratorVisitor
         	SimpleNode op = (SimpleNode) node.jjtGetChild(1);
         	SimpleNode exp2 = (SimpleNode) node.jjtGetChild(2);
         	
-        	exp1.jjtAccept(this, data);
+        	exp1.jjtAccept(this, data); //generate expression code 
+        	// fsore_0
+        	CodeGenerator.objectFile.println("       fstore_0");
+        	exp2.jjtAccept(this, data); // generate expression code
+        	//fsore_1
+        	CodeGenerator.objectFile.println("       fstore_1");
+        	//fload_0
+        	CodeGenerator.objectFile.println("       fload_0");
+        	//fload_1
+        	CodeGenerator.objectFile.println("       fload_1");
+        	op.jjtAccept(this, data); //  create a branch if_icmplt L003  ; branch if i < j
+        	//set iconst_0
+        	//set goto lable_2
+        	return data;
+        }
+        
+        public Object visit(ASTif_stmt node, Object data) {
+
+        	SimpleNode condition = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0);
+        	SimpleNode branch1 = (SimpleNode) node.jjtGetChild(0).jjtGetChild(1);
         	
-        	exp2.jjtAccept(this, data);
+        	condition.jjtAccept(this, data); //parse condition set labels 
         	
-        	
-        	op.jjtAccept(this, data);
+        	branch1.jjtAccept(this, data);
+        	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
+        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
+        	//branch2.jjtAccept(this, data);
+        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
         
@@ -309,19 +333,6 @@ public class CodeGeneratorVisitor
         	condition.jjtAccept(this, data);
         	CodeGenerator.objectFile.println(label_suffix+label_count+":");
         	body.jjtAccept(this, data);
-        	return data;
-        }
-        
-        public Object visit(ASTif_stmt node, Object data) {
-
-        	SimpleNode condition = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0);
-        	SimpleNode branch1 = (SimpleNode) node.jjtGetChild(0).jjtGetChild(1);
-        	condition.jjtAccept(this, data);
-        	branch1.jjtAccept(this, data);
-        	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
-        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
-        	//branch2.jjtAccept(this, data);
-        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
         

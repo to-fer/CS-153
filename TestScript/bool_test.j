@@ -19,9 +19,13 @@
       fadd
       ldc 1.0
       fadd
+       fstore_0
       ldc 1.0
       ldc 3.0
       fadd
+       fstore_1
+       fload_0
+       fload_1
 fcmpl 
 ifge Label1
        getstatic    java/lang/System/out Ljava/io/PrintStream;
