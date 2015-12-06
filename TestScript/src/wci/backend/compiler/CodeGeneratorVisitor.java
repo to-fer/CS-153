@@ -366,8 +366,6 @@ public class CodeGeneratorVisitor
         	
         	CodeGenerator.objectFile.println("loop: ");
         	((SimpleNode) condition.jjtGetChild(1)).setAttribute(IS_WHILE, true);
-        	((SimpleNode) condition.jjtGetChild(0)).setAttribute(IS_WHILE, true);
-        	((SimpleNode) condition.jjtGetChild(2)).setAttribute(IS_WHILE, true);
         	condition.jjtAccept(this, data);
 //        	generate_code_for_while_condition(condition, data);
         	
