@@ -234,23 +234,25 @@ public class CodeGeneratorVisitor
         	String boolOpString = "       ";
         	String op = ( (SimpleNode) node.jjtGetChild(0)).toString();
         	System.out.println("OP "+op);
+        	
         	if(op.equals("LESS_THAN")) {
-//        		boolOpString = "fcmpl \n";
-//        		boolOpString += "ifge "+label_suffix + ++label_count;
+        		// if A < B push -1 on stack   [B,A]
         		boolOpString = "fcmpl \n";
-        		boolOpString += "ifge "+label_suffix + ++label_count;	
+        		// iflt pops the top int off the operand stack. If the int is less than zero
+        		boolOpString += "iflt "+label_suffix + ++label_count;
         	}
         	else if(op.equals("GREATER_THAN")) {
-        		boolOpString = "fcmpg \n";
-        		boolOpString += "ifle "+label_suffix + ++label_count;
+        		boolOpString = "fcmpg \n"; // pushes 1 if A > b
+        		// branches if val > 0 
+        		boolOpString += "ifgt "+label_suffix + ++label_count;
         	}
         	else if(op.equals("LESS_THAN_OR_EQUALS")) {
         		boolOpString = "fcmpl \n";
-        		boolOpString += "ifgt "+label_suffix + ++label_count;
+        		boolOpString += "ifle "+label_suffix + ++label_count;
         	}
         	else if(op.equals("GREATER_THAN_OR_EQUALS")) {
         		boolOpString = "fcmpg \n";
-        		boolOpString += "iflt "+label_suffix+ ++label_count;
+        		boolOpString += "ifge "+label_suffix+ ++label_count;
         	}
         	else if(op.equals("EQUALITY")) {
         		boolOpString = "fcmpg \n";
@@ -261,6 +263,8 @@ public class CodeGeneratorVisitor
         		boolOpString += "ifeq "+label_suffix+ ++label_count;
         	}
         	CodeGenerator.objectFile.println(boolOpString);
+        	//CodeGenerator.objectFile.println("       iconst_0");
+        	CodeGenerator.objectFile.println("       goto " +label_suffix + ++label_count);
         	return data;
         }
         
@@ -275,11 +279,11 @@ public class CodeGeneratorVisitor
         	exp2.jjtAccept(this, data); // generate expression code
         	//fsore_1
         	CodeGenerator.objectFile.println("       fstore_1");
-        	//fload_0
+        	//load B
         	CodeGenerator.objectFile.println("       fload_0");
-        	//fload_1
+        	//load A
         	CodeGenerator.objectFile.println("       fload_1");
-        	op.jjtAccept(this, data); //  create a branch if_icmplt L003  ; branch if i < j
+        	op.jjtAccept(this, data); //  [B,A] create a branch if_icmplt L003  ; branch if i < j
         	//set iconst_0
         	//set goto lable_2
         	return data;
@@ -289,14 +293,12 @@ public class CodeGeneratorVisitor
 
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0);
         	SimpleNode branch1 = (SimpleNode) node.jjtGetChild(0).jjtGetChild(1);
-        	
         	condition.jjtAccept(this, data); //parse condition set labels 
-        	
-        	branch1.jjtAccept(this, data);
-        	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
-        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
-        	//branch2.jjtAccept(this, data);
-        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
+        	int preLabel = label_count -1;
+        	CodeGenerator.objectFile.println(label_suffix  + (preLabel) + ":");
+        	branch1.jjtAccept(this, data);// generate the branch code 
+        	//generate label for next branch or empty branch
+        	CodeGenerator.objectFile.println(label_suffix +  + (label_count) + ":");
         	return data;
         }
         
