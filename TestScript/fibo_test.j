@@ -54,11 +54,16 @@
       putstatic TypeScriptProgram/z F                                     ;pop value: assingment_node
 loop: 
       getstatic TypeScriptProgram/curr_fib_count F                                     ;identifier
+       fstore_0
       getstatic TypeScriptProgram/limit F                                     ;identifier
+       fstore_1
+       fload_0
+       fload_1
 fcmpl 
-ifge Label1
+iflt Label1
+       goto Label2
 goto Empty1
-Label1:
+Label2:
       getstatic TypeScriptProgram/first_fibo F                                     ;identifier
       getstatic TypeScriptProgram/second_fibo F                                     ;identifier
       fadd
