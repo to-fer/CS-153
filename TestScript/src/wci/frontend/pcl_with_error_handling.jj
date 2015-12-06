@@ -242,10 +242,10 @@ SimpleNode program() : {/*@bgen(jjtree) program */
 
 /*if statements*/
 void boolean_op() : {/*@bgen(jjtree) boolean_op */
-  ASTboolean_op jjtn000 = new ASTboolean_op(JJTBOOLEAN_OP);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
+                     ASTboolean_op jjtn000 = new ASTboolean_op(JJTBOOLEAN_OP);
+                     boolean jjtc000 = true;
+                     jjtree.openNodeScope(jjtn000);
+/*@egen*/jjtn000.setAttribute(IS_WHILE, false);}
 {/*@bgen(jjtree) boolean_op */
         try {
 /*@egen*//*@bgen(jjtree) LESS_THAN */
@@ -366,7 +366,7 @@ void boolean_op() : {/*@bgen(jjtree) boolean_op */
             jjtree.closeNodeScope(jjtn000, true);
           }
         }
-/*@egen*/ 
+/*@egen*/
 }
 
 void condition() : {/*@bgen(jjtree) condition */
