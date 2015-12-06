@@ -184,6 +184,7 @@ SimpleNode program() : {}
 	// Cross listing requires a program ID don't wana take it out
 	{	  
 	programId = symTabStack.enterLocal("TypeScript");
+	programId.setTypeSpec(Predefined.charType);
 	programId.setDefinition(DefinitionImpl.PROGRAM);
 	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
 	symTabStack.setProgramId(programId);

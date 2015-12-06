@@ -266,8 +266,12 @@ public class CodeGeneratorVisitor
         	SimpleNode exp1 = (SimpleNode) node.jjtGetChild(0);
         	SimpleNode op = (SimpleNode) node.jjtGetChild(1);
         	SimpleNode exp2 = (SimpleNode) node.jjtGetChild(2);
+        	
         	exp1.jjtAccept(this, data);
+        	
         	exp2.jjtAccept(this, data);
+        	
+        	
         	op.jjtAccept(this, data);
         	return data;
         }
@@ -309,16 +313,9 @@ public class CodeGeneratorVisitor
         }
         
         public Object visit(ASTif_stmt node, Object data) {
-//        	SimpleNode if_part = (SimpleNode) node.jjtGetChild(0);
-//        	if_part.jjtAccept(this, data);
-//        	if(node.jjtGetNumChildren() > 1){
-//        		SimpleNode else_part = (SimpleNode) node.jjtGetChild(1);
-//        		else_part.jjtAccept(this, data);
-//        	}
-        	
+
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0);
         	SimpleNode branch1 = (SimpleNode) node.jjtGetChild(0).jjtGetChild(1);
-        	//SimpleNode branch2 = (SimpleNode) node.jjtGetChild(1);
         	condition.jjtAccept(this, data);
         	branch1.jjtAccept(this, data);
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);

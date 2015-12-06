@@ -78,6 +78,12 @@ public class TypeSetterVisitor extends TSParserVisitorAdapter
 	        return obj;
 		}
 
+		public Object visit(ASTcondition node, Object data) {
+	        Object obj = super.visit(node, data);
+	        setType(node);
+			return obj;
+		}
+		
 		public Object visit(ASTidentifier node, Object data) {
 	        return data;
 
