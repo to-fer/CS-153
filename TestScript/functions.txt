@@ -1,0 +1,8 @@
+function tester(str:char, str2:char, x:number):number {
+	println("hello world");
+	var t:number = 4+5+3;
+	return t;
+}
+
+tester("heelo world", "heeelo", 5+4+32); 
+

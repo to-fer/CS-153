@@ -569,13 +569,16 @@ void while_node() : {/*@bgen(jjtree) while_node */
           }
         }
 /*@egen*/
-} 
+}
 
-void Statement()      : {}
+
+void Statement()       : {}
 {
    	try
 	{
-     Assignment() | if_stmt() | while_node() | println()  //| Expression() < SEMICOLON >//| error() { handleError(token); }
+	  LOOKAHEAD(2)
+     Assignment() | if_stmt() | while_node() | println() | FunctionDeclaration()
+   		| Function_invocation()   //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -588,38 +591,6 @@ void Statement()      : {}
         syncSet.add(EOF);
         handleError(ex, syncSet, true);
    }
-}
-
-void println() : {/*@bgen(jjtree) println */
-  ASTprintln jjtn000 = new ASTprintln(JJTPRINTLN);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) println */
-    try {
-/*@egen*/
-    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
-    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
 }
 
 void Compound_stmt() : {/*@bgen(jjtree) Compound_stmt */
@@ -667,6 +638,255 @@ void Statement_list()      : {}
   	}
   	  	
 }
+
+void println() : {/*@bgen(jjtree) println */
+  ASTprintln jjtn000 = new ASTprintln(JJTPRINTLN);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) println */
+    try {
+/*@egen*/
+    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
+    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+//------- Function rules begin -------
+
+void PureFunction() : {/*@bgen(jjtree) PureFunction */
+  ASTPureFunction jjtn000 = new ASTPureFunction(JJTPUREFUNCTION);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) PureFunction */
+    try {
+/*@egen*/
+    {System.out.println("PureFunction START");}
+    <LEFT_BRACE> Statement_list() <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>/*@bgen(jjtree)*/
+    {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+    }
+/*@egen*/
+    {System.out.println("PureFunction END");}/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void SideEffectFunction() : {/*@bgen(jjtree) SideEffectFunction */
+  ASTSideEffectFunction jjtn000 = new ASTSideEffectFunction(JJTSIDEEFFECTFUNCTION);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) SideEffectFunction */
+    try {
+/*@egen*/
+    {System.out.println("SideEffectFunction START");}
+    <LEFT_BRACE> Statement_list() (<RETURN> <SEMICOLON>)? <RIGHT_BRACE>/*@bgen(jjtree)*/
+    {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+    }
+/*@egen*/
+    {System.out.println("SideEffectFunction END");}/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
+                            ASTFunctionDeclaration jjtn000 = new ASTFunctionDeclaration(JJTFUNCTIONDECLARATION);
+                            boolean jjtc000 = true;
+                            jjtree.openNodeScope(jjtn000);
+/*@egen*/SymTabEntry funcID; SimpleNode funcNode;}
+{/*@bgen(jjtree) FunctionDeclaration */
+    try {
+/*@egen*/
+    <FUNCTION> <IDENTIFIER>    {
+      // enter the function name into a symbol table stack
+      funcID = symTabStack.enterLocal(token.image);
+      funcID.setDefinition(DefinitionImpl.FUNCTION);
+      funcID.appendLineNumber(token.beginLine);
+	  jjtn000.setAttribute(ID, funcID);  
+    }
+	<LEFT_PARAN>  
+  {
+    symTabStack.push();
+  	// push all variables onto new stack
+  }
+   (	      <IDENTIFIER> {
+	          	      }  
+	      <COLON>
+	      typeSignature() {
+	        	
+	      } 
+		  (		      <COMMA>
+		      <IDENTIFIER> {
+		          
+		      }  
+		      <COLON>
+		      typeSignature() {
+		        	
+		      }
+	     )*
+   )?
+     {
+    symTabStack.pop();
+  	// push all variables onto new stack
+  	}
+    <RIGHT_PARAN>
+    <COLON>
+	    (
+	      typeSignature(){
+	        
+		      //set the type for function
+//              SymTabEntry typeId = symTabStack.lookup(token.image);//		      funcID.appendLineNumber(token.beginLine);//		      TypeSpec type = typeId.getTypeSpec();//		      funcID.setTypeSpec(type);		    }
+		     PureFunction()/*@bgen(jjtree)*/
+                     {
+                       jjtree.closeNodeScope(jjtn000, true);
+                       jjtc000 = false;
+                     }
+/*@egen*/		     {
+		       
+		      // use funcID to set the ROUTINE_CODE
+			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both    		     }
+	  )
+     | (
+       	  <VOID> {
+	      // use funcID to set the typespec	     }
+	     SideEffectFunction() {
+   		      // use funcID to set the ROUTINE_CODE
+			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 	     })/*@bgen(jjtree)*/
+    {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+    }
+/*@egen*/
+  
+    {System.out.println("FunctionDeclaration END");}/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void Function_invocation() :{/*@bgen(jjtree) Function_invocation */
+  ASTFunction_invocation jjtn000 = new ASTFunction_invocation(JJTFUNCTION_INVOCATION);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}{/*@bgen(jjtree) Function_invocation */
+  try {
+/*@egen*/
+  <IDENTIFIER>
+    {
+
+    }
+	<LEFT_PARAN>  
+   (
+     Expression() {
+	          
+	      }  
+		(
+		      <COMMA>
+		      Expression() {
+		          
+		      }  
+	     )*
+   )?
+   <RIGHT_PARAN>
+   <SEMICOLON>/*@bgen(jjtree)*/
+  } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      throw (RuntimeException)jjte000;
+    }
+    if (jjte000 instanceof ParseException) {
+      throw (ParseException)jjte000;
+    }
+    throw (Error)jjte000;
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
+/*@egen*/}
+//------- Function rules end -------
 
 void declaration() :{/*@bgen(jjtree) declaration */
   ASTdeclaration jjtn000 = new ASTdeclaration(JJTDECLARATION);
@@ -779,7 +999,7 @@ void IdentifierType()       :{SymTabEntry someID; ICodeNodeImpl old;}
     {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
-      old = jjtn001;
+      //old = jjtThis;
 	  jjtn001.setAttribute(ID, someID);  
       
     }/*@bgen(jjtree)*/
@@ -795,7 +1015,7 @@ void IdentifierType()       :{SymTabEntry someID; ICodeNodeImpl old;}
       typeId.appendLineNumber(token.beginLine);
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
-      old.setTypeSpec(type);
+      //old.setTypeSpec(type);
     }
 }
 

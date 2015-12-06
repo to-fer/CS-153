@@ -55,21 +55,7 @@ public class Predefined
      * @param symTabStack the symbol table stack to initialize.
      */
     private static void initializeTypes(SymTabStack symTabStack)
-    {
-    	/*
-        // Type integer.
-    	//enter variable name to stack 
-        integerId = symTabStack.enterLocal("integer");
-        //crate type form
-        integerType = TypeFactory.createType(SCALAR);
-        //set the SymTabEntry in side the typeSpec
-        integerType.setIdentifier(integerId);
-        // how a symbol table entry is defined.
-        integerId.setDefinition(DefinitionImpl.TYPE);
-        
-        integerId.setTypeSpec(integerType);
-		*/
-    	
+    {   	
         // Type real.
     	numberId = symTabStack.enterLocal("number");
     	numberType = TypeFactory.createType(SCALAR);

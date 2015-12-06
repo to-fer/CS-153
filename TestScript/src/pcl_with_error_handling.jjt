@@ -257,13 +257,16 @@ void else_part(): {}
 
 
 void while_node() : {}{	<WHILE> condition() Compound_stmt()
-} 
+}
 
-void Statement()#void : {}
+
+void Statement() #void : {}
 {
    	try
 	{
-     Assignment() | if_stmt() | while_node() | println()  //| Expression() < SEMICOLON >//| error() { handleError(token); }
+	  LOOKAHEAD(2)
+     Assignment() | if_stmt() | while_node() | println() | FunctionDeclaration()
+   		| Function_invocation()   //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
    {
 
@@ -276,12 +279,6 @@ void Statement()#void : {}
         syncSet.add(EOF);
         handleError(ex, syncSet, true);
    }
-}
-
-void println() : {}
-{
-    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
-    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>
 }
 
 void Compound_stmt() : {}
@@ -303,6 +300,105 @@ void Statement_list() #void: {}
   	}
   	  	
 }
+
+void println() : {}
+{
+    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
+    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>
+}
+
+//------- Function rules begin -------
+
+void PureFunction() : {}
+{
+    {System.out.println("PureFunction START");}
+    <LEFT_BRACE> Statement_list() <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>
+    {System.out.println("PureFunction END");}
+}
+
+void SideEffectFunction() : {}
+{
+    {System.out.println("SideEffectFunction START");}
+    <LEFT_BRACE> Statement_list() (<RETURN> <SEMICOLON>)? <RIGHT_BRACE>
+    {System.out.println("SideEffectFunction END");}
+}
+
+void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
+{
+    <FUNCTION> <IDENTIFIER>    {
+      // enter the function name into a symbol table stack
+      funcID = symTabStack.enterLocal(token.image);
+      funcID.setDefinition(DefinitionImpl.FUNCTION);
+      funcID.appendLineNumber(token.beginLine);
+	  jjtThis.setAttribute(ID, funcID);  
+    }
+	<LEFT_PARAN>  
+  {
+    symTabStack.push();
+  	// push all variables onto new stack
+  }
+   (	      <IDENTIFIER> {
+	          	      }  
+	      <COLON>
+	      typeSignature() {
+	        	
+	      } 
+		  (		      <COMMA>
+		      <IDENTIFIER> {
+		          
+		      }  
+		      <COLON>
+		      typeSignature() {
+		        	
+		      }
+	     )*
+   )?
+     {
+    symTabStack.pop();
+  	// push all variables onto new stack
+  	}
+    <RIGHT_PARAN>
+    <COLON>
+	    (
+	      typeSignature(){
+	        
+		      //set the type for function
+//              SymTabEntry typeId = symTabStack.lookup(token.image);//		      funcID.appendLineNumber(token.beginLine);//		      TypeSpec type = typeId.getTypeSpec();//		      funcID.setTypeSpec(type);		    }
+		     PureFunction()		     {
+		       
+		      // use funcID to set the ROUTINE_CODE
+			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both    		     }
+	  )
+     | (
+       	  <VOID> {
+	      // use funcID to set the typespec	     }
+	     SideEffectFunction() {
+   		      // use funcID to set the ROUTINE_CODE
+			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 	     })
+  
+    {System.out.println("FunctionDeclaration END");}
+}
+
+void Function_invocation() :{}{
+  <IDENTIFIER>
+    {
+
+    }
+	<LEFT_PARAN>  
+   (
+     Expression() {
+	          
+	      }  
+		(
+		      <COMMA>
+		      Expression() {
+		          
+		      }  
+	     )*
+   )?
+   <RIGHT_PARAN>
+   <SEMICOLON>}
+//------- Function rules end -------
 
 void declaration() :{}
 {
@@ -333,7 +429,7 @@ void IdentifierType() #void :{SymTabEntry someID; ICodeNodeImpl old;}
     {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
-      old = jjtThis;
+      //old = jjtThis;
 	  jjtThis.setAttribute(ID, someID);  
       
     } #identifier <COLON>
@@ -343,7 +439,7 @@ void IdentifierType() #void :{SymTabEntry someID; ICodeNodeImpl old;}
       typeId.appendLineNumber(token.beginLine);
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
-      old.setTypeSpec(type);
+      //old.setTypeSpec(type);
     }
 }
 
