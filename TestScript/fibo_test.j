@@ -49,7 +49,7 @@
       getstatic TypeScriptProgram/limit F                                     ;identifier
       fadd
       putstatic TypeScriptProgram/z F                                     ;pop value: assingment_node
-loop: 
+loop1: 
       getstatic TypeScriptProgram/curr_fib_count F                                     ;identifier
        fstore_0
       getstatic TypeScriptProgram/limit F                                     ;identifier
@@ -79,7 +79,7 @@ Label1:
       ldc 1.0
       fadd
       putstatic TypeScriptProgram/curr_fib_count F                                     ;pop value: assingment_node
-goto loop
+goto loop1
 Empty1:
 
     return

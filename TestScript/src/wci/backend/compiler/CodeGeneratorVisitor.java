@@ -13,6 +13,7 @@ public class CodeGeneratorVisitor
 		int label_count = 0;
 		String label_suffix = "Label";
 		int empty_count = 0;
+		int loop_count = 0;
 
         /*
          Note that once we implement functions, this will have to be changed because we currently implement identifiers
@@ -378,7 +379,7 @@ public class CodeGeneratorVisitor
         	System.out.println("WHILE has "+node.jjtGetNumChildren());
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         	
-        	CodeGenerator.objectFile.println("loop: ");
+        	CodeGenerator.objectFile.println("loop"+ ++loop_count+": ");
 
         	((SimpleNode) condition.jjtGetChild(1)).setAttribute(IS_WHILE, true);
         	condition.jjtAccept(this, data);
@@ -389,7 +390,7 @@ public class CodeGeneratorVisitor
         	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
         	body.jjtAccept(this, data);
         	//CodeGenerator.objectFile.println("goto "+label_suffix+label_count);
-        	CodeGenerator.objectFile.println("goto loop");
+        	CodeGenerator.objectFile.println("goto loop"+loop_count);
         	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
