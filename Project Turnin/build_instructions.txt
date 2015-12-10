@@ -1,0 +1,1 @@
+Use Ant. The default Ant task builds the compiler, or you can run "ant compile". 
