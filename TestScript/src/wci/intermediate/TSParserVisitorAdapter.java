@@ -83,6 +83,26 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	}
 
 	@Override
+	public Object visit(ASTPureFunction node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTSideEffectFunction node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTFunctionDeclaration node, Object data) {
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTFunction_invocation node, Object data) {
+		return null;
+	}
+
+	@Override
 	public Object visit(ASTCompound_stmt node, Object data) {
         return node.childrenAccept(this, data);
 
@@ -169,21 +189,6 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 	public Object visit(ASTwhile_node node, Object data) {
 		// TODO Auto-generated method stub
         return node.childrenAccept(this, data);
-	}
-
-
-
-
-	@Override
-	public Object visit(ASTelse_if_part node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object visit(ASTassignment_2 node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
