@@ -38,7 +38,7 @@ public class TypeSetterVisitor extends TSParserVisitorAdapter
 
 		public Object visit(ASTprogram node, Object data) {
 	        Object obj = super.visit(node, data);
-	        setType(node);
+			node.setTypeSpec(Predefined.charType);
 	        return obj;
 		}
 

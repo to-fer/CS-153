@@ -184,6 +184,8 @@ SimpleNode program() : {}
 	programId.setDefinition(DefinitionImpl.PROGRAM);
 	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
 	programId.setAttribute(FUNCTIONS_CODE, new ArrayList<SimpleNode>());
+  	jjtThis.setTypeSpec(Predefined.charType);
+	
 	symTabStack.setProgramId(programId);
 	}
         Statement_list()
@@ -383,13 +385,14 @@ void VarIdentifierType() #void : {}
     <VAR> IdentifierType()
 }
 
-void IdentifierType() #void :{SymTabEntry someID; ICodeNodeImpl old;}
+void IdentifierType() #void :{SymTabEntry someID; ICodeNodeImpl old; SimpleNode id;}
 {
     <IDENTIFIER> 
     {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
-	  jjtThis.setAttribute(ID, someID);  
+	  jjtThis.setAttribute(ID, someID);
+	  id = jjtThis;
       
     } #identifier <COLON>
     typeSignature()
@@ -398,6 +401,7 @@ void IdentifierType() #void :{SymTabEntry someID; ICodeNodeImpl old;}
       typeId.appendLineNumber(token.beginLine);
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
+      id.setTypeSpec(type);
     }
 }
 
