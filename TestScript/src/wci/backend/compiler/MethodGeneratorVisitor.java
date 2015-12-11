@@ -405,35 +405,16 @@ public class MethodGeneratorVisitor
 
     	((SimpleNode) condition.jjtGetChild(1)).setAttribute(IS_WHILE, true);
     	condition.jjtAccept(this, data);
-//    	generate_code_for_while_condition(condition, data);
     	
     	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
     	CodeGenerator.objectFile.println(label_suffix+label_count+":");
     	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
     	body.jjtAccept(this, data);
-    	//CodeGenerator.objectFile.println("goto "+label_suffix+label_count);
     	CodeGenerator.objectFile.println("goto loop"+loop_count);
     	CodeGenerator.objectFile.println("Empty"+empty_count+":");
     	return data;
     }
-//    .method public static main([Ljava/lang/String;)V
-//
-//    ldc 0.0
-//    putstatic TypeScriptProgram/first_fibo F                                     ;pop value: assingment_node
-//     getstatic    java/lang/System/out Ljava/io/PrintStream;
-//    
-//.method public CreateWarrior()V
-//ldc "Warrior"
-//putstatic Game/classChoice Ljava/lang/String;
-//ldc "Battle Axe"
-//putstatic Game/weaponOne Ljava/lang/String;
-//ldc "Great Sword"
-//putstatic Game/weaponTwo Ljava/lang/String;
-//
-//return
-//.limit locals 32
-//.limit stack 40
-//.end method
+
     /**
      * Assumes all function are void
      */
@@ -443,7 +424,7 @@ public class MethodGeneratorVisitor
     	
     	CodeGenerator.objectFile.println();
     	//generate function code
-    	CodeGenerator.objectFile.println(".method public " +  funcName + "()V");
+    	CodeGenerator.objectFile.println(".method public static " +  funcName + "()V");
 		SimpleNode functionCode = (SimpleNode) node.jjtGetChild(0);
 		functionCode.jjtAccept(this,data);
 		
