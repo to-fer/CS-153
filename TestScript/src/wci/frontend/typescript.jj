@@ -5,7 +5,7 @@
                                                             
                
                  
-   DEBUG_PARSER=true;
+   DEBUG_PARSER=false;
    DEBUG_TOKEN_MANAGER=false;
 }
 
@@ -47,9 +47,7 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
         // Parse a Typescript program.
         Reader    reader = new FileReader(sourceFilePath);
         TypeScriptParser parser = new TypeScriptParser(reader);
-        System.out.println("before program");
         SimpleNode rootNode = parser.program();
-        System.out.println("after program");
 		rootNode.dump(">");
         // Print the cross-reference table.
 		CrossReferencer crossReferencer = new CrossReferencer();
@@ -69,7 +67,6 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
         treePrinter.print(symTabStack);
 		if(generate_code_flag)
 		{
-		  
 	        Backend backend = BackendFactory.createBackend("compile");
 	        backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
 		}
@@ -92,19 +89,12 @@ PARSER_END(TypeScriptParser)
 SKIP: {
   " " | "\r" | "\t" | "\n"
   | <"//" (~["\n"])* ("\n"|"\r")?>
-  //| <COMMENT : "{"(~["}"])*"}">
 }
-
-//TOKEN:
-//{
-////   //<NEW_LINE: "\n" >
-//    <EOL : "\r" | "\n" | "\r\n">
-//}
 
 TOKEN : { //useful regex
 	<#DIGIT  : ["0"-"9"]>
     |<#ONE_TO_NINE: ["1"-"9"] >
-	  	//A-Z only if ignore case option is false
+	//A-Z only if ignore case option is false
 	| <#LETTER : ["a"-"z","A"-"Z"]>
 	| <#SPACE: [" "] >
 }
@@ -206,22 +196,14 @@ SimpleNode program() : {/*@bgen(jjtree) program */
 	programId.setAttribute(FUNCTIONS_CODE, new ArrayList<SimpleNode>());
 	symTabStack.setProgramId(programId);
 	}
-		{
-          System.out.println("before");
-        }
-        Statement_list() //(<EOF>)?
-        {
-          System.out.println("before1");
-            return jjtn000;
-            System.out.println("after");
-        }/*@bgen(jjtree)*/
+        Statement_list()/*@bgen(jjtree)*/
         {
           jjtree.closeNodeScope(jjtn000, true);
           jjtc000 = false;
         }
 /*@egen*/
         {
-          System.out.println("done parsing");
+            return jjtn000;
         }/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {
@@ -243,7 +225,6 @@ SimpleNode program() : {/*@bgen(jjtree) program */
           }
         }
 /*@egen*/
-        
 }
 
 
@@ -382,44 +363,31 @@ void condition() : {/*@bgen(jjtree) condition */
   jjtree.openNodeScope(jjtn000);
 /*@egen*/}
 {/*@bgen(jjtree) condition */
-    try {
+        try {
 /*@egen*/
-    {
-      System.out.println("before condition");
-    }
 	<LEFT_PARAN>
-	// leave out not for now	( (<NOT> #NOT)? Expression() (boolean_op() Expression())? )
 	(Expression() (boolean_op() Expression())? )
 	<RIGHT_PARAN>/*@bgen(jjtree)*/
-        {
-          jjtree.closeNodeScope(jjtn000, true);
-          jjtc000 = false;
+        } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            throw (RuntimeException)jjte000;
+          }
+          if (jjte000 instanceof ParseException) {
+            throw (ParseException)jjte000;
+          }
+          throw (Error)jjte000;
+        } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
         }
 /*@egen*/
-	{
-	  System.out.println("after condition");
-	}/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
-	
 }
 
 
@@ -587,12 +555,9 @@ void Statement()       : {}
 	{
 	  LOOKAHEAD(3)
      Assignment() | if_stmt() | while_node() | println() | FunctionDeclaration()
-   		| Function_invocation()   //| Expression() < SEMICOLON >//| error() { handleError(token); }
+   		| Function_invocation()
     } catch(ParseException ex)
    {
-
-     System.out.println("Exception!!!!");
-     System.out.println("token :"+ex.currentToken.image);
 		HashSet syncSet = new HashSet();
         syncSet.add(SEMICOLON);
         syncSet.add(LEFT_BRACE);
@@ -635,17 +600,9 @@ void Compound_stmt() : {/*@bgen(jjtree) Compound_stmt */
 
 void Statement_list()      : {}
 {
-  {
-    System.out.println("before stmt");
-  }
   		(
   	  		Statement()
-
   	  	)+
-  	{
-  	  System.out.println("after stmt");
-  	}
-  	  	
 }
 
 void println() : {/*@bgen(jjtree) println */
@@ -656,8 +613,7 @@ void println() : {/*@bgen(jjtree) println */
 {/*@bgen(jjtree) println */
     try {
 /*@egen*/
-    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
-    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>/*@bgen(jjtree)*/
+    <PRINTLN> <LEFT_PARAN> Expression() <RIGHT_PARAN> <SEMICOLON>/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -690,14 +646,7 @@ void PureFunction() : {/*@bgen(jjtree) PureFunction */
 {/*@bgen(jjtree) PureFunction */
     try {
 /*@egen*/
-    {System.out.println("SideEffectFunction START");}
     <LEFT_BRACE> Statement_list() (<RETURN> (Expression())? <SEMICOLON>)? <RIGHT_BRACE>/*@bgen(jjtree)*/
-    {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtc000 = false;
-    }
-/*@egen*/
-    {System.out.println("SideEffectFunction END");}/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -742,8 +691,6 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
     }
 	<LEFT_PARAN>  
   {
-    //symTabStack.push();
-  	// push all variables onto new stack
   }
    (
 	      <IDENTIFIER> {
@@ -765,8 +712,6 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
 	     )*
    )?
      {
-    //symTabStack.pop();
-  	// push all variables onto new stack
   	}
     <RIGHT_PARAN>
     <COLON>
@@ -774,16 +719,15 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
       // use funcID to set the typespec
      }
      
-     PureFunction() {
+     PureFunction()/*@bgen(jjtree)*/
+                    {
+                      jjtree.closeNodeScope(jjtn000, true);
+                      jjtc000 = false;
+                    }
+/*@egen*/ {
 	      // use funcID to set the ROUTINE_CODE
-		  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 
+		  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both
      }/*@bgen(jjtree)*/
-    {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtc000 = false;
-    }
-/*@egen*/
-    {System.out.println("FunctionDeclaration END");}/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -969,7 +913,6 @@ void IdentifierType()       :{SymTabEntry someID; ICodeNodeImpl old;}
     {
       someID = symTabStack.enterLocal(token.image);
       processVariableDecl(token, someID);
-      //old = jjtThis;
 	  jjtn001.setAttribute(ID, someID);  
       
     }/*@bgen(jjtree)*/
@@ -985,7 +928,6 @@ void IdentifierType()       :{SymTabEntry someID; ICodeNodeImpl old;}
       typeId.appendLineNumber(token.beginLine);
       TypeSpec type = typeId.getTypeSpec();
       someID.setTypeSpec(type);
-      //old.setTypeSpec(type);
     }
 }
 
@@ -1047,14 +989,11 @@ void Expression()       : {}
       }
 /*@egen*/             
     )*
-	//LOOKAHEAD(3)
-    //Assignment() //| if_stmt()
 }
 
 void simple_expression()       :{}
 {
-	//factor()  //(MATH_OP factor())?
-	factor() (("+"|"-"|"/"|"*") simple_expression())? //< SEMICOLON >
+	factor() (("+"|"-"|"/"|"*") simple_expression())?
 }
 
 void term()       : {}
@@ -1266,25 +1205,17 @@ String handleError(ParseException ex, HashSet syncSet, boolean doPop)
   	generate_code_flag = false;
     Token token = ex.currentToken;
     TypeScriptParseException tse = new TypeScriptParseException(ex);
-//    syncSet.put(EOF);
-//    System.out.println(ex.getMessage2());
     System.out.println(tse.getMessage());
-//	System.out.println("TOKEN PARSED: "+token.image);
-    // Consume tokens up to but not including a token in the sync set.
-//    System.out.println(getToken(1).image);
     while (!syncSet.contains(token.kind))
     {
-      //getToken(1).kind)) {
         token = getNextToken();
     }
     System.out.println(getToken(1).image);
     while (!syncSet.contains(token.kind))
     {
-      //getToken(1).kind)) {
         token = getNextToken();
     }
 
-//    if (doPop) jjtree.popNode();
     return token.image;/*@bgen(jjtree)*/
      } finally {
        if (jjtc000) {

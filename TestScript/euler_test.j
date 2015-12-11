@@ -1,4 +1,4 @@
-.class public TypeScriptProgram
+.class public euler_test
 .super java/lang/Object
 
 .field private static expected_result F
@@ -20,8 +20,8 @@
       fadd
       ldc 3.0
       fadd
-      putstatic TypeScriptProgram/t F                                     ;pop value: assingment_node
-      getstatic TypeScriptProgram/t F                                     ;identifier
+      putstatic euler_test/t F                                     ;pop value: assingment_node
+      getstatic euler_test/t F                                     ;identifier
 return
 .limit locals 32
 .limit stack 40
@@ -30,13 +30,13 @@ return
 
 .method public static sum_square_diff()V
       ldc 1.0
-      putstatic TypeScriptProgram/i F                                     ;pop value: assingment_node
+      putstatic euler_test/i F                                     ;pop value: assingment_node
       ldc 0.0
-      putstatic TypeScriptProgram/sum F                                     ;pop value: assingment_node
+      putstatic euler_test/sum F                                     ;pop value: assingment_node
       ldc 0.0
-      putstatic TypeScriptProgram/square_sum F                                     ;pop value: assingment_node
+      putstatic euler_test/square_sum F                                     ;pop value: assingment_node
 loop1: 
-      getstatic TypeScriptProgram/i F                                     ;identifier
+      getstatic euler_test/i F                                     ;identifier
        fstore_0
       ldc 100.0
        fstore_1
@@ -46,28 +46,28 @@ fcmpl
 ifle Label1
 goto Empty1
 Label1:
-      getstatic TypeScriptProgram/sum F                                     ;identifier
-      getstatic TypeScriptProgram/i F                                     ;identifier
+      getstatic euler_test/sum F                                     ;identifier
+      getstatic euler_test/i F                                     ;identifier
       fadd
-      putstatic TypeScriptProgram/sum F                                     ;pop value: assingment_node
-      getstatic TypeScriptProgram/i F                                     ;identifier
-      getstatic TypeScriptProgram/i F                                     ;identifier
+      putstatic euler_test/sum F                                     ;pop value: assingment_node
+      getstatic euler_test/i F                                     ;identifier
+      getstatic euler_test/i F                                     ;identifier
       fmul
-      putstatic TypeScriptProgram/temp F                                     ;pop value: assingment_node
-      getstatic TypeScriptProgram/square_sum F                                     ;identifier
-      getstatic TypeScriptProgram/temp F                                     ;identifier
+      putstatic euler_test/temp F                                     ;pop value: assingment_node
+      getstatic euler_test/square_sum F                                     ;identifier
+      getstatic euler_test/temp F                                     ;identifier
       fadd
-      putstatic TypeScriptProgram/square_sum F                                     ;pop value: assingment_node
-      getstatic TypeScriptProgram/i F                                     ;identifier
+      putstatic euler_test/square_sum F                                     ;pop value: assingment_node
+      getstatic euler_test/i F                                     ;identifier
       ldc 1.0
       fadd
-      putstatic TypeScriptProgram/i F                                     ;pop value: assingment_node
+      putstatic euler_test/i F                                     ;pop value: assingment_node
 goto loop1
 Empty1:
-      getstatic TypeScriptProgram/sum F                                     ;identifier
-      getstatic TypeScriptProgram/sum F                                     ;identifier
+      getstatic euler_test/sum F                                     ;identifier
+      getstatic euler_test/sum F                                     ;identifier
       fmul
-      putstatic TypeScriptProgram/square_of_sum F                                     ;pop value: assingment_node
+      putstatic euler_test/square_of_sum F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "The sum of the squares is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -85,12 +85,12 @@ Empty1:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "The difference between the sum of the squares of the first one hundred natural numbers and the square of the sum is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-      getstatic TypeScriptProgram/square_of_sum F                                     ;identifier
-      getstatic TypeScriptProgram/square_sum F                                     ;identifier
+      getstatic euler_test/square_of_sum F                                     ;identifier
+      getstatic euler_test/square_sum F                                     ;identifier
       fsub
-      putstatic TypeScriptProgram/result F                                     ;pop value: assingment_node
+      putstatic euler_test/result F                                     ;pop value: assingment_node
       ldc 2.516415E7
-      putstatic TypeScriptProgram/expected_result F                                     ;pop value: assingment_node
+      putstatic euler_test/expected_result F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        ldc "Expected result: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -105,9 +105,9 @@ Empty1:
        getstatic     TypeScriptProgram/result F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-      getstatic TypeScriptProgram/result F                                     ;identifier
+      getstatic euler_test/result F                                     ;identifier
        fstore_0
-      getstatic TypeScriptProgram/expected_result F                                     ;identifier
+      getstatic euler_test/expected_result F                                     ;identifier
        fstore_1
        fload_0
        fload_1
@@ -139,7 +139,7 @@ return
 
 .method public static main([Ljava/lang/String;)V
 
-      invokestatic TypeScriptProgram/sum_square_diff()V
+      invokestatic euler_test/sum_square_diff()V
 
     return
 
