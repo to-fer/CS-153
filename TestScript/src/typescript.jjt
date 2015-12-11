@@ -272,8 +272,7 @@ void Statement_list() #void: {}
 
 void println() : {}
 {
-    // TODO Once expression parsing works, allow for an expression to appear here instead of just factor()
-    <PRINTLN> <LEFT_PARAN> factor() <RIGHT_PARAN> <SEMICOLON>
+    <PRINTLN> <LEFT_PARAN> Expression() <RIGHT_PARAN> <SEMICOLON>
 }
 
 //------- Function rules begin -------
