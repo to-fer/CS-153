@@ -36,5 +36,6 @@ public interface TypeScriptParserVisitor
   public Object visit(ASTnumber node, Object data);
   public Object visit(ASTstring node, Object data);
   public Object visit(ASTerror node, Object data);
+  public Object visit(ASThandleError node, Object data);
 }
-/* JavaCC - OriginalChecksum=de1a8ee62c5e9ca9d067dbd535611ffd (do not edit this line) */
+/* JavaCC - OriginalChecksum=a805f5a085d09b665119126a370c09e5 (do not edit this line) */

@@ -57,7 +57,10 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
 
                 Backend backend = BackendFactory.createBackend("compile");
                 backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
-                System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
+                }
+                else
+                {
+                        System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
                 }
     }
 
@@ -1340,7 +1343,11 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
   static String handleError(ParseException ex, HashSet syncSet, boolean doPop) throws ParseException {
     trace_call("handleError");
     try {
-        generate_code_flag = false;
+ /*@bgen(jjtree) handleError */
+     ASThandleError jjtn000 = new ASThandleError(JJTHANDLEERROR);
+     boolean jjtc000 = true;
+     jjtree.openNodeScope(jjtn000);
+     try {generate_code_flag = false;
     Token token = ex.currentToken;
     TypeScriptParseException tse = new TypeScriptParseException(ex);
 //    syncSet.put(EOF);
@@ -1362,7 +1369,12 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
     }
 
 //    if (doPop) jjtree.popNode();
-    return token.image;
+    return token.image;/*@bgen(jjtree)*/
+     } finally {
+       if (jjtc000) {
+         jjtree.closeNodeScope(jjtn000, true);
+       }
+     }
     } finally {
       trace_return("handleError");
     }

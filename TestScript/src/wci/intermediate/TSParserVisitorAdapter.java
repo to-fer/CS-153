@@ -186,4 +186,10 @@ public class TSParserVisitorAdapter implements TypeScriptParserVisitor
         return node.childrenAccept(this, data);
 	}
 
+	@Override
+	public Object visit(ASThandleError node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
