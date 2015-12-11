@@ -1,12 +1,10 @@
 package wci.backend.compiler;
 
-//import com.sun.org.apache.xpath.internal.operations.Variable;
 import wci.backend.Backend;
 import wci.frontend.Node;
 import wci.frontend.SimpleNode;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.DefinitionImpl;
-import wci.intermediate.symtabimpl.Predefined;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import java.io.PrintWriter;
@@ -62,7 +60,6 @@ public class CodeGenerator extends Backend
     private void writeMainMethod() {
         writeMainMethodHeader();
         writeMainMethodBody();
-        // TODO Count the locals.
         objectFile.println(".limit locals " + LOCALS_LIMIT);
         objectFile.println(".limit stack " + STACK_LIMIT);
         objectFile.println(".end method");
