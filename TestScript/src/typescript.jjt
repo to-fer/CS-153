@@ -8,7 +8,7 @@ options{
    DEBUG_TOKEN_MANAGER=false;
 }
 
-PARSER_BEGIN(PclParser)
+PARSER_BEGIN(TypeScriptParser)
 package wci.frontend;
 import java.util.*;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
-public class PclParser
+public class TypeScriptParser
 {
     private static SymTabStack symTabStack;
     private static SymTabEntry programId;
@@ -40,9 +40,9 @@ public class PclParser
         
         String sourceFilePath = args[0];
         
-        // Parse a Pcl program.
+        // Parse a Typescript program.
         Reader    reader = new FileReader(sourceFilePath);
-        PclParser parser = new PclParser(reader);
+        TypeScriptParser parser = new TypeScriptParser(reader);
         System.out.println("before program");
         SimpleNode rootNode = parser.program();
         System.out.println("after program");
@@ -77,7 +77,7 @@ public class PclParser
         return fileNameWithoutExtension(fileName) + ".j";
     }
 }
-PARSER_END(PclParser)
+PARSER_END(TypeScriptParser)
 
 SKIP: {
   " " | "\r" | "\t" | "\n"
@@ -257,7 +257,9 @@ void else_part(): {}
 }
 
 
-void while_node() : {}{	<WHILE> condition() Compound_stmt()
+void while_node() : {}
+{
+	<WHILE> condition() Compound_stmt()
 }
 
 
@@ -319,7 +321,8 @@ void PureFunction() : {}
 
 void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
 {
-    <FUNCTION> <IDENTIFIER>    {
+    <FUNCTION> <IDENTIFIER>
+    {
       // enter the function name into a symbol table stack
       funcID = symTabStack.enterLocal(token.image);
       funcID.setDefinition(DefinitionImpl.FUNCTION);
@@ -334,13 +337,16 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
     //symTabStack.push();
   	// push all variables onto new stack
   }
-   (	      <IDENTIFIER> {
-	          	      }  
+   (
+	      <IDENTIFIER> {
+	          
+	      }  
 	      <COLON>
 	      typeSignature() {
 	        	
 	      } 
-		  (		      <COMMA>
+		  (
+		      <COMMA>
 		      <IDENTIFIER> {
 		          
 		      }  
@@ -359,14 +365,16 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
    	 typeSignature() {
       // use funcID to set the typespec
      }
-          PureFunction() {
+     
+     PureFunction() {
 	      // use funcID to set the ROUTINE_CODE
 		  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 
      }
     {System.out.println("FunctionDeclaration END");}
 }
 
-void Function_invocation() :{SymTabEntry funcID; SimpleNode funcNode;}{
+void Function_invocation() :{SymTabEntry funcID; SimpleNode funcNode;}
+{
   <IDENTIFIER>
     {
       funcID = symTabStack.lookup(token.image);
@@ -387,7 +395,8 @@ void Function_invocation() :{SymTabEntry funcID; SimpleNode funcNode;}{
 	     )*
    )?
    <RIGHT_PARAN>
-   <SEMICOLON>}
+   <SEMICOLON>
+}
 //------- Function rules end -------
 
 void declaration() :{}
@@ -444,12 +453,16 @@ void typeSignature() #void :{}
 void Expression() #void : {}
 {
     term() (
-        "+" term()        {
+        "+" term()
+        {
            jjtThis.setTypeSpec(Predefined.numberType);
-                  } #add(2)
-      | "-" term()      {
+          
+        } #add(2)
+      | "-" term()
+      {
            jjtThis.setTypeSpec(Predefined.numberType);
-              } #subtract(2)
+        
+      } #subtract(2)
     )*
 	//LOOKAHEAD(3)
     //Assignment() //| if_stmt()
@@ -464,12 +477,16 @@ void simple_expression() #void :{}
 void term() #void : {}
 {
     factor() (
-        "*" factor()        {
+        "*" factor()
+        {
            jjtThis.setTypeSpec(Predefined.numberType);
-                  } #multiply(2)
-      | "/" factor()      {
+          
+        } #multiply(2)
+      | "/" factor()
+      {
            jjtThis.setTypeSpec(Predefined.numberType);
-              } #divide(2)
+        
+      } #divide(2)
     )*
 }
 
@@ -481,7 +498,8 @@ void factor() #void : {}
   | string()
 }
 
-void boolean_node() : {}{
+void boolean_node() : {}
+{
   (<TRUE> | <FALSE>)
   {
 	SymTabEntry variableId = symTabStack.lookup(token.image);
@@ -489,7 +507,8 @@ void boolean_node() : {}{
 	TypeSpec type = variableId.getTypeSpec();
 	jjtThis.setTypeSpec(type);
 	jjtThis.setAttribute(ID, variableId);	 
-  } }
+  } 
+}
 
 void identifier() : {} 
 {
@@ -549,7 +568,11 @@ String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
 //	System.out.println("TOKEN PARSED: "+token.image);
     // Consume tokens up to but not including a token in the sync set.
     System.out.println(getToken(1).image);
-    while (!syncSet.contains(token.kind))    {      //getToken(1).kind)) {        token = getNextToken();    } 	
+    while (!syncSet.contains(token.kind))
+    {
+      //getToken(1).kind)) {
+        token = getNextToken();
+    } 	
 
 //    if (doPop) jjtree.popNode();
     return token.image;

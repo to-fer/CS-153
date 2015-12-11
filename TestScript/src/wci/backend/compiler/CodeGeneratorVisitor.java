@@ -8,7 +8,7 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class CodeGeneratorVisitor
         extends TSParserVisitorAdapter
-        implements PclParserTreeConstants {
+        implements TypeScriptParserTreeConstants {
 	
 		int label_count = 0;
 		String label_suffix = "Label";
@@ -178,7 +178,7 @@ public class CodeGeneratorVisitor
       }
         public Object generate_bool_var_print_code(String id, Object data) {
         	CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
-    		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/"+id+" Z");
+    		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/" + id + " Z");
     		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(Z)Ljava/lang/String;");
     		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
         	return data;
@@ -375,12 +375,12 @@ public class CodeGeneratorVisitor
 //        	generate_code_for_while_condition(condition, data);
         	
         	CodeGenerator.objectFile.println("goto "+"Empty"+ ++empty_count);
-        	CodeGenerator.objectFile.println(label_suffix+label_count+":");
+        	CodeGenerator.objectFile.println(label_suffix + label_count + ":");
         	SimpleNode body = (SimpleNode) node.jjtGetChild(1);
         	body.jjtAccept(this, data);
         	//CodeGenerator.objectFile.println("goto "+label_suffix+label_count);
         	CodeGenerator.objectFile.println("goto loop"+loop_count);
-        	CodeGenerator.objectFile.println("Empty"+empty_count+":");
+        	CodeGenerator.objectFile.println("Empty" + empty_count + ":");
         	return data;
         }
         

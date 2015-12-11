@@ -4,35 +4,14 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.IS_WHILE;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.VALUE;
 
-import wci.frontend.ASTAssignment;
-import wci.frontend.ASTCompound_stmt;
-import wci.frontend.ASTFunctionDeclaration;
-import wci.frontend.ASTFunction_invocation;
-import wci.frontend.ASTadd;
-import wci.frontend.ASTboolean_node;
-import wci.frontend.ASTboolean_op;
-import wci.frontend.ASTcondition;
-import wci.frontend.ASTdivide;
-import wci.frontend.ASTelse_part;
-import wci.frontend.ASTidentifier;
-import wci.frontend.ASTif_body;
-import wci.frontend.ASTif_part;
-import wci.frontend.ASTif_stmt;
-import wci.frontend.ASTmultiply;
-import wci.frontend.ASTnumber;
-import wci.frontend.ASTprintln;
-import wci.frontend.ASTstring;
-import wci.frontend.ASTsubtract;
-import wci.frontend.ASTwhile_node;
-import wci.frontend.PclParserTreeConstants;
-import wci.frontend.SimpleNode;
+import wci.frontend.*;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.TSParserVisitorAdapter;
 import wci.intermediate.TypeSpec;
 
 public class MethodGeneratorVisitor
 		extends TSParserVisitorAdapter 
-			implements PclParserTreeConstants {
+			implements TypeScriptParserTreeConstants {
 	
 	
 	int label_count = 0;
