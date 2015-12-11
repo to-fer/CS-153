@@ -540,14 +540,15 @@ void processVariableDecl(Token token, SymTabEntry variableId) #void
 JAVACODE
 String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
 {
+  	
     Token token = ex.currentToken;
-    System.out.println(ex.getMessage());
-
+    TypeScriptParseException tse = new TypeScriptParseException(ex);
+//    System.out.println(ex.getMessage2());
+    System.out.println(tse.getMessage());
+	System.out.println("TOKEN PARSED: "+token.image);
     // Consume tokens up to but not including a token in the sync set.
-    while (!syncSet.contains(getToken(1).kind)) {
-        token = getNextToken();
-    } 	
+//    while (!syncSet.contains(getToken(1).kind)) {//        token = getNextToken();//    } 	
 
-    if (doPop) jjtree.popNode();
+//    if (doPop) jjtree.popNode();
     return token.image;
 }
