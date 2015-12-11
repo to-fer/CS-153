@@ -1,6 +1,7 @@
 .class public TypeScriptProgram
 .super java/lang/Object
 
+.field private static expected_result F
 .field private static i F
 .field private static result F
 .field private static square_of_sum F
@@ -92,6 +93,24 @@ Empty1:
        getstatic     TypeScriptProgram/result F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+      ldc 2.516415E7
+      putstatic TypeScriptProgram/expected_result F                                     ;pop value: assingment_node
+      getstatic TypeScriptProgram/result F                                     ;identifier
+       fstore_0
+      getstatic TypeScriptProgram/expected_result F                                     ;identifier
+       fstore_1
+       fload_0
+       fload_1
+fcmpg 
+ifeq Label2
+       goto Label3
+Label2:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "The result is correct"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       goto Label4
+Label3:
+Label4:
       ldc 0.0
 return
 .limit locals 32
