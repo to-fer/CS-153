@@ -543,11 +543,13 @@ String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
   	
     Token token = ex.currentToken;
     TypeScriptParseException tse = new TypeScriptParseException(ex);
+//    syncSet.put(EOF);
 //    System.out.println(ex.getMessage2());
     System.out.println(tse.getMessage());
-	System.out.println("TOKEN PARSED: "+token.image);
+//	System.out.println("TOKEN PARSED: "+token.image);
     // Consume tokens up to but not including a token in the sync set.
-//    while (!syncSet.contains(getToken(1).kind)) {//        token = getNextToken();//    } 	
+    System.out.println(getToken(1).image);
+    while (!syncSet.contains(token.kind))    {      //getToken(1).kind)) {        token = getNextToken();    } 	
 
 //    if (doPop) jjtree.popNode();
     return token.image;
