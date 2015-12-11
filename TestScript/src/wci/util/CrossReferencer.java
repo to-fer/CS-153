@@ -7,8 +7,6 @@ import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.typeimpl.TypeFormImpl;
 
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-import static wci.intermediate.typeimpl.TypeFormImpl.*;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 /**
@@ -68,15 +66,6 @@ public class CrossReferencer
         if (newRecordTypes.size() > 0) {
             printRecords(newRecordTypes);
         }
-
-        // Print any procedures and functions defined in the routine.
-//        ArrayList<SymTabEntry> routineIds =
-//            (ArrayList<SymTabEntry>) routineId.getAttribute(ROUTINE_ROUTINES);
-//        if (routineIds != null) {
-//            for (SymTabEntry rtnId : routineIds) {
-//                printRoutine(rtnId);
-//            }
-//        }
     }
 
     /**
