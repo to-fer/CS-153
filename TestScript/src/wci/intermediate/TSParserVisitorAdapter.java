@@ -84,22 +84,17 @@ public class TSParserVisitorAdapter implements PclParserVisitor
 
 	@Override
 	public Object visit(ASTPureFunction node, Object data) {
-		return null;
-	}
-
-	@Override
-	public Object visit(ASTSideEffectFunction node, Object data) {
-		return null;
+        return node.childrenAccept(this, data);
 	}
 
 	@Override
 	public Object visit(ASTFunctionDeclaration node, Object data) {
-		return null;
+        return node.childrenAccept(this, data);
 	}
 
 	@Override
 	public Object visit(ASTFunction_invocation node, Object data) {
-		return null;
+        return node.childrenAccept(this, data);
 	}
 
 	@Override

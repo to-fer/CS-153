@@ -1,16 +1,16 @@
-function tester(str:char, str2:char, x:number):number {
+
+function doStuff(): void {   // works 
 	println("hello world");
 	var t:number = 4+5+3;
-	return t; 
-}
-
-tester("heelo world", "heeelo", 5+4+32); 
-
-
-function doStuff(): void {
-	println("hello world");
-	var t:number = 4+5+3;
+	println("printing inside the function value t");
+	println(t);
 	return;
 }
+
+doStuff();
+
+doStuff();
+
+doStuff();
 
 doStuff();

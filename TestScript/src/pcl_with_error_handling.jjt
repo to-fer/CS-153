@@ -187,6 +187,7 @@ SimpleNode program() : {}
 	programId.setTypeSpec(Predefined.charType);
 	programId.setDefinition(DefinitionImpl.PROGRAM);
 	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+	programId.setAttribute(FUNCTIONS_CODE, new ArrayList<SimpleNode>());
 	symTabStack.setProgramId(programId);
 	}
 		{
@@ -323,7 +324,10 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
       funcID = symTabStack.enterLocal(token.image);
       funcID.setDefinition(DefinitionImpl.FUNCTION);
       funcID.appendLineNumber(token.beginLine);
-	  jjtThis.setAttribute(ID, funcID);  
+	  jjtThis.setAttribute(ID, funcID);
+	  //add all function decl to a list do 
+      ArrayList<SimpleNode> funcArr = (ArrayList<SimpleNode>) programId.getAttribute(FUNCTIONS_CODE);
+      funcArr.add(jjtThis);
     }
 	<LEFT_PARAN>  
   {
@@ -362,10 +366,13 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
     {System.out.println("FunctionDeclaration END");}
 }
 
-void Function_invocation() :{}{
+void Function_invocation() :{SymTabEntry funcID; SimpleNode funcNode;}{
   <IDENTIFIER>
     {
-
+      funcID = symTabStack.lookup(token.image);
+      funcID.setDefinition(DefinitionImpl.FUNCTION);
+      funcID.appendLineNumber(token.beginLine);
+	  jjtThis.setAttribute(ID, funcID);  
     }
 	<LEFT_PARAN>  
    (

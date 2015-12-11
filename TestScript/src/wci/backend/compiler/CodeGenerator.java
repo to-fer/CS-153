@@ -3,12 +3,14 @@ package wci.backend.compiler;
 //import com.sun.org.apache.xpath.internal.operations.Variable;
 import wci.backend.Backend;
 import wci.frontend.Node;
+import wci.frontend.SimpleNode;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.symtabimpl.Predefined;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +55,7 @@ public class CodeGenerator extends Backend
     private void writeProgramClassInfo() {
         writeProgramHeader();
         writeLocalVarFields();
+        writeAllUserDefinedMethods();
         writeProgramClassConstructor();
     }
 
@@ -113,6 +116,14 @@ public class CodeGenerator extends Backend
         objectFile.println();
         objectFile.println("    return");
         objectFile.println();
+    }
+    
+    private void writeAllUserDefinedMethods() {
+    	ArrayList<SimpleNode> functionNodes = (ArrayList<SimpleNode>) symTabStack.getProgramId().getAttribute(SymTabKeyImpl.FUNCTIONS_CODE);
+    	 MethodGeneratorVisitor methodVisitor = new MethodGeneratorVisitor();
+    	 for(int i = 0; i < functionNodes.size(); i++) {
+    		 functionNodes.get(i).jjtAccept(methodVisitor,null);
+    	 }
     }
     
     public static String writeComment(String comment) {

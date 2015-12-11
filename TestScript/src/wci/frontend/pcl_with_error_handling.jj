@@ -197,6 +197,7 @@ SimpleNode program() : {/*@bgen(jjtree) program */
 	programId.setTypeSpec(Predefined.charType);
 	programId.setDefinition(DefinitionImpl.PROGRAM);
 	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+	programId.setAttribute(FUNCTIONS_CODE, new ArrayList<SimpleNode>());
 	symTabStack.setProgramId(programId);
 	}
 		{
@@ -724,7 +725,10 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
       funcID = symTabStack.enterLocal(token.image);
       funcID.setDefinition(DefinitionImpl.FUNCTION);
       funcID.appendLineNumber(token.beginLine);
-	  jjtn000.setAttribute(ID, funcID);  
+	  jjtn000.setAttribute(ID, funcID);
+	  //add all function decl to a list do 
+      ArrayList<SimpleNode> funcArr = (ArrayList<SimpleNode>) programId.getAttribute(FUNCTIONS_CODE);
+      funcArr.add(jjtn000);
     }
 	<LEFT_PARAN>  
   {
@@ -789,15 +793,18 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
 }
 
 void Function_invocation() :{/*@bgen(jjtree) Function_invocation */
-  ASTFunction_invocation jjtn000 = new ASTFunction_invocation(JJTFUNCTION_INVOCATION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}{/*@bgen(jjtree) Function_invocation */
+                             ASTFunction_invocation jjtn000 = new ASTFunction_invocation(JJTFUNCTION_INVOCATION);
+                             boolean jjtc000 = true;
+                             jjtree.openNodeScope(jjtn000);
+/*@egen*/SymTabEntry funcID; SimpleNode funcNode;}{/*@bgen(jjtree) Function_invocation */
   try {
 /*@egen*/
   <IDENTIFIER>
     {
-
+      funcID = symTabStack.lookup(token.image);
+      funcID.setDefinition(DefinitionImpl.FUNCTION);
+      funcID.appendLineNumber(token.beginLine);
+	  jjtn000.setAttribute(ID, funcID);  
     }
 	<LEFT_PARAN>  
    (

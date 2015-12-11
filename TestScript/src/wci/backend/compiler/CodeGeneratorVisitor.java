@@ -372,9 +372,6 @@ public class CodeGeneratorVisitor
         }
         
         
-        
-        
-        
         public Object visit(ASTwhile_node node, Object data) {
         	System.out.println("WHILE has "+node.jjtGetNumChildren());
         	SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
@@ -394,5 +391,64 @@ public class CodeGeneratorVisitor
         	CodeGenerator.objectFile.println("Empty"+empty_count+":");
         	return data;
         }
-        
+//        .method public static main([Ljava/lang/String;)V
+//
+//        ldc 0.0
+//        putstatic TypeScriptProgram/first_fibo F                                     ;pop value: assingment_node
+//         getstatic    java/lang/System/out Ljava/io/PrintStream;
+//        
+//    .method public CreateWarrior()V
+//    ldc "Warrior"
+//    putstatic Game/classChoice Ljava/lang/String;
+//    ldc "Battle Axe"
+//    putstatic Game/weaponOne Ljava/lang/String;
+//    ldc "Great Sword"
+//    putstatic Game/weaponTwo Ljava/lang/String;
+//
+//    return
+//    .limit locals 32
+//    .limit stack 40
+//    .end method
+        /**
+         * Assumes all function are void
+         */
+        /*
+    	public Object visit(ASTFunctionDeclaration node, Object data) {
+        	SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
+        	String funcName = id.getName();
+        	
+        	CodeGenerator.objectFile.println();
+        	//generate function code
+        	CodeGenerator.objectFile.println(".method public " +  funcName + "()V");
+    		SimpleNode functionCode = (SimpleNode) node.jjtGetChild(0);
+    		functionCode.jjtAccept(this,data);
+    		
+    		//finish off function
+    		CodeGenerator.objectFile.println("return");
+    		CodeGenerator.objectFile.println(".limit locals 32");
+    		CodeGenerator.objectFile.println(".limit stack 40");
+    		CodeGenerator.objectFile.println(".end method");
+        	CodeGenerator.objectFile.println();
+    		return data;
+    	}
+    	
+		*/
+    	
+//    	new TestFor
+//        dup
+//        invokespecial TestFor/<init>()V
+//        invokevirtual TestFor/main()V
+    	public Object visit(ASTFunction_invocation node, Object data) {
+        	SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
+        	String funcName = id.getName();
+        	
+    		CodeGenerator.objectFile.println("      new " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME);
+    		CodeGenerator.objectFile.println("      dup");
+    		CodeGenerator.objectFile.println("      invokespecial " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME 
+    				+"/<init>()V");
+    		CodeGenerator.objectFile.println("      invokevirtual " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME 
+    				+"/" + funcName + "()V");
+
+			return data;
+    	}
 }
