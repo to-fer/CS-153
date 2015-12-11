@@ -194,6 +194,8 @@ SimpleNode program() : {/*@bgen(jjtree) program */
 	programId.setDefinition(DefinitionImpl.PROGRAM);
 	programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
 	programId.setAttribute(FUNCTIONS_CODE, new ArrayList<SimpleNode>());
+  	jjtn000.setTypeSpec(Predefined.charType);
+	
 	symTabStack.setProgramId(programId);
 	}
         Statement_list()/*@bgen(jjtree)*/

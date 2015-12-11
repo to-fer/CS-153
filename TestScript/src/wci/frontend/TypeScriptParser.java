@@ -81,6 +81,8 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
         programId.setDefinition(DefinitionImpl.PROGRAM);
         programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
         programId.setAttribute(FUNCTIONS_CODE, new ArrayList<SimpleNode>());
+        jjtn000.setTypeSpec(Predefined.charType);
+
         symTabStack.setProgramId(programId);
       Statement_list();
           jjtree.closeNodeScope(jjtn000, true);
@@ -1203,19 +1205,6 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
     finally { jj_save(0, xla); }
   }
 
-  static private boolean jj_3R_8() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(EQ)) return true;
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_9() {
-    if (jj_scan_token(VAR)) return true;
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
   static private boolean jj_3R_14() {
     if (jj_3R_18()) return true;
     return false;
@@ -1310,6 +1299,19 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
 
   static private boolean jj_3R_15() {
     if (jj_3R_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_8() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(EQ)) return true;
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_9() {
+    if (jj_scan_token(VAR)) return true;
+    if (jj_3R_11()) return true;
     return false;
   }
 
