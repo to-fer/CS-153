@@ -38,7 +38,7 @@ public class CodeGeneratorVisitor
 
                 // Emit the appropriate store instruction.
                 CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.programClassName +
-                        "/" + fieldName + " " + typeCode + CodeGenerator.writeComment("pop value: assingment_node"));
+						"/" + fieldName + " " + typeCode + CodeGenerator.writeComment("pop value: assingment_node"));
                 CodeGenerator.objectFile.flush();
                 return data;
         }
@@ -162,7 +162,7 @@ public class CodeGeneratorVisitor
       }
         public Object generate_bool_var_print_code(String id, Object data) {
         	CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
-    		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/" + id + " Z");
+    		CodeGenerator.objectFile.println("       getstatic     " + CodeGenerator.programClassName + "/" + id + " Z");
     		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(Z)Ljava/lang/String;");
     		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
         	return data;
@@ -171,7 +171,7 @@ public class CodeGeneratorVisitor
         public Object generate_string_print_code(String id, String val, Object data) {
         	if(id != null) {
       		CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
-      		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/"+id+" Ljava/lang/String;");
+      		CodeGenerator.objectFile.println("       getstatic     " + CodeGenerator.programClassName + "/"+id+" Ljava/lang/String;");
       		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
 	      	}
 	      	else {
@@ -184,7 +184,7 @@ public class CodeGeneratorVisitor
         public Object generate_float_print_code(String id, float value, Object data ) {
         	if(id != null) {
         		CodeGenerator.objectFile.println("       getstatic    java/lang/System/out Ljava/io/PrintStream;");
-        		CodeGenerator.objectFile.println("       getstatic     TypeScriptProgram/"+id+" F");
+        		CodeGenerator.objectFile.println("       getstatic     " + CodeGenerator.programClassName + "/"+id+" F");
         		CodeGenerator.objectFile.println( "      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;");
         		CodeGenerator.objectFile.println("       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
         	}
