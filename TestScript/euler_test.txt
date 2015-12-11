@@ -1,11 +1,13 @@
 function tester(str:char, str2:char, x:number):number {
 	println("hello world");
 	var t:number = 4+5+3;
-	return t; 
+	return t;
 }
 
 
 
+//This program finds the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
+//the full description of the problem can be found at https://projecteuler.net/problem=6
 function sum_square_diff(): number {
 	var i:number = 1;
 	var sum:number = 0;
