@@ -341,7 +341,7 @@ Label42:
       fsub
       putstatic bool_test/result F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       getstatic     TypeScriptProgram/result F
+       getstatic     bool_test/result F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
@@ -359,7 +359,7 @@ Label42:
       fsub
       putstatic bool_test/result2 F                                     ;pop value: assingment_node
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       getstatic     TypeScriptProgram/result2 F
+       getstatic     bool_test/result2 F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;

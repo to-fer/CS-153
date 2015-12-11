@@ -17,7 +17,7 @@
        ldc "The first fibonacci number is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       getstatic     TypeScriptProgram/first_fibo F
+       getstatic     functions/first_fibo F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       ldc 1.0
@@ -26,7 +26,7 @@
        ldc "The second fibonacci number is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       getstatic     TypeScriptProgram/second_fibo F
+       getstatic     functions/second_fibo F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       ldc 100.0
@@ -62,7 +62,7 @@ Label1:
        ldc "The next fibonacci number is: "
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       getstatic     TypeScriptProgram/this_fibo F
+       getstatic     functions/this_fibo F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
       getstatic functions/curr_fib_count F                                     ;identifier
