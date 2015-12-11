@@ -36,6 +36,7 @@ public interface TypeScriptParserTreeConstants
   public int JJTNUMBER = 30;
   public int JJTSTRING = 31;
   public int JJTERROR = 32;
+  public int JJTHANDLEERROR = 33;
 
 
   public String[] jjtNodeName = {
@@ -72,6 +73,7 @@ public interface TypeScriptParserTreeConstants
     "number",
     "string",
     "error",
+    "handleError",
   };
 }
-/* JavaCC - OriginalChecksum=ec0a56413c83dce16f69aef267ffccb4 (do not edit this line) */
+/* JavaCC - OriginalChecksum=bcce960518764cccea739495242f0f98 (do not edit this line) */

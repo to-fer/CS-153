@@ -68,7 +68,9 @@ public class TypeScriptParser
 		  
 	        Backend backend = BackendFactory.createBackend("compile");
 	        backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
-	        System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
+		}
+		else
+		{			System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
 		}
     }
 
@@ -561,7 +563,7 @@ void processVariableDecl(Token token, SymTabEntry variableId) #void
 }
 
 JAVACODE
-String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
+String handleError(ParseException ex, HashSet syncSet, boolean doPop) 
 {
   	generate_code_flag = false;
     Token token = ex.currentToken;

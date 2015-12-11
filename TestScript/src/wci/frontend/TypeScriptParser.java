@@ -57,7 +57,10 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
 
                 Backend backend = BackendFactory.createBackend("compile");
                 backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
-                System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
+                }
+                else
+                {
+                        System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
                 }
     }
 
@@ -1339,7 +1342,11 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
   static String handleError(ParseException ex, HashSet syncSet, boolean doPop) throws ParseException {
     trace_call("handleError");
     try {
-        generate_code_flag = false;
+ /*@bgen(jjtree) handleError */
+     ASThandleError jjtn000 = new ASThandleError(JJTHANDLEERROR);
+     boolean jjtc000 = true;
+     jjtree.openNodeScope(jjtn000);
+     try {generate_code_flag = false;
     Token token = ex.currentToken;
     TypeScriptParseException tse = new TypeScriptParseException(ex);
 //    syncSet.put(EOF);
@@ -1361,7 +1368,12 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
     }
 
 //    if (doPop) jjtree.popNode();
-    return token.image;
+    return token.image;/*@bgen(jjtree)*/
+     } finally {
+       if (jjtc000) {
+         jjtree.closeNodeScope(jjtn000, true);
+       }
+     }
     } finally {
       trace_return("handleError");
     }
@@ -1372,17 +1384,6 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
     try { return !jj_3_1(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(0, xla); }
-  }
-
-  static private boolean jj_3R_15() {
-    if (jj_3R_19()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_11() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(COLON)) return true;
-    return false;
   }
 
   static private boolean jj_3R_14() {
@@ -1481,6 +1482,17 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
 
   static private boolean jj_3R_16() {
     if (jj_3R_20()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15() {
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(COLON)) return true;
     return false;
   }
 
