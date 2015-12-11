@@ -3,7 +3,7 @@ package wci.intermediate;
 
 import wci.frontend.*;
 
-public class TSParserVisitorAdapter implements PclParserVisitor
+public class TSParserVisitorAdapter implements TypeScriptParserVisitor
 {
 
 	@Override
