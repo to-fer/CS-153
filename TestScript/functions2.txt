@@ -4,13 +4,12 @@ function tester(str:char, str2:char, x:number):number {
 	return t; 
 }
 
-tester("heelo world", "heeelo", 5+4+32); 
+tester("heelo world", "heeelo", 5+4+32);  \
 
 
-function doStuff(): void {
+function doStuff():void {
 	println("hello world");
 	var t:number = 4+5+3;
-	return;
 }
 
 doStuff();

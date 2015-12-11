@@ -576,7 +576,7 @@ void Statement()       : {}
 {
    	try
 	{
-	  LOOKAHEAD(2)
+	  LOOKAHEAD(3)
      Assignment() | if_stmt() | while_node() | println() | FunctionDeclaration()
    		| Function_invocation()   //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
@@ -681,46 +681,8 @@ void PureFunction() : {/*@bgen(jjtree) PureFunction */
 {/*@bgen(jjtree) PureFunction */
     try {
 /*@egen*/
-    {System.out.println("PureFunction START");}
-    <LEFT_BRACE> Statement_list() <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>/*@bgen(jjtree)*/
-    {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtc000 = false;
-    }
-/*@egen*/
-    {System.out.println("PureFunction END");}/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
-}
-
-void SideEffectFunction() : {/*@bgen(jjtree) SideEffectFunction */
-  ASTSideEffectFunction jjtn000 = new ASTSideEffectFunction(JJTSIDEEFFECTFUNCTION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) SideEffectFunction */
-    try {
-/*@egen*/
     {System.out.println("SideEffectFunction START");}
-    <LEFT_BRACE> Statement_list() (<RETURN> <SEMICOLON>)? <RIGHT_BRACE>/*@bgen(jjtree)*/
+    <LEFT_BRACE> Statement_list() (<RETURN> (Expression())? <SEMICOLON>)? <RIGHT_BRACE>/*@bgen(jjtree)*/
     {
       jjtree.closeNodeScope(jjtn000, true);
       jjtc000 = false;
@@ -766,7 +728,7 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
     }
 	<LEFT_PARAN>  
   {
-    symTabStack.push();
+    //symTabStack.push();
   	// push all variables onto new stack
   }
    (	      <IDENTIFIER> {
@@ -786,38 +748,23 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
 	     )*
    )?
      {
-    symTabStack.pop();
+    //symTabStack.pop();
   	// push all variables onto new stack
   	}
     <RIGHT_PARAN>
     <COLON>
-	    (
-	      typeSignature(){
-	        
-		      //set the type for function
-//              SymTabEntry typeId = symTabStack.lookup(token.image);//		      funcID.appendLineNumber(token.beginLine);//		      TypeSpec type = typeId.getTypeSpec();//		      funcID.setTypeSpec(type);		    }
-		     PureFunction()/*@bgen(jjtree)*/
-                     {
-                       jjtree.closeNodeScope(jjtn000, true);
-                       jjtc000 = false;
-                     }
-/*@egen*/		     {
-		       
-		      // use funcID to set the ROUTINE_CODE
-			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both    		     }
-	  )
-     | (
-       	  <VOID> {
-	      // use funcID to set the typespec	     }
-	     SideEffectFunction() {
-   		      // use funcID to set the ROUTINE_CODE
-			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 	     })/*@bgen(jjtree)*/
+   	 typeSignature() {
+      // use funcID to set the typespec
+     }
+          PureFunction() {
+	      // use funcID to set the ROUTINE_CODE
+		  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 
+     }/*@bgen(jjtree)*/
     {
       jjtree.closeNodeScope(jjtn000, true);
       jjtc000 = false;
     }
 /*@egen*/
-  
     {System.out.println("FunctionDeclaration END");}/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
@@ -1024,6 +971,7 @@ void typeSignature()       :{}
 	   <NUMBER>
 	  |<BOOLEAN>
 	  |<STRING>
+	  |<VOID>
 }
 
 void Expression()       : {}

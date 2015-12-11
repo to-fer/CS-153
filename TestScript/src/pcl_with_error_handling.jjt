@@ -264,7 +264,7 @@ void Statement() #void : {}
 {
    	try
 	{
-	  LOOKAHEAD(2)
+	  LOOKAHEAD(3)
      Assignment() | if_stmt() | while_node() | println() | FunctionDeclaration()
    		| Function_invocation()   //| Expression() < SEMICOLON >//| error() { handleError(token); }
     } catch(ParseException ex)
@@ -311,15 +311,8 @@ void println() : {}
 
 void PureFunction() : {}
 {
-    {System.out.println("PureFunction START");}
-    <LEFT_BRACE> Statement_list() <RETURN> Expression() <SEMICOLON> <RIGHT_BRACE>
-    {System.out.println("PureFunction END");}
-}
-
-void SideEffectFunction() : {}
-{
     {System.out.println("SideEffectFunction START");}
-    <LEFT_BRACE> Statement_list() (<RETURN> <SEMICOLON>)? <RIGHT_BRACE>
+    <LEFT_BRACE> Statement_list() (<RETURN> (Expression())? <SEMICOLON>)? <RIGHT_BRACE>
     {System.out.println("SideEffectFunction END");}
 }
 
@@ -334,7 +327,7 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
     }
 	<LEFT_PARAN>  
   {
-    symTabStack.push();
+    //symTabStack.push();
   	// push all variables onto new stack
   }
    (	      <IDENTIFIER> {
@@ -354,28 +347,18 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
 	     )*
    )?
      {
-    symTabStack.pop();
+    //symTabStack.pop();
   	// push all variables onto new stack
   	}
     <RIGHT_PARAN>
     <COLON>
-	    (
-	      typeSignature(){
-	        
-		      //set the type for function
-//              SymTabEntry typeId = symTabStack.lookup(token.image);//		      funcID.appendLineNumber(token.beginLine);//		      TypeSpec type = typeId.getTypeSpec();//		      funcID.setTypeSpec(type);		    }
-		     PureFunction()		     {
-		       
-		      // use funcID to set the ROUTINE_CODE
-			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both    		     }
-	  )
-     | (
-       	  <VOID> {
-	      // use funcID to set the typespec	     }
-	     SideEffectFunction() {
-   		      // use funcID to set the ROUTINE_CODE
-			  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 	     })
-  
+   	 typeSignature() {
+      // use funcID to set the typespec
+     }
+          PureFunction() {
+	      // use funcID to set the ROUTINE_CODE
+		  // use typespec  or set ROUTINE_RETURN_TYPE to void  or use typspec for both 
+     }
     {System.out.println("FunctionDeclaration END");}
 }
 
@@ -448,6 +431,7 @@ void typeSignature() #void :{}
 	   <NUMBER>
 	  |<BOOLEAN>
 	  |<STRING>
+	  |<VOID>
 }
 
 void Expression() #void : {}
