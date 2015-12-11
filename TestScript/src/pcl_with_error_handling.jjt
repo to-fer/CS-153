@@ -30,7 +30,7 @@ public class PclParser
 {
     private static SymTabStack symTabStack;
     private static SymTabEntry programId;
-
+	public static boolean generate_code_flag = true;
     public static void main(String[] args)
         throws Exception
     {
@@ -63,9 +63,12 @@ public class PclParser
         // Print the parse tree.
         ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
         treePrinter.print(symTabStack);
-
-        Backend backend = BackendFactory.createBackend("compile");
-        backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
+		if(generate_code_flag)
+		{		  
+	        Backend backend = BackendFactory.createBackend("compile");
+	        backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
+	        System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
+		}
     }
 
     private static String fileNameWithoutExtension(String fileName) {
@@ -540,7 +543,7 @@ void processVariableDecl(Token token, SymTabEntry variableId) #void
 JAVACODE
 String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
 {
-  	
+  	generate_code_flag = false;
     Token token = ex.currentToken;
     TypeScriptParseException tse = new TypeScriptParseException(ex);
 //    syncSet.put(EOF);
@@ -548,7 +551,7 @@ String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
     System.out.println(tse.getMessage());
 //	System.out.println("TOKEN PARSED: "+token.image);
     // Consume tokens up to but not including a token in the sync set.
-    System.out.println(getToken(1).image);
+//    System.out.println(getToken(1).image);
     while (!syncSet.contains(token.kind))    {      //getToken(1).kind)) {        token = getNextToken();    } 	
 
 //    if (doPop) jjtree.popNode();
