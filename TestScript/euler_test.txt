@@ -23,10 +23,14 @@ function sum_square_diff(): number {
 	println(square_of_sum);
 	println("The difference between the sum of the squares of the first one hundred natural numbers and the square of the sum is: ");
 	var result:number = square_of_sum - square_sum;
-	println(result);
+	//println(result);
 	var expected_result:number = 25164150;
+	println("Expected result: ");
+	println(expected_result);
+	println("Result: ");
+	println(result);
 	if(result == expected_result) {
-		println("The result is correct");
+		println("test passed 1/1");
 	}
 	return 0;
 }

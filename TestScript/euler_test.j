@@ -89,12 +89,22 @@ Empty1:
       getstatic TypeScriptProgram/square_sum F                                     ;identifier
       fsub
       putstatic TypeScriptProgram/result F                                     ;pop value: assingment_node
+      ldc 2.516415E7
+      putstatic TypeScriptProgram/expected_result F                                     ;pop value: assingment_node
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Expected result: "
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       getstatic     TypeScriptProgram/expected_result F
+      invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "Result: "
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        getstatic    java/lang/System/out Ljava/io/PrintStream;
        getstatic     TypeScriptProgram/result F
       invokestatic  java/lang/String.valueOf(F)Ljava/lang/String;
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-      ldc 2.516415E7
-      putstatic TypeScriptProgram/expected_result F                                     ;pop value: assingment_node
       getstatic TypeScriptProgram/result F                                     ;identifier
        fstore_0
       getstatic TypeScriptProgram/expected_result F                                     ;identifier
@@ -106,7 +116,7 @@ ifeq Label2
        goto Label3
 Label2:
        getstatic    java/lang/System/out Ljava/io/PrintStream;
-       ldc "The result is correct"
+       ldc "test passed 1/1"
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        goto Label4
 Label3:
