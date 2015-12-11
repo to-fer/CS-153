@@ -20,7 +20,7 @@ public class CodeGeneratorVisitor
                 TypeSpec type = id.getTypeSpec();
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
-                CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
+                CodeGenerator.objectFile.println("      getstatic " + CodeGenerator.programClassName +
                         "/" + identifier + " " + typeCode + CodeGenerator.writeComment("identifier"));
 
                 return data;
@@ -37,7 +37,7 @@ public class CodeGeneratorVisitor
                 String typeCode = TypeCode.typeSpecToTypeCode(type);
 
                 // Emit the appropriate store instruction.
-                CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME +
+                CodeGenerator.objectFile.println("      putstatic " + CodeGenerator.programClassName +
                         "/" + fieldName + " " + typeCode + CodeGenerator.writeComment("pop value: assingment_node"));
                 CodeGenerator.objectFile.flush();
                 return data;
@@ -360,7 +360,7 @@ public class CodeGeneratorVisitor
         	SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
         	String funcName = id.getName();
 
-    		CodeGenerator.objectFile.println("      invokestatic " + CodeGenerator.PROGRAM_HEADER_CLASS_NAME 
+    		CodeGenerator.objectFile.println("      invokestatic " + CodeGenerator.programClassName
     				+"/" + funcName + "()V");
 
 			return data;
