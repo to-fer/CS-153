@@ -51,7 +51,6 @@ public class TypeScriptParser
 
         // Visit the parse tree nodes to decorate them with type information.
         TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-        rootNode.se
         rootNode.jjtAccept(typeVisitor, null);
 
         // Create and initialize the ICode wrapper for the parse tree.
