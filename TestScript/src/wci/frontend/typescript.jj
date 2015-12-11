@@ -733,6 +733,7 @@ void FunctionDeclaration():{/*@bgen(jjtree) FunctionDeclaration */
       funcID.setDefinition(DefinitionImpl.FUNCTION);
       funcID.appendLineNumber(token.beginLine);
 	  jjtn000.setAttribute(ID, funcID);
+      jjtn000.setTypeSpec(symTabStack.lookup("void").getTypeSpec());
 	  //add all function decl to a list do 
       ArrayList<SimpleNode> funcArr = (ArrayList<SimpleNode>) programId.getAttribute(FUNCTIONS_CODE);
       funcArr.add(jjtn000);

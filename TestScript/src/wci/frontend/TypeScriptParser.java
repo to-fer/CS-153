@@ -691,6 +691,7 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
       funcID.setDefinition(DefinitionImpl.FUNCTION);
       funcID.appendLineNumber(token.beginLine);
           jjtn000.setAttribute(ID, funcID);
+      jjtn000.setTypeSpec(symTabStack.lookup("void").getTypeSpec());
           //add all function decl to a list do 
       ArrayList<SimpleNode> funcArr = (ArrayList<SimpleNode>) programId.getAttribute(FUNCTIONS_CODE);
       funcArr.add(jjtn000);
@@ -1374,17 +1375,6 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
     finally { jj_save(0, xla); }
   }
 
-  static private boolean jj_3R_15() {
-    if (jj_3R_19()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_11() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(COLON)) return true;
-    return false;
-  }
-
   static private boolean jj_3R_14() {
     if (jj_3R_18()) return true;
     return false;
@@ -1481,6 +1471,17 @@ public class TypeScriptParser/*@bgen(jjtree)*/implements TypeScriptParserTreeCon
 
   static private boolean jj_3R_16() {
     if (jj_3R_20()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15() {
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(COLON)) return true;
     return false;
   }
 

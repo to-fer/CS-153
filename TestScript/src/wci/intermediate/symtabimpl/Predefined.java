@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
+import wci.intermediate.typeimpl.TypeFormImpl;
 
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -28,6 +29,8 @@ public class Predefined
     public static TypeSpec numberType;
     public static TypeSpec booleanType;
     public static TypeSpec charType;
+    public static TypeSpec voidType;
+
     public static TypeSpec undefinedType;
 
     // Predefined identifiers.
@@ -38,6 +41,8 @@ public class Predefined
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
+    public static SymTabEntry voidId;
+
 
     /**
      * Initialize a symbol table stack with predefined identifiers.
@@ -76,6 +81,13 @@ public class Predefined
         charType.setIdentifier(charId);
         charId.setDefinition(DefinitionImpl.TYPE);
         charId.setTypeSpec(charType);
+
+        // void 
+        voidId = symTabStack.enterLocal("void");
+        voidType = TypeFactory.createType(TypeFormImpl.FUNCTION);
+        voidType.setIdentifier(voidId);
+        voidId.setDefinition(DefinitionImpl.TYPE);
+        voidId.setTypeSpec(voidType);
 
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);

@@ -7,6 +7,7 @@ import wci.intermediate.symtabimpl.Predefined;
 
 import static wci.intermediate.typeimpl.TypeFormImpl.ARRAY;
 import static wci.intermediate.typeimpl.TypeFormImpl.SUBRANGE;
+
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 /**

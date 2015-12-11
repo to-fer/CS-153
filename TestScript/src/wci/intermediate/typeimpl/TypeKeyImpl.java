@@ -23,4 +23,6 @@ public enum TypeKeyImpl implements TypeKey
 
     // Record
     RECORD_SYMTAB
+    
+    
 }

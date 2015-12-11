@@ -332,6 +332,7 @@ void FunctionDeclaration():{SymTabEntry funcID; SimpleNode funcNode;}
       funcID.setDefinition(DefinitionImpl.FUNCTION);
       funcID.appendLineNumber(token.beginLine);
 	  jjtThis.setAttribute(ID, funcID);
+      jjtThis.setTypeSpec(symTabStack.lookup("void").getTypeSpec());
 	  //add all function decl to a list do 
       ArrayList<SimpleNode> funcArr = (ArrayList<SimpleNode>) programId.getAttribute(FUNCTIONS_CODE);
       funcArr.add(jjtThis);
