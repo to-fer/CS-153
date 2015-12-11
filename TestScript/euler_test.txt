@@ -12,11 +12,20 @@ function sum_square_diff(): number {
 	var square_sum:number = 0;
 	while(i <= 100) {
 		sum = sum + i;
-		square_sum = square_sum + (i*i);
+		var temp:number = i * i;
+		square_sum = square_sum + temp;
 		i = i + 1;
 	}
-	println(sum);
+	var square_of_sum:number = sum * sum;
+	println("The sum of the squares is: ");
 	println(square_sum);
+	println("The square of the sum is: ");
+	println(square_of_sum);
+	println("The difference between the sum of the squares of the first one hundred natural numbers and the square of the sum is: ");
+	var result:number = square_of_sum - square_sum;
+	println(result);
+	return 0;
 }
 
 //println(sum(1, 100));
+sum_square_diff();
