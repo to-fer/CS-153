@@ -1,6 +1,8 @@
-package wci.frontend;
+package wci.intermediate;
 
 import java.util.ArrayList;
+
+import wci.frontend.ParseException;
 
 public class TypeScriptParseException extends ParseException{
 	
