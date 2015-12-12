@@ -27,7 +27,7 @@ public class MethodGeneratorVisitor
 		SimpleNode functionCode = (SimpleNode) node.jjtGetChild(0);
 		CodeGeneratorVisitor codeGen = new CodeGeneratorVisitor();
 		functionCode.jjtAccept(codeGen, null);
-		functionCode.jjtAccept(this,data);
+		//functionCode.jjtAccept(this,data);
 		
 		//finish off function
 		CodeGenerator.objectFile.println("return");
