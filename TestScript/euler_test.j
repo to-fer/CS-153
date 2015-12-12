@@ -120,6 +120,9 @@ Label2:
        invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
        goto Label4
 Label3:
+       getstatic    java/lang/System/out Ljava/io/PrintStream;
+       ldc "test passed 0/1"
+       invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
 Label4:
       ldc 0.0
 return
