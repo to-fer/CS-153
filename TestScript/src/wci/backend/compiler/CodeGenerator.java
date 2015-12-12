@@ -26,7 +26,7 @@ public class CodeGenerator extends Backend
     static ICode iCode;
     static SymTabStack symTabStack;
     static PrintWriter objectFile;
-    public static String programClassName;
+    static String programClassName;
 
 
     /**
