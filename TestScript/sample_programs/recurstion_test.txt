@@ -1,0 +1,28 @@
+var t:number = 0;
+
+function doStuff():void {
+	println("in the function");
+	if(t >= 20) {
+		println("function finished");
+	} else {
+		println("recursively t =");
+		t = t + 1;
+		println(t);
+		doStuff();
+	}
+}
+
+doStuff();
+
+println("function recursion expect t==20");
+println(t);
+
+if(t == 20) {
+	println("t = 20 test passed");
+} else {
+	println("t =");
+	println(t);
+	println("test failed");
+}
+	
+
