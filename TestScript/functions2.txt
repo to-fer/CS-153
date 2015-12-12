@@ -1,15 +1,28 @@
-function tester(str:char, str2:char, x:number):number {
-	println("hello world");
-	var t:number = 4+5+3;
-	return t; 
-}
-
-tester("heelo world", "heeelo", 5+4+32);  \
-
+var t:number = 0;
 
 function doStuff():void {
-	println("hello world");
-	var t:number = 4+5+3;
+	println("in the function");
+	if(t >= 20) {
+		println("function finished");
+	} else {
+		println("recursively t =");
+		t = t + 1;
+		println(t);
+		doStuff();
+	}
 }
 
 doStuff();
+
+println("function recursion expect t==20");
+println(t);
+
+if(t == 20) {
+	println("t = 20 test passed");
+} else {
+	println("t =");
+	println(t);
+	println("test failed");
+}
+	
+
