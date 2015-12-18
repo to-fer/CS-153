@@ -1,9 +1,0 @@
-The sum of the squares is:
-338350.0
-The square of the sum is:
-2.55025E7
-The difference between the sum of the squares of the first one hundred natural numbers and the square of the sum is:
-Expected result:
-2.516415E7
-Result:
-2.516415E7
