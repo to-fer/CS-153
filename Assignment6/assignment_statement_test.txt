@@ -1,6 +1,0 @@
-var x = 9;
-var y = 10;
-x = 9;
-var y: number = 0;
-y = 9;
-var z = 90;

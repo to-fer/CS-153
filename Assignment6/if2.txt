@@ -1,3 +1,0 @@
-if(i<3) {
-	var j: number = 0;
-}

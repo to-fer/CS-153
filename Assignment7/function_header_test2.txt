@@ -1,5 +1,0 @@
-function with_no_arguments(): string {
-    var x: string = "test";
-    var y: number = 5;
-    return x;
-}
