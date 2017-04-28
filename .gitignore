@@ -1,1 +1,4 @@
 target/
+src/main/java/wci/frontend/
+.idea/
+*.iml

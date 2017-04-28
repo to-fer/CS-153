@@ -1,6 +1,7 @@
 options{
     IGNORE_CASE=true;
-    JJTREE_OUTPUT_DIRECTORY="wci/frontend";
+    JJTREE_OUTPUT_DIRECTORY="src/main/java/wci/frontend";
+    OUTPUT_DIRECTORY="src/main/java/wci/frontend";
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
@@ -67,7 +68,8 @@ public class TypeScriptParser
 	        backend.process(iCode, symTabStack, objectFileName(sourceFilePath));
 		}
 		else
-		{			System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
+		{
+			System.out.println("COULD NOT GENERATE CODE DUE TO SYNTAX ERRORS");
 		}
     }
 
